@@ -1,14 +1,14 @@
 import './App.css'
-import { Button } from './components/ui/button'
+import LayoutPage from './layoutPage'
 
 function App() {
 
   return (
-    <>
+    <LayoutPage>
       <div className="flex min-h-svh flex-col items-center justify-center">
-        <Button className='cursor-pointer'>Click me</Button>
+
       </div>
-    </>
+    </LayoutPage>
   )
 }
 
