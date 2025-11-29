@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -13,6 +13,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primaty-background: #1f1f1f;
+  --secondary-background: #fe8700;
+  --third-background: #d9d9d9;
+  --fourth-background: #0066ff;
+
+  --primary-text: #ffffff;
+  --secondary-color: #000000;
+  --third-color: #e0e0e0;
+
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -55,7 +65,8 @@
   }
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }
@@ -139,4 +150,13 @@ html, body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.link {
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: var(--third-color);
 }
