@@ -1,21 +1,23 @@
 import React from 'react';
 import { FOOTER } from '@/fixtures/footer.fixture';
-import type { FooterProps } from '@/types/Footer';
+import type { FooterProps } from '@/types/footer';
 import { Link } from 'react-router-dom';
 import { Button } from '../ui/button';
+import WebsiteLogo from '../common/WebsiteLogo';
 
 const Footer: React.FC<FooterProps> = ({
   image = FOOTER.image,
   imageTitle = FOOTER.imageTitle,
+  imageLink = FOOTER.imageLink,
   quickLinks = FOOTER.quickLinks,
 }) => {
   return (
-    <footer className="flex justify-around items-center border border-t-[--primary-text] p-2">
+    <footer className="flex justify-around items-center border-t p-2">
       <div>
-        <img
-          src={image}
-          alt={imageTitle}
-          className="w-15 h-15 object-cover rounded-xl"
+        <WebsiteLogo
+          image={image}
+          imageTitle={imageTitle}
+          imageLink={imageLink}
         />
       </div>
       <div>

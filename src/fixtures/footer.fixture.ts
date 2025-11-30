@@ -1,6 +1,7 @@
 export const FOOTER = {
   image: 'https://placehold.co/50x50',
   imageTitle: 'Company logo',
+  imageLink: '/',
   quickLinks: [
     { title: 'Home', path: '/' },
     { title: 'Privacy policy', path: '/privacy' },
