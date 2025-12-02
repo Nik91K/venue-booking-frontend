@@ -12,7 +12,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -20,17 +19,11 @@ import {
 import { SIDEBAR } from '@/fixtures/sidebar.fixture';
 import { USER_DATA } from '@/fixtures/user.fixture';
 import type { Role } from '@/types/common';
-import {
-  ChevronUp,
-  LogIn,
-  Settings,
-  CreditCard,
-  LogOut,
-  UserCircle,
-} from 'lucide-react';
+import { ChevronUp, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Avatar from 'boring-avatars';
 import { Link } from 'react-router-dom';
+import DropdownMenuSitebar from '../common/DropwnMenu';
 
 type AppSidebarProps = {
   role?: Role;
@@ -129,7 +122,8 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuSitebar />
+                  {/* <DropdownMenuItem>
                     <UserCircle className="mr-2 size-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
@@ -145,7 +139,7 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                   <DropdownMenuItem>
                     <LogOut className="mr-2 size-4" />
                     <span>Log out</span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (

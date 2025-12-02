@@ -14,7 +14,7 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
           <Footer />
         </div>
       </SidebarInset>
-      <AppSidebar role="user" />
+      <AppSidebar role="guest" />
     </SidebarProvider>
   );
 };

@@ -1,5 +1,6 @@
 import type { Role } from '@/types/common';
 import type { SidebarSection } from '@/types/sidebat';
+import { UserCircle, CreditCard, Settings } from 'lucide-react';
 
 export const SIDEBAR: Record<Role, SidebarSection[]> = {
   guest: [
@@ -8,6 +9,11 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       items: [
         { title: 'Home', path: '/', icon: 'Home' },
         { title: 'Browse Services', path: '/services', icon: 'Search' },
+      ],
+    },
+    {
+      label: 'Contact us',
+      items: [
         { title: 'About Us', path: '/about', icon: 'Info' },
         { title: 'Contact', path: '/contact', icon: 'Mail' },
       ],
@@ -127,3 +133,11 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
 };
 
 export type SidebarConfig = typeof SIDEBAR;
+
+export const SIDEBAR_MENU = {
+  items: [
+    { icon: UserCircle, label: 'Profile', onClick: undefined },
+    { icon: CreditCard, label: 'Billing', onClick: undefined },
+    { icon: Settings, label: 'Settings', onClick: undefined },
+  ],
+};
