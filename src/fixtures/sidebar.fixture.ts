@@ -12,33 +12,8 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
         { title: 'Contact', path: '/contact', icon: 'Mail' },
       ],
     },
-    {
-      label: 'Get Started',
-      items: [
-        { title: 'Sign Up', path: '/signup', icon: 'UserPlus' },
-        { title: 'Login', path: '/login', icon: 'LogIn' },
-      ],
-    },
   ],
   user: [
-    {
-      label: 'Dashboard',
-      items: [
-        { title: 'Overview', path: '/dashboard', icon: 'Home' },
-        { title: 'Messages', path: '/messages', icon: 'Inbox' },
-        { title: 'Calendar', path: '/calendar', icon: 'Calendar' },
-        { title: 'Search', path: '/search', icon: 'Search' },
-      ],
-    },
-    {
-      label: 'My Account',
-      items: [
-        { title: 'Profile', path: '/profile', icon: 'User' },
-        { title: 'Settings', path: '/settings', icon: 'Settings' },
-        { title: 'Notifications', path: '/notifications', icon: 'Bell' },
-        { title: 'Security', path: '/security', icon: 'Shield' },
-      ],
-    },
     {
       label: 'Reservations',
       items: [
@@ -60,11 +35,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
   moderator: [
     {
       label: 'Dashboard',
-      items: [
-        { title: 'Overview', path: '/dashboard', icon: 'Home' },
-        { title: 'Messages', path: '/messages', icon: 'Inbox' },
-        { title: 'Calendar', path: '/calendar', icon: 'Calendar' },
-      ],
+      items: [{ title: 'Overview', path: '/dashboard', icon: 'Home' }],
     },
     {
       label: 'Moderation',
@@ -79,20 +50,6 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
           path: '/moderator/reports',
           icon: 'AlertTriangle',
         },
-        {
-          title: 'Content Management',
-          path: '/moderator/content',
-          icon: 'FileText',
-        },
-        { title: 'Activity Log', path: '/moderator/logs', icon: 'Activity' },
-      ],
-    },
-    {
-      label: 'My Account',
-      items: [
-        { title: 'Profile', path: '/profile', icon: 'User' },
-        { title: 'Settings', path: '/settings', icon: 'Settings' },
-        { title: 'Notifications', path: '/notifications', icon: 'Bell' },
       ],
     },
     {
@@ -107,7 +64,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
     {
       label: 'Dashboard',
       items: [
-        { title: 'Overview', path: '/dashboard', icon: 'Home' },
+        { title: 'Overview', path: '/admin/dashboard', icon: 'Home' },
         { title: 'Analytics', path: '/admin/analytics', icon: 'BarChart' },
         { title: 'Reports', path: '/admin/reports', icon: 'FileText' },
       ],
@@ -115,10 +72,10 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
     {
       label: 'Administration',
       items: [
-        { title: 'User Management', path: '/admin/users', icon: 'Users' },
-        { title: 'Role Management', path: '/admin/roles', icon: 'Shield' },
-        { title: 'Content Control', path: '/admin/content', icon: 'FileCheck' },
-        { title: 'System Settings', path: '/admin/system', icon: 'Settings' },
+        { title: 'User Management', path: '/admin#users', icon: 'Users' },
+        { title: 'Role Management', path: '/admin#roles', icon: 'Shield' },
+        { title: 'Content Control', path: '/admin#content', icon: 'FileCheck' },
+        { title: 'System Settings', path: '/admin#system', icon: 'Settings' },
         { title: 'Audit Logs', path: '/admin/logs', icon: 'Activity' },
       ],
     },
@@ -131,13 +88,6 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
           path: '/admin/reports',
           icon: 'AlertTriangle',
         },
-      ],
-    },
-    {
-      label: 'My Account',
-      items: [
-        { title: 'Profile', path: '/profile', icon: 'User' },
-        { title: 'Settings', path: '/settings', icon: 'Settings' },
       ],
     },
   ],
@@ -171,13 +121,6 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
           icon: 'Shield',
         },
         { title: 'Audit Logs', path: '/root/logs', icon: 'Activity' },
-      ],
-    },
-    {
-      label: 'My Account',
-      items: [
-        { title: 'Profile', path: '/profile', icon: 'User' },
-        { title: 'Settings', path: '/settings', icon: 'Settings' },
       ],
     },
   ],
