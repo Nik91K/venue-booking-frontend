@@ -16,6 +16,7 @@ const Header: React.FC<HeaderProps> = ({ role = 'guest' }) => {
   return (
     <header className="flex items-center gap-4 p-4 border-b justify-around sticky top-0 bg-(--primary-background) text-(--primary-text) z-10">
       <div className="flex items-center gap-4">
+        <SidebarTrigger />
         <WebsiteLogo
           image={config.image}
           imageLink={config.imageLink}
@@ -33,7 +34,6 @@ const Header: React.FC<HeaderProps> = ({ role = 'guest' }) => {
             </li>
           ))}
         </ul>
-        <SidebarTrigger />
       </nav>
     </header>
   );

@@ -7,6 +7,7 @@ import AppSidebar from '@/components/layout/Sidebar';
 const LayoutPage = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
+      <AppSidebar role="guest" />
       <SidebarInset>
         <div className="bg-(--primary-background) text-(--primary-text) flex min-h-screen flex-col">
           <Header role="guest" />
@@ -14,7 +15,6 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
           <Footer />
         </div>
       </SidebarInset>
-      <AppSidebar role="guest" />
     </SidebarProvider>
   );
 };

@@ -10,3 +10,11 @@ export type WebsiteLogoProps = {
 };
 
 export type Role = 'guest' | 'user' | 'moderator' | 'admin' | 'superAdmin';
+
+export type InputType =
+  | 'text'
+  | 'password'
+  | 'email'
+  | 'file'
+  | 'image'
+  | 'search';

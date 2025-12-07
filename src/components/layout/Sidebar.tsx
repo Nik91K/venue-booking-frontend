@@ -42,7 +42,7 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
   const userData = USER_DATA[role];
 
   return (
-    <Sidebar side="right" className="text-(--primary-text)">
+    <Sidebar side="left" className="text-(--primary-text)">
       <SidebarContent className="bg-(--primary-background-light) text-(--primary-text)">
         {sidebarConfig.map(section => (
           <SidebarGroup key={section.label}>
@@ -123,23 +123,6 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuSitebar />
-                  {/* <DropdownMenuItem>
-                    <UserCircle className="mr-2 size-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard className="mr-2 size-4" />
-                    <span>Billing</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="mr-2 size-4" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <LogOut className="mr-2 size-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
