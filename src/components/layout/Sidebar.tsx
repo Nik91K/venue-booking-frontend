@@ -127,7 +127,7 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
               </DropdownMenu>
             ) : (
               <Button
-                variant="default"
+                variant="secondary"
                 className="w-full justify-start gap-2"
                 asChild
               >

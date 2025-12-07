@@ -32,11 +32,8 @@ const Footer: React.FC<FooterProps> = ({
         </ul>
       </div>
       <div>
-        <Button
-          title="Register"
-          className="cursor-pointer bg-(--third-background) hover:bg-white text-(--secondary-color) px-6 py-3 text-lg"
-        >
-          Register
+        <Button title="Register" variant="secondary" size="lg">
+          <Link to="/register">Register</Link>
         </Button>
       </div>
     </footer>
