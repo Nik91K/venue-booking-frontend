@@ -108,7 +108,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
           {errors.confirmPassword && (
             <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
           )}
-          <Button type="submit" variant="secondary" className="w-full mt-4">
+          <Button type="submit" variant="orange" className="w-full mt-4">
             Create Account
           </Button>
         </form>

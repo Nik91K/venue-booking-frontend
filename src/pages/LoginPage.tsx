@@ -71,7 +71,7 @@ const LoginPage: React.FC<AuthorizationProps> = ({
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password}</p>
           )}
-          <Button type="submit" variant="secondary" className="w-full mt-4">
+          <Button type="submit" variant="orange" className="w-full mt-4">
             Submit
           </Button>
         </form>
