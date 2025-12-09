@@ -6,4 +6,6 @@ export type HeaderConfig = {
   imageLink?: string;
   message?: string;
   links?: NavLink[];
+  backgroundColor?: string;
+  textColor?: string;
 };

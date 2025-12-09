@@ -18,3 +18,9 @@ export type InputType =
   | 'file'
   | 'image'
   | 'search';
+
+export type RouteHeaderConfig = {
+  showLinks: boolean;
+  showEstablishment: boolean;
+  variant: 'default' | 'minimal' | 'establishment';
+};
