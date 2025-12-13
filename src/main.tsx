@@ -4,13 +4,17 @@ import './index.css';
 import App from './App.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
+import { Provider } from 'react-redux';
+import { store } from './api/store.ts';
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
-    </Routes>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>
 );

@@ -4,19 +4,23 @@ import FormFieldGroup from '@/components/common/FormFieldGroup';
 import { Button } from '@/components/ui/button';
 import { MailIcon, KeyRound, User } from 'lucide-react';
 import { useState } from 'react';
-import {
-  validatePassword,
-  validateEmail,
-  validateUsername,
-} from '@/hooks/authorization';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { AuthorizationProps } from '@/types/authorization';
 import { AUTHORIZATION } from '@/fixtures/authorization.fixture';
+import { register } from '@/api/slices/authSlice';
+import type { AppDispatch, RootState } from '@/api/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { validateRegistrationForm } from '@/hooks/authorization';
 
 const RegisterPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.registration.header,
   link = AUTHORIZATION.registration.link,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const { loading } = useSelector((state: RootState) => state.auth);
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -25,35 +29,26 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!validateUsername(formData.username)) {
-      newErrors.username = 'Incorrect username';
-    }
-
-    if (!validateEmail(formData.email)) {
-      newErrors.email = 'Incorrect email';
-    }
-
-    if (!validatePassword(formData.password)) {
-      newErrors.password = 'Incorrect password';
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).length === 0;
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!validateForm()) return;
+    const validationErrors = validateRegistrationForm(formData);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
 
-    console.log(true);
+    try {
+      await dispatch(
+        register({
+          name: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: 'USER',
+        })
+      ).unwrap();
+      navigate('/home');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -108,12 +103,17 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
           {errors.confirmPassword && (
             <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
           )}
-          <Button type="submit" variant="orange" className="w-full mt-4">
-            Create Account
+          <Button
+            type="submit"
+            variant="orange"
+            className="w-full mt-4"
+            disabled={loading}
+          >
+            {loading ? 'Creating account...' : 'Create account'}
           </Button>
         </form>
         <p className="text-center text-sm">
-          {link.text}{' '}
+          {link.text}
           <Link to={link.href} className="link">
             {link.linkText}
           </Link>

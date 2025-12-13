@@ -10,7 +10,7 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
       <AppSidebar role="guest" />
       <SidebarInset>
         <div className="bg-(--primary-background) text-(--primary-text) flex min-h-screen flex-col">
-          <Header role="admin" />
+          <Header role="guest" />
           <main className="flex-1 max-w-7xl mx-auto px-4">{children}</main>
           <Footer />
         </div>

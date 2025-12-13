@@ -3,15 +3,23 @@ import LayoutPage from '@/layoutPage';
 import FormFieldGroup from '@/components/common/FormFieldGroup';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { validateEmail, validatePassword } from '@/hooks/authorization';
 import type { AuthorizationProps } from '@/types/authorization';
 import { AUTHORIZATION } from '@/fixtures/authorization.fixture';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '@/api/slices/authSlice';
+import type { AppDispatch, RootState } from '@/api/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { validateLoginForm } from '@/hooks/authorization';
 
 const LoginPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.login.header,
   link = AUTHORIZATION.login.link,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const { loading } = useSelector((state: RootState) => state.auth);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,26 +27,25 @@ const LoginPage: React.FC<AuthorizationProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!validateEmail(formData.email)) {
-      newErrors.email = 'Incorrect email';
-    }
-
-    if (!validatePassword(formData.password)) {
-      newErrors.password = 'Incorrect password';
-    }
-
-    setErrors(newErrors);
-    return Object.values(newErrors).length === 0;
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
-    event?.preventDefault();
+    event.preventDefault();
 
-    if (!validateForm()) return;
+    const validationErrors = validateLoginForm(formData);
+    setErrors(validationErrors);
 
-    console.log(true);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    try {
+      await dispatch(
+        login({
+          email: formData.email,
+          password: formData.password,
+        })
+      ).unwrap();
+      navigate('/home');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -53,6 +60,8 @@ const LoginPage: React.FC<AuthorizationProps> = ({
           <p className="mt-2">{header.text}</p>
         </div>
         <form onSubmit={handleSubmit} className="grid gap-1">
+          {loading && <p>Loading</p>}
+
           <FormFieldGroup
             type="text"
             placeholder="Enter your email"
@@ -71,8 +80,13 @@ const LoginPage: React.FC<AuthorizationProps> = ({
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password}</p>
           )}
-          <Button type="submit" variant="orange" className="w-full mt-4">
-            Submit
+          <Button
+            type="submit"
+            variant="orange"
+            className="w-full mt-4"
+            disabled={loading}
+          >
+            {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </form>
         <p className="text-center text-sm">

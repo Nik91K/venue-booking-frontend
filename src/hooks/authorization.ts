@@ -19,3 +19,47 @@ export function validatePassword(data: string): boolean {
 export function validateEmail(data: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data);
 }
+
+export const validateLoginForm = (formData: {
+  email: string;
+  password: string;
+}) => {
+  const newErrors: Record<string, string> = {};
+
+  if (!validateEmail(formData.email)) {
+    newErrors.email = 'Incorrect email';
+  }
+
+  if (!validatePassword(formData.password)) {
+    newErrors.password = 'Incorrect password';
+  }
+
+  return newErrors;
+};
+
+export const validateRegistrationForm = (formData: {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}) => {
+  const newErrors: Record<string, string> = {};
+
+  if (!validateUsername(formData.username)) {
+    newErrors.username = 'Incorrect username';
+  }
+
+  if (!validateEmail(formData.email)) {
+    newErrors.email = 'Incorrect email';
+  }
+
+  if (!validatePassword(formData.password)) {
+    newErrors.password = 'Incorrect password';
+  }
+
+  if (formData.password !== formData.confirmPassword) {
+    newErrors.confirmPassword = 'Passwords do not match';
+  }
+
+  return newErrors;
+};

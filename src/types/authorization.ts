@@ -10,6 +10,6 @@ type link = {
 };
 
 export type AuthorizationProps = {
-  header: header;
-  link: link;
+  header?: header;
+  link?: link;
 };
