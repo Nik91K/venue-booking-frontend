@@ -21,23 +21,19 @@ import { USER_DATA } from '@/fixtures/user.fixture';
 import type { Role } from '@/types/common';
 import { ChevronUp, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Avatar from 'boring-avatars';
 import { Link } from 'react-router-dom';
 import DropdownMenuSitebar from '../common/DropwnMenu';
+import { USER_MENU } from '@/fixtures/sidebar.fixture';
+import { userAvatar } from '@/hooks/userAvatar';
+import { useAppSelector } from '@/api/hooks';
 
 type AppSidebarProps = {
   role?: Role;
+  username?: string;
 };
 
-const AVATAR_COLORS = {
-  user: ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'],
-  moderator: ['#023e8a', '#0077b6', '#0096c7', '#00b4d8', '#48cae4'],
-  admin: ['#7209b7', '#560bad', '#480ca8', '#3a0ca3', '#3f37c9'],
-  superAdmin: ['#d00000', '#dc2f02', '#e85d04', '#f48c06', '#faa307'],
-  guest: ['#94a3b8', '#64748b', '#475569', '#334155', '#1e293b'],
-};
-
-export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
+export function AppSidebar({ username = 'user' }: AppSidebarProps) {
+  const role = useAppSelector(state => state.role.role);
   const sidebarConfig = SIDEBAR[role];
   const userData = USER_DATA[role];
 
@@ -77,11 +73,10 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
                     <div className="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-muted">
-                      <Avatar
-                        size={32}
-                        name={userData.name}
-                        variant="beam"
-                        colors={AVATAR_COLORS[role] || AVATAR_COLORS.guest}
+                      <img
+                        src={userAvatar(username)}
+                        alt="user avatar"
+                        className="w-13 h-13 rounded-full cursor-pointer"
                       />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
@@ -104,11 +99,10 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <div className="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-muted">
-                        <Avatar
-                          size={32}
-                          name={userData.name}
-                          variant="beam"
-                          colors={AVATAR_COLORS[role] || AVATAR_COLORS.guest}
+                        <img
+                          src={userAvatar(username)}
+                          alt="user avatar"
+                          className="w-13 h-13 rounded-full cursor-pointer"
                         />
                       </div>
                       <div className="grid flex-1 text-left text-sm leading-tight">
@@ -122,7 +116,8 @@ export function AppSidebar({ role = 'guest' }: AppSidebarProps) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuSitebar />
+                  <DropdownMenuSitebar items={USER_MENU} />
+                  <Button className="w-full">Logout</Button>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (

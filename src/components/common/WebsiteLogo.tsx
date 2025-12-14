@@ -9,7 +9,7 @@ const WebsiteLogo: React.FC<WebsiteLogoProps> = ({
 }) => {
   return (
     <Link to={imageLink || '/'}>
-      <img src={image} alt={imageTitle} className="rounded-full w-15 h-15" />
+      <img src={image} alt={imageTitle} className="rounded-full w-13 h-13" />
     </Link>
   );
 };

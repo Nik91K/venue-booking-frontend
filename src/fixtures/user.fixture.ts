@@ -1,27 +1,27 @@
 import type { Role } from '@/types/common';
-import type { UserData } from '@/types/user';
+import type { UserType } from '@/types/user';
 
-export const USER_DATA: Record<Role, UserData | null> = {
-  guest: null,
-  user: {
+export const USER_DATA: Record<Role, UserType | null> = {
+  GUEST: null,
+  USER: {
     name: 'John Doe',
     email: 'john.doe@example.com',
-    role: 'user',
+    role: 'USER',
   },
-  moderator: {
+  MODERATOR: {
     name: 'Jane Smith',
     email: 'jane.smith@example.com',
     avatar: 'https://placehold.co/50x50',
-    role: 'moderator',
+    role: 'MODERATOR',
   },
-  admin: {
+  OWNER: {
     name: 'Michael Johnson',
     email: 'michael.j@example.com',
-    role: 'admin',
+    role: 'OWNER',
   },
-  superAdmin: {
+  SUBER_ADMIN: {
     name: 'Sarah Williams',
     email: 'sarah.w@example.com',
-    role: 'superAdmin',
+    role: 'SUBER_ADMIN',
   },
 };

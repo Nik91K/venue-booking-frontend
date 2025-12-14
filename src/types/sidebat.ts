@@ -9,14 +9,10 @@ export type SidebarSection = {
   }>;
 };
 
-type MenuItem = {
+export type UserMenuItems = {
   icon: LucideIcon;
   label: string;
-  onClick?: () => void;
-  variant?: 'default' | 'destructive';
+  path: string;
 };
 
-export type MenuSection = {
-  items?: MenuItem[];
-  separator?: boolean;
-};
+export type MenuSection = UserMenuItems[];
