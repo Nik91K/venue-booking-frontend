@@ -1,7 +1,6 @@
 import React from 'react';
 import { HEADER } from '@/fixtures/header.fixture';
 import type { HeaderConfig } from '@/types/header';
-import type { Role } from '@/types/common';
 import { Link } from 'react-router-dom';
 import WebsiteLogo from '../common/WebsiteLogo';
 import { SidebarTrigger } from '@/components/ui/sidebar';
@@ -16,16 +15,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { USER_MENU } from '@/fixtures/sidebar.fixture';
 import DropdownMenuItems from '../common/DropwnMenu';
+import { useAppSelector } from '@/api/hooks';
 
 type HeaderProps = {
-  role?: Role;
   username?: string;
 };
 
-const Header: React.FC<HeaderProps> = ({
-  role = 'GUEST',
-  username = 'user',
-}) => {
+const Header: React.FC<HeaderProps> = ({ username = 'user' }) => {
+  const role = useAppSelector(state => state.role.role);
   const config: HeaderConfig = HEADER[role];
 
   return (

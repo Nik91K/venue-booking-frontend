@@ -25,16 +25,15 @@ import { Link } from 'react-router-dom';
 import DropdownMenuSitebar from '../common/DropwnMenu';
 import { USER_MENU } from '@/fixtures/sidebar.fixture';
 import { userAvatar } from '@/hooks/userAvatar';
+import { useAppSelector } from '@/api/hooks';
 
 type AppSidebarProps = {
   role?: Role;
   username?: string;
 };
 
-export function AppSidebar({
-  role = 'GUEST',
-  username = 'user',
-}: AppSidebarProps) {
+export function AppSidebar({ username = 'user' }: AppSidebarProps) {
+  const role = useAppSelector(state => state.role.role);
   const sidebarConfig = SIDEBAR[role];
   const userData = USER_DATA[role];
 
