@@ -32,7 +32,7 @@ const Footer: React.FC<FooterProps> = ({
         </ul>
       </div>
       <div>
-        <Button title="Register" variant="secondary" size="lg">
+        <Button title="Register" variant="secondary" size="lg" asChild>
           <Link to="/register">Register</Link>
         </Button>
       </div>

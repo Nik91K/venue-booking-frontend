@@ -3,18 +3,29 @@ import {
   DropdownMenuSeparator,
 } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
-import { SIDEBAR_MENU } from '@/fixtures/sidebar.fixture';
-import type { MenuSection } from '@/types/sidebat';
+import { Link } from 'react-router-dom';
+import type { UserMenuItems } from '@/types/sidebat';
 
-const DropdownMenuSitebar: React.FC<MenuSection> = ({
-  items = SIDEBAR_MENU.items,
+type DropdownMenuSidebarProps = {
+  separator?: boolean;
+  items: UserMenuItems[];
+};
+
+const DropdownMenuItems: React.FC<DropdownMenuSidebarProps> = ({
   separator = false,
+  items,
 }) => {
   return (
     <>
-      {items.map((items, index) => (
-        <DropdownMenuItem key={index}>
-          <span>{items.label}</span>
+      {items.map(item => (
+        <DropdownMenuItem key={item.path} asChild>
+          <Link
+            to={item.path}
+            className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            {item.icon && <item.icon />}
+            <span>{item.label}</span>
+          </Link>
         </DropdownMenuItem>
       ))}
       {separator && <DropdownMenuSeparator />}
@@ -22,4 +33,4 @@ const DropdownMenuSitebar: React.FC<MenuSection> = ({
   );
 };
 
-export default DropdownMenuSitebar;
+export default DropdownMenuItems;

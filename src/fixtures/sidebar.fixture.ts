@@ -1,9 +1,9 @@
 import type { Role } from '@/types/common';
-import type { SidebarSection } from '@/types/sidebat';
-import { UserCircle, CreditCard, Settings } from 'lucide-react';
+import type { MenuSection, SidebarSection } from '@/types/sidebat';
+import { CreditCard, Settings } from 'lucide-react';
 
 export const SIDEBAR: Record<Role, SidebarSection[]> = {
-  guest: [
+  GUEST: [
     {
       label: 'Explore',
       items: [
@@ -19,7 +19,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
   ],
-  user: [
+  USER: [
     {
       label: 'Reservations',
       items: [
@@ -38,7 +38,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
   ],
-  moderator: [
+  MODERATOR: [
     {
       label: 'Dashboard',
       items: [{ title: 'Overview', path: '/dashboard', icon: 'Home' }],
@@ -66,7 +66,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
   ],
-  admin: [
+  OWNER: [
     {
       label: 'Dashboard',
       items: [
@@ -97,7 +97,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
   ],
-  superAdmin: [
+  SUBER_ADMIN: [
     {
       label: 'Dashboard',
       items: [
@@ -134,10 +134,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
 
 export type SidebarConfig = typeof SIDEBAR;
 
-export const SIDEBAR_MENU = {
-  items: [
-    { icon: UserCircle, label: 'Profile', onClick: undefined },
-    { icon: CreditCard, label: 'Billing', onClick: undefined },
-    { icon: Settings, label: 'Settings', onClick: undefined },
-  ],
-};
+export const USER_MENU: MenuSection = [
+  { icon: CreditCard, label: 'Billing', path: '/billing' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
+];

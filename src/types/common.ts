@@ -9,7 +9,7 @@ export type WebsiteLogoProps = {
   imageLink?: string;
 };
 
-export type Role = 'guest' | 'user' | 'moderator' | 'admin' | 'superAdmin';
+export type Role = 'GUEST' | 'USER' | 'MODERATOR' | 'OWNER' | 'SUBER_ADMIN';
 
 export type InputType =
   | 'text'
