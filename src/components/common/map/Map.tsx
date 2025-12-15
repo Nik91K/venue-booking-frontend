@@ -1,5 +1,5 @@
 import { Map } from '@vis.gl/react-google-maps';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 type MapProps = {
   center?: { lat: number; lng: number };
@@ -8,14 +8,37 @@ type MapProps = {
 };
 
 const MapComponent: React.FC<MapProps> = ({
-  center = { lat: 40.7128, lng: -74.006 }, // Default center (New York)
+  center = { lat: 40.7128, lng: -74.006 },
   zoom = 12,
   children,
 }) => {
+  const defaultCenter = center;
+
+  const [userCenter, setUserCenter] = useState(defaultCenter);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.warn('Geolocation not supported');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setUserCenter({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      () => {
+        setUserCenter(center);
+      }
+    );
+  }, [center]);
+
   return (
     <Map
-      tyle={{ width: '100%', height: '100%' }}
-      defaultCenter={center}
+      style={{ width: '100%', height: '100%' }}
+      defaultCenter={userCenter}
       defaultZoom={zoom}
       gestureHandling="greedy"
       disableDefaultUI={false}
