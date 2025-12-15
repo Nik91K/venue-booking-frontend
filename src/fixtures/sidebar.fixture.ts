@@ -8,7 +8,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       label: 'Explore',
       items: [
         { title: 'Home', path: '/', icon: 'Home' },
-        { title: 'Browse Services', path: '/services', icon: 'Search' },
+        { title: 'Browse Services', path: '/explore', icon: 'Search' },
       ],
     },
     {
@@ -20,6 +20,13 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
     },
   ],
   USER: [
+    {
+      label: 'Explore',
+      items: [
+        { title: 'Home', path: '/', icon: 'Home' },
+        { title: 'Browse Services', path: '/explore', icon: 'Search' },
+      ],
+    },
     {
       label: 'Reservations',
       items: [
