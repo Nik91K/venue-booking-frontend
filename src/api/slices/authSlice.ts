@@ -27,7 +27,13 @@ const SLICE_URL = '/auth';
 export const register = createAsyncThunk(
   'auth/register',
   async (
-    userData: { name: string; email: string; password: string; role: string },
+    userData: {
+      name: string;
+      phone: string;
+      email: string;
+      password: string;
+      role: string;
+    },
     { rejectWithValue }
   ) => {
     try {

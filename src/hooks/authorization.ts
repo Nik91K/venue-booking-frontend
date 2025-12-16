@@ -20,6 +20,10 @@ export function validateEmail(data: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data);
 }
 
+export function validatePhone(data: string): boolean {
+  return /^\+380\d{9}$/.test(data);
+}
+
 export const validateLoginForm = (formData: {
   email: string;
   password: string;
@@ -39,6 +43,7 @@ export const validateLoginForm = (formData: {
 
 export const validateRegistrationForm = (formData: {
   username: string;
+  phone: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -47,6 +52,10 @@ export const validateRegistrationForm = (formData: {
 
   if (!validateUsername(formData.username)) {
     newErrors.username = 'Incorrect username';
+  }
+
+  if (!validatePhone(formData.phone)) {
+    newErrors.phone = 'Incorrect phone number';
   }
 
   if (!validateEmail(formData.email)) {

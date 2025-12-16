@@ -12,7 +12,7 @@ export const AUTHORIZATION = {
   },
   login: {
     header: {
-      title: 'Sign in',
+      title: 'Welcome back',
       text: 'Sign up to get started',
     },
     link: {

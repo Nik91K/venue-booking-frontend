@@ -54,44 +54,47 @@ const LoginPage: React.FC<AuthorizationProps> = ({
 
   return (
     <LayoutPage>
-      <div className="flex items-center flex-col min-h-screen py-4">
-        <div className="text-center">
+      <div className="flex flex-col items-center p-6 bg-(--primary-background-light) rounded-md max-w-md mx-auto">
+        <div className="text-center mb-6">
           <h2 className="text-2xl font-bold">{header.title}</h2>
-          <p className="mt-2">{header.text}</p>
+          <p className="mt-2 text-gray-500">{header.text}</p>
         </div>
-        <form onSubmit={handleSubmit} className="grid gap-1">
-          {loading && <p>Loading</p>}
-
-          <FormFieldGroup
-            type="text"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={value => handleChange('email', value)}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email}</p>
-          )}
-          <FormFieldGroup
-            type="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={value => handleChange('password', value)}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password}</p>
-          )}
+        <form onSubmit={handleSubmit} className="w-full grid gap-4">
+          {loading && <p className="text-center text-gray-500">Loading...</p>}
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="text"
+              placeholder="m@example.com"
+              value={formData.email}
+              onChange={value => handleChange('email', value)}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={value => handleChange('password', value)}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+          </div>
           <Button
             type="submit"
             variant="orange"
-            className="w-full mt-4"
+            className="w-full mt-2 py-2"
             disabled={loading}
           >
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </form>
-        <p className="text-center text-sm">
-          {link.text}{' '}
-          <Link to={link.href} className="link">
+        <p className="text-center text-sm mt-6">
+          {link.text}
+          <Link to={link.href} className="link font-medium">
             {link.linkText}
           </Link>
         </p>

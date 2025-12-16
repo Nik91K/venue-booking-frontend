@@ -2,7 +2,7 @@ import React from 'react';
 import LayoutPage from '@/layoutPage';
 import FormFieldGroup from '@/components/common/FormFieldGroup';
 import { Button } from '@/components/ui/button';
-import { MailIcon, KeyRound, User } from 'lucide-react';
+import { MailIcon, KeyRound, User, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { AuthorizationProps } from '@/types/authorization';
@@ -23,6 +23,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
 
   const [formData, setFormData] = useState({
     username: '',
+    phone: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -40,6 +41,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
       await dispatch(
         register({
           name: formData.username,
+          phone: formData.phone,
           email: formData.email,
           password: formData.password,
           role: 'USER',
@@ -57,52 +59,73 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
 
   return (
     <LayoutPage>
-      <div className="flex items-center flex-col min-h-screen py-4">
-        <div className="text-center">
+      <div className="flex flex-col items-center p-6 bg-(--primary-background-light) rounded-md max-w-md mx-auto">
+        <div className="text-center mb-6">
           <h2 className="text-2xl font-bold">{header.title}</h2>
-          <p className="mt-2">{header.text}</p>
+          <p className="mt-2 text-gray-500">{header.text}</p>
         </div>
-        <form onSubmit={handleSubmit} className="grid gap-1">
-          <FormFieldGroup
-            type="text"
-            placeholder="Enter your username"
-            value={formData.username}
-            onChange={value => handleChange('username', value)}
-            icon={<User />}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm">{errors.username}</p>
-          )}
-          <FormFieldGroup
-            type="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={value => handleChange('email', value)}
-            icon={<MailIcon />}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email}</p>
-          )}
-          <FormFieldGroup
-            type="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={value => handleChange('password', value)}
-            icon={<KeyRound />}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password}</p>
-          )}
-          <FormFieldGroup
-            type="password"
-            placeholder="Repeat password"
-            value={formData.confirmPassword}
-            onChange={value => handleChange('confirmPassword', value)}
-            icon={<KeyRound />}
-          />
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-          )}
+        <form onSubmit={handleSubmit} className="w-full grid gap-4">
+          {loading && <p className="text-center text-gray-500">Loading...</p>}
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="text"
+              placeholder="Enter your username"
+              value={formData.username}
+              onChange={value => handleChange('username', value)}
+              icon={<User />}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.username}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="text"
+              placeholder="+380680000000"
+              value={formData.phone}
+              onChange={value => handleChange('phone', value)}
+              icon={<Phone />}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.phone}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={value => handleChange('email', value)}
+              icon={<MailIcon />}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={value => handleChange('password', value)}
+              icon={<KeyRound />}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <FormFieldGroup
+              type="password"
+              placeholder="Repeat password"
+              value={formData.confirmPassword}
+              onChange={value => handleChange('confirmPassword', value)}
+              icon={<KeyRound />}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+            )}
+          </div>
           <Button
             type="submit"
             variant="orange"

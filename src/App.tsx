@@ -8,7 +8,7 @@ import type { MainPageListProps } from './types/mainPageText';
 function App() {
   return (
     <LayoutPage>
-      <div className="flex min-h-svh flex-col items-center">
+      <div className="flex flex-col items-center">
         <TextComponent
           title={TEXT_COMPONENTS.top.title}
           text={TEXT_COMPONENTS.top.text}
