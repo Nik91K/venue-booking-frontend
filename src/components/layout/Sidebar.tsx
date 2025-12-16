@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
 } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
@@ -18,7 +19,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SIDEBAR } from '@/fixtures/sidebar.fixture';
 import { USER_DATA } from '@/fixtures/user.fixture';
-import type { Role } from '@/types/common';
 import { ChevronUp, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,6 @@ import { userAvatar } from '@/hooks/userAvatar';
 import { useAppSelector } from '@/api/hooks';
 
 type AppSidebarProps = {
-  role?: Role;
   username?: string;
 };
 
@@ -39,6 +38,20 @@ export function AppSidebar({ username = 'user' }: AppSidebarProps) {
 
   return (
     <Sidebar side="left" className="text-(--primary-text)">
+      {!userData && (
+        <SidebarHeader className="bg-(--primary-background-light) text-(--primary-text)">
+          <Button
+            variant="secondary"
+            className="px-1 py-1.5 w-full justify-start gap-2"
+            asChild
+          >
+            <Link to="/login">
+              <LogIn className="size-4" />
+              <span>Log In</span>
+            </Link>
+          </Button>
+        </SidebarHeader>
+      )}
       <SidebarContent className="bg-(--primary-background-light) text-(--primary-text)">
         {sidebarConfig.map(section => (
           <SidebarGroup key={section.label}>
@@ -62,10 +75,10 @@ export function AppSidebar({ username = 'user' }: AppSidebarProps) {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="bg-(--primary-background-light) border-t">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            {userData ? (
+      {userData && (
+        <SidebarFooter className="bg-(--primary-background-light) border-t">
+          <SidebarMenu>
+            <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
@@ -120,21 +133,10 @@ export function AppSidebar({ username = 'user' }: AppSidebarProps) {
                   <Button className="w-full">Logout</Button>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <Button
-                variant="secondary"
-                className="w-full justify-start gap-2"
-                asChild
-              >
-                <Link to="/login">
-                  <LogIn className="size-4" />
-                  <span>Log In</span>
-                </Link>
-              </Button>
-            )}
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
