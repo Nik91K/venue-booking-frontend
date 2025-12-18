@@ -17,7 +17,7 @@ const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
   };
 
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white">
+    <div className="max-w-2xs rounded-lg overflow-hidden shadow-lg bg-white">
       <div className="relative w-full h-48 overflow-hidden bg-gray-200">
         <img
           src={establishment.image}
