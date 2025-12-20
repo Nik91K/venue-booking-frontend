@@ -41,15 +41,15 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
       await dispatch(
         register({
           name: formData.username,
-          phone: formData.phone,
+          phoneNumber: formData.phone,
           email: formData.email,
           password: formData.password,
           role: 'USER',
         })
       ).unwrap();
       navigate('/home');
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.error);
     }
   };
 

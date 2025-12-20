@@ -24,17 +24,25 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import DropdownMenuSitebar from '../common/DropwnMenu';
 import { USER_MENU } from '@/fixtures/sidebar.fixture';
-import { userAvatar } from '@/hooks/userAvatar';
-import { useAppSelector } from '@/api/hooks';
+import type { Role } from '@/types/common';
+import { logout } from '@/api/slices/authSlice';
+import { useAppDispatch } from '@/api/hooks';
 
 type AppSidebarProps = {
-  username?: string;
+  username: string;
+  role: Role;
+  avatar: string;
+  email: string;
 };
 
-export function AppSidebar({ username = 'user' }: AppSidebarProps) {
-  const role = useAppSelector(state => state.role.role);
+export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
   const sidebarConfig = SIDEBAR[role];
   const userData = USER_DATA[role];
+
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <Sidebar side="left" className="text-(--primary-text)">
@@ -87,17 +95,15 @@ export function AppSidebar({ username = 'user' }: AppSidebarProps) {
                   >
                     <div className="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-muted">
                       <img
-                        src={userAvatar(username)}
+                        src={avatar}
                         alt="user avatar"
                         className="w-13 h-13 rounded-full cursor-pointer"
                       />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {userData.name}
-                      </span>
+                      <span className="truncate font-semibold">{username}</span>
                       <span className="truncate text-xs text-muted-foreground">
-                        {userData.email}
+                        {email}
                       </span>
                     </div>
                     <ChevronUp className="ml-auto size-4" />
@@ -113,24 +119,26 @@ export function AppSidebar({ username = 'user' }: AppSidebarProps) {
                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                       <div className="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-muted">
                         <img
-                          src={userAvatar(username)}
+                          src={avatar}
                           alt="user avatar"
                           className="w-13 h-13 rounded-full cursor-pointer"
                         />
                       </div>
                       <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">
-                          {userData.name}
+                          {username}
                         </span>
                         <span className="truncate text-xs text-muted-foreground">
-                          {userData.email}
+                          {email}
                         </span>
                       </div>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuSitebar items={USER_MENU} />
-                  <Button className="w-full">Logout</Button>
+                  <Button className="w-full" onClick={handleLogout}>
+                    Logout
+                  </Button>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>

@@ -24,12 +24,16 @@ const initialState: AuthState = {
 const API_URL = import.meta.env.VITE_API_URL;
 const SLICE_URL = '/auth';
 
+if (!API_URL) {
+  throw new Error('VITE_API_URL is not defined');
+}
+
 export const register = createAsyncThunk(
   'auth/register',
   async (
     userData: {
       name: string;
-      phone: string;
+      phoneNumber: string;
       email: string;
       password: string;
       role: string;
@@ -73,7 +77,25 @@ export const refreshAccessToken = createAsyncThunk<
 >('auth/refresh', async (_, { getState, rejectWithValue }) => {
   try {
     const { refreshToken } = getState().auth;
-    const response = await axios.post(`${API_URL}/refresh`, { refreshToken });
+    const response = await axios.post(`${API_URL}${SLICE_URL}/refresh`, {
+      refreshToken,
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const getCurrentUser = createAsyncThunk<
+  UserType,
+  void,
+  { state: RootState }
+>('auth/me', async (_, { getState, rejectWithValue }) => {
+  try {
+    const { accessToken } = getState().auth;
+    const response = await axios.get(`${API_URL}${SLICE_URL}/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
@@ -86,7 +108,7 @@ export const logout = createAsyncThunk<void, void, { state: RootState }>(
     try {
       const { accessToken } = getState().auth;
       await axios.post(
-        `${API_URL}/logout`,
+        `${API_URL}${SLICE_URL}/logout`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -154,6 +176,22 @@ const authSlice = createSlice({
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+      })
+
+      .addCase(getCurrentUser.pending, state => {
+        state.loading = true;
+      })
+
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+
+      .addCase(getCurrentUser.rejected, state => {
+        state.loading = false;
+        state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
       })
 
       .addCase(logout.fulfilled, state => {

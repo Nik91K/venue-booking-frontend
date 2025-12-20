@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import WebsiteLogo from '../common/WebsiteLogo';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
-import { userAvatar } from '@/hooks/userAvatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +14,24 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { USER_MENU } from '@/fixtures/sidebar.fixture';
 import DropdownMenuItems from '../common/DropwnMenu';
-import { useAppSelector } from '@/api/hooks';
+import type { Role } from '@/types/common';
+import { logout } from '@/api/slices/authSlice';
+import { useAppDispatch } from '@/api/hooks';
 
 type HeaderProps = {
-  username?: string;
+  username: string;
+  role: Role;
+  avatar: string;
+  email: string;
 };
 
-const Header: React.FC<HeaderProps> = ({ username = 'user' }) => {
-  const role = useAppSelector(state => state.role.role);
+const Header: React.FC<HeaderProps> = ({ username, role, avatar, email }) => {
   const config: HeaderConfig = HEADER[role];
+
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <header
@@ -46,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ username = 'user' }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <img
-                src={userAvatar(username)}
+                src={avatar}
                 alt="user avatar"
                 className="w-13 h-13 rounded-full cursor-pointer"
               />
@@ -59,19 +67,21 @@ const Header: React.FC<HeaderProps> = ({ username = 'user' }) => {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <div className="h-8 w-8 rounded-lg overflow-hidden flex items-center justify-center bg-muted">
-                    <img src={userAvatar(username)} alt="user avatar" />
+                    <img src={avatar} alt="user avatar" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">name</span>
+                    <span className="truncate font-semibold">{username}</span>
                     <span className="truncate text-xs text-muted-foreground">
-                      email
+                      {email}
                     </span>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItems items={USER_MENU} />
-              <Button className="w-full">Logout</Button>
+              <Button className="w-full" onClick={handleLogout}>
+                Logout
+              </Button>
             </DropdownMenuContent>
           </DropdownMenu>
         )}

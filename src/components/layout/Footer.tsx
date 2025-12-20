@@ -10,6 +10,7 @@ const Footer: React.FC<FooterProps> = ({
   imageTitle = FOOTER.imageTitle,
   imageLink = FOOTER.imageLink,
   quickLinks = FOOTER.quickLinks,
+  role,
 }) => {
   return (
     <footer className="flex justify-around items-center border-t p-2">
@@ -32,9 +33,13 @@ const Footer: React.FC<FooterProps> = ({
         </ul>
       </div>
       <div>
-        <Button title="Register" variant="secondary" size="lg" asChild>
-          <Link to="/register">Register</Link>
-        </Button>
+        {role == 'GUEST' ? (
+          <Button title="Register" variant="secondary" size="lg" asChild>
+            <Link to="/register">Register</Link>
+          </Button>
+        ) : (
+          <Link to={'/settings'}>Settings</Link>
+        )}
       </div>
     </footer>
   );

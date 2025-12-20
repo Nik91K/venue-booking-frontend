@@ -21,7 +21,7 @@ export function validateEmail(data: string): boolean {
 }
 
 export function validatePhone(data: string): boolean {
-  return /^\+380\d{9}$/.test(data);
+  return /^\+380\d{9}$/.test(data.trim());
 }
 
 export const validateLoginForm = (formData: {

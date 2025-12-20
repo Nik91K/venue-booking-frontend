@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { store } from './store';
+import { refreshAccessToken } from './slices/authSlice';
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -21,3 +22,23 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+instance.interceptors.response.use(
+  response => response,
+  async error => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        await store.dispatch(refreshAccessToken());
+        return instance(originalRequest);
+      } catch {
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default instance;
