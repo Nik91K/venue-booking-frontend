@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SIDEBAR } from '@/fixtures/sidebar.fixture';
-import { USER_DATA } from '@/fixtures/user.fixture';
 import { ChevronUp, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -37,7 +36,6 @@ type AppSidebarProps = {
 
 export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
   const sidebarConfig = SIDEBAR[role];
-  const userData = USER_DATA[role];
 
   const dispatch = useAppDispatch();
   const handleLogout = () => {
@@ -46,7 +44,7 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
 
   return (
     <Sidebar side="left" className="text-(--primary-text)">
-      {!userData && (
+      {role == 'GUEST' && (
         <SidebarHeader className="bg-(--primary-background-light) text-(--primary-text)">
           <Button
             variant="secondary"
@@ -83,7 +81,7 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
         ))}
       </SidebarContent>
 
-      {userData && (
+      {role !== 'GUEST' && (
         <SidebarFooter className="bg-(--primary-background-light) border-t">
           <SidebarMenu>
             <SidebarMenuItem>

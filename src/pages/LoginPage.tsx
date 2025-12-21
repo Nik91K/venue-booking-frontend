@@ -42,7 +42,7 @@ const LoginPage: React.FC<AuthorizationProps> = ({
           password: formData.password,
         })
       ).unwrap();
-      navigate('/home');
+      navigate('/explore');
     } catch (error) {
       console.log(error);
     }

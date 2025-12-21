@@ -47,7 +47,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
           role: 'USER',
         })
       ).unwrap();
-      navigate('/home');
+      navigate('/explore');
     } catch (error: any) {
       console.log(error.error);
     }
