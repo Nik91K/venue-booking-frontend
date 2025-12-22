@@ -8,42 +8,52 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 
-const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 },
-];
+type ChartData = Record<string, string | number>;
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: '#2563eb',
-  },
-  mobile: {
-    label: 'Mobile',
-    color: '#60a5fa',
-  },
-} satisfies ChartConfig;
+type BarChartProps = {
+  data: ChartData[];
+  config: ChartConfig;
+  dataKeys: string[];
+  xAxisKey: string;
+  xAxisFormat?: (value: string) => string;
+  className?: string;
+  showGrid?: boolean;
+  showLegent?: boolean;
+  showTooltip?: boolean;
+};
 
-export function BarChartComponent() {
+export function BarChartComponent({
+  data,
+  config,
+  dataKeys,
+  xAxisKey,
+  xAxisFormat,
+  className = 'min-h-50 w-full',
+  showGrid = true,
+  showLegent = true,
+  showTooltip = true,
+}: BarChartProps) {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
+    <ChartContainer config={config} className={className}>
+      <BarChart accessibilityLayer data={data}>
+        {showGrid && <CartesianGrid vertical={false} />}
         <XAxis
-          dataKey="month"
+          dataKey={xAxisKey}
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={value => value.slice(0, 3)}
+          tickFormatter={xAxisFormat}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        {showLegent && <ChartLegend content={<ChartLegendContent />} />}
+        {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+        {dataKeys.map(key => (
+          <Bar
+            key={key}
+            dataKey={key}
+            fill={config[key]?.color || 'oklch(0.769 0.188 70.08)'}
+            radius={4}
+          />
+        ))}
       </BarChart>
     </ChartContainer>
   );

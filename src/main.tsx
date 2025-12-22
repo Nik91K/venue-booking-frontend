@@ -3,11 +3,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './api/store.ts';
 import './index.css';
+import ProtectedRoute from './guards/ProtectedRoute.tsx';
 import App from './App.tsx';
 import RegisterPage from './pages/RegisterPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import VenuesMapPage from './pages/VenuesMapPage.tsx';
-import AdminPage from './pages/AdminPage.tsx';
+import AdminDashboard from './pages/admin/AdminDashboard.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -17,7 +18,13 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/explore" element={<VenuesMapPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/admin"
+          element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </Provider>
