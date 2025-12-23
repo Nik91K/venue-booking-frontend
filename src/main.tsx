@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import VenuesMapPage from './pages/VenuesMapPage.tsx';
 import AdminDashboard from './pages/admin/AdminDashboard.tsx';
+import AdminUsersPage from './pages/admin/UserManagement.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
         >
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="user" element={<AdminUsersPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -109,6 +109,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       label: 'Dashboard',
       items: [
         { title: 'Admin Dashboard', path: '/admin/dashboard', icon: 'Home' },
+        { title: 'User Dashboard', path: '/admin/user', icon: 'User' },
       ],
     },
   ],

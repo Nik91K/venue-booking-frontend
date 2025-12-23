@@ -149,7 +149,7 @@ const AdminDashboard = () => {
                 dataKeys={['bookings']}
                 xAxisKey="time"
                 xAxisFormat={value => value.slice(0, 5)}
-                className="h-[300px]"
+                className="h-75"
               />
             </CardContent>
           </Card>
@@ -168,7 +168,7 @@ const AdminDashboard = () => {
                 dataKeys={['bookings']}
                 xAxisKey="day"
                 xAxisFormat={value => value.slice(0, 3)}
-                className="h-[300px]"
+                className="h-75"
               />
             </CardContent>
           </Card>
@@ -188,7 +188,7 @@ const AdminDashboard = () => {
               dataKeys={['completed', 'cancelled', 'noShow', 'pending']}
               xAxisKey="month"
               xAxisFormat={value => value.slice(0, 3)}
-              className="h-[400px] w-full"
+              className="h-100 w-full"
             />
           </CardContent>
         </Card>
@@ -204,7 +204,7 @@ const AdminDashboard = () => {
               config={dailyBookingsConfig}
               dataKeys={['bookings']}
               xAxisKey="day"
-              className="h-[300px] w-full"
+              className="h-75 w-full"
             />
           </CardContent>
         </Card>
