@@ -79,7 +79,11 @@ const Header: React.FC<HeaderProps> = ({ username, role, avatar, email }) => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItems items={USER_MENU} />
-              <Button className="w-full" onClick={handleLogout}>
+              <Button
+                className="w-full"
+                onClick={handleLogout}
+                variant={'secondary'}
+              >
                 Logout
               </Button>
             </DropdownMenuContent>

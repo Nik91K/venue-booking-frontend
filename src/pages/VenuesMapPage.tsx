@@ -31,7 +31,7 @@ const VenuesMapPage = () => {
                 </InputGroupAddon>
                 <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
               </InputGroup>
-              <Button className="cursor-pointer" variant={'default'}>
+              <Button className="cursor-pointer" variant={'secondary'}>
                 <Heart color="#f66151" />
               </Button>
             </div>

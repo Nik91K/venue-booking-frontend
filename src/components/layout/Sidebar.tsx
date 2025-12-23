@@ -134,7 +134,11 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuSitebar items={USER_MENU} />
-                  <Button className="w-full" onClick={handleLogout}>
+                  <Button
+                    className="w-full"
+                    onClick={handleLogout}
+                    variant={'secondary'}
+                  >
                     Logout
                   </Button>
                 </DropdownMenuContent>

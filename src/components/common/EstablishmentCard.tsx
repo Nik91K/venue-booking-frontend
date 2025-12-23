@@ -32,9 +32,7 @@ const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
             <h2 className="text-xl text-(--secondary-color) line-clamp-1">
               {establishment.title}
             </h2>
-            <Badge variant="secondary" className="whitespace-nowrap">
-              {establishment.type}
-            </Badge>
+            <Badge className="whitespace-nowrap">{establishment.type}</Badge>
           </div>
 
           <div className="flex items-center justify-between text-sm text-gray-600">
@@ -51,11 +49,7 @@ const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
             {establishment.features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="flex items-center gap-1"
-                >
+                <Badge key={index} className="flex items-center gap-1">
                   <Icon size={14} />
                   <span className="text-xs">{feature.title}</span>
                 </Badge>

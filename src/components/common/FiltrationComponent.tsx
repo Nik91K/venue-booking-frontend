@@ -38,12 +38,7 @@ const FiltrationComponent = () => {
           <h2 className="text-lg font-semibold">Filters</h2>
         </div>
         {hasActiveFilters && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleReset}
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
+          <Button size="sm" onClick={handleReset}>
             <X className="h-4 w-4 mr-1" />
             Clear all
           </Button>
