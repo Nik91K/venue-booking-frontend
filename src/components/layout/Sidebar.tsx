@@ -26,6 +26,7 @@ import { USER_MENU } from '@/fixtures/sidebar.fixture';
 import type { Role } from '@/types/common';
 import { logout } from '@/api/slices/authSlice';
 import { useAppDispatch } from '@/api/hooks';
+import { SIDEBAR_FOOTER } from '@/fixtures/sidebar.fixture';
 
 type AppSidebarProps = {
   username: string;
@@ -36,6 +37,7 @@ type AppSidebarProps = {
 
 export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
   const sidebarConfig = SIDEBAR[role];
+  const footer = SIDEBAR_FOOTER;
 
   const dispatch = useAppDispatch();
   const handleLogout = () => {
@@ -70,6 +72,7 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <Link to={item.path}>
+                        {item.icon && <item.icon />}
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -85,6 +88,16 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
         <SidebarFooter className="bg-(--primary-background-light) border-t">
           <SidebarMenu>
             <SidebarMenuItem>
+              <div className="flex flex-col justify-center items-cnter">
+                {footer.map(item => (
+                  <SidebarMenuButton asChild>
+                    <Link to={item.path}>
+                      {item.icon && <item.icon />}
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                ))}
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
@@ -109,7 +122,7 @@ export function AppSidebar({ username, role, avatar, email }: AppSidebarProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                  side="top"
+                  side="right"
                   align="end"
                   sideOffset={4}
                 >

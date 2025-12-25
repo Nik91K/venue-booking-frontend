@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ username, role, avatar, email }) => {
       className={`flex items-center gap-4 p-4 border-b justify-around sticky top-0 ${config.backgroundColor || 'bg-(--primary-background)'} text-(--primary-text) z-10`}
     >
       <div className="flex items-center gap-4">
-        <SidebarTrigger size="lg" />
+        <SidebarTrigger size="lg" className="cursor-pointer" />
         <WebsiteLogo
           image={config.image}
           imageLink={config.imageLink}

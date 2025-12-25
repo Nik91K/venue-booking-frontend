@@ -11,6 +11,7 @@ import { register } from '@/api/slices/authSlice';
 import type { AppDispatch, RootState } from '@/api/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateRegistrationForm } from '@/hooks/authorization';
+import { Card } from '@/components/ui/card';
 
 const RegisterPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.registration.header,
@@ -59,7 +60,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
 
   return (
     <LayoutPage>
-      <div className="flex flex-col items-center p-6 bg-(--primary-background-light) rounded-md max-w-md mx-auto">
+      <Card className="p-6 my-10">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold">{header.title}</h2>
           <p className="mt-2 text-gray-500">{header.text}</p>
@@ -141,7 +142,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
             {link.linkText}
           </Link>
         </p>
-      </div>
+      </Card>
     </LayoutPage>
   );
 };

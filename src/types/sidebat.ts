@@ -5,7 +5,7 @@ export type SidebarSection = {
   items: Array<{
     title: string;
     path: string;
-    icon: string;
+    icon: LucideIcon;
   }>;
 };
 
