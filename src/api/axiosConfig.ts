@@ -4,7 +4,7 @@ import { refreshAccessToken } from './slices/authSlice';
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 instance.interceptors.request.use(
@@ -31,10 +31,15 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await store.dispatch(refreshAccessToken());
+        await store.dispatch(refreshAccessToken()).unwrap();
+        const newAccessToken = store.getState().auth.accessToken;
+
+        if (newAccessToken) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
         return instance(originalRequest);
-      } catch {
-        return Promise.reject(error);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);

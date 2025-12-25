@@ -21,7 +21,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/admin"
-          element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}
+          element={<ProtectedRoute allowedRoles={['SUBER_ADMIN']} />}
         >
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />

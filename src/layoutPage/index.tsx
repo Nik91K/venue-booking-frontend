@@ -1,13 +1,24 @@
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppSidebar from '@/components/layout/Sidebar';
 import { Spinner } from '@/components/ui/spinner';
-import { useAppSelector } from '@/api/hooks';
+import { useAppSelector, useAppDispatch } from '@/api/hooks';
+import { getCurrentUser } from '@/api/slices/authSlice';
 
 const LayoutPage = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, error } = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+  const { user, loading, error, accessToken } = useAppSelector(
+    state => state.auth
+  );
+
+  useEffect(() => {
+    if (accessToken && !user && !loading) {
+      dispatch(getCurrentUser());
+    }
+  }, [accessToken, user, loading, dispatch]);
+
   if (loading) return <Spinner />;
   if (error) return <p>{error}</p>;
 
