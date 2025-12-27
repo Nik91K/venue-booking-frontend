@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapIcon } from 'lucide-react';
-import type { EstablishmentCard as EstablishmentCardType } from '@/types/establishmentCard';
+import type { EstablishmentType as EstablishmentCardType } from '@/types/establishmentCard';
 
 interface EstablishmentCardProps {
   establishment: EstablishmentCardType;

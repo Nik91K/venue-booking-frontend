@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-export type EstablishmentCard = {
+export type EstablishmentType = {
   image: string;
   title: string;
   type: string;
@@ -8,6 +8,7 @@ export type EstablishmentCard = {
   locationDetails: LocationDetails;
   workingHours: Date;
   features: Features[];
+  comments: CommentType[];
   rating: number;
   reviews: number;
 };
@@ -20,6 +21,14 @@ export type LocationDetails = {
 };
 
 type Features = {
+  id: number;
   icon: LucideIcon;
   title: string;
 };
+
+export interface CommentType {
+  id: number;
+  userId: number;
+  text: string;
+  createdAt: string;
+}
