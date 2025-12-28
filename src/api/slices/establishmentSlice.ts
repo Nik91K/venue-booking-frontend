@@ -7,13 +7,15 @@ import type { EstablishmentType } from '@/types/establishmentCard';
 import axios from 'axios';
 
 interface EstablishmentState {
-  establishment: EstablishmentType | null;
+  establishments: EstablishmentType[];
+  selectedEstablishment: EstablishmentType | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: EstablishmentState = {
-  establishment: null,
+  establishments: [],
+  selectedEstablishment: null,
   loading: false,
   error: null,
 };
@@ -26,7 +28,7 @@ if (!API_URL) {
 }
 
 export const createEstablishment = createAsyncThunk(
-  '/establishment',
+  'establishment/create',
   async (
     establishmentData: {
       name: string;
@@ -50,8 +52,8 @@ export const createEstablishment = createAsyncThunk(
   }
 );
 
-export const getAllEstablishment = createAsyncThunk(
-  '/establishment',
+export const getAllEstablishments = createAsyncThunk(
+  'establishment/getAll',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}${SLICE_URL}`);
@@ -63,7 +65,7 @@ export const getAllEstablishment = createAsyncThunk(
 );
 
 export const getEstablishmentById = createAsyncThunk(
-  '/establishment/id',
+  'establishment/id',
   async (id: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}${SLICE_URL}/${id}`);
@@ -106,7 +108,7 @@ export const getEstablishmentComments = createAsyncThunk(
   async (id: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}${SLICE_URL}/${id}/comments`);
-      return response.data;
+      return { id, comments: response.data };
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
     }
@@ -116,14 +118,14 @@ export const getEstablishmentComments = createAsyncThunk(
 export const addFeatureToEstablishment = createAsyncThunk(
   'establishment/addFeature',
   async (
-    { id, featureId }: { id: number; featureId: string },
+    { id, featureId }: { id: number; featureId: number },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `${API_URL}${SLICE_URL}/${id}/features/${featureId}`
       );
-      return response.data;
+      return { id, feature: response.data };
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
     }
@@ -149,8 +151,12 @@ const establishmentSlice = createSlice({
   name: 'establishment',
   initialState,
   reducers: {
-    clearEstablishment(state) {
-      state.establishment = null;
+    clearEstablishments(state) {
+      state.establishments = [];
+      state.error = null;
+    },
+    clearSelectedEstablishment(state) {
+      state.selectedEstablishment = null;
       state.error = null;
     },
   },
@@ -164,10 +170,25 @@ const establishmentSlice = createSlice({
         createEstablishment.fulfilled,
         (state, action: PayloadAction<EstablishmentType>) => {
           state.loading = false;
-          state.establishment = action.payload;
+          state.establishments.push(action.payload);
         }
       )
       .addCase(createEstablishment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(getAllEstablishments.pending, state => {
+        state.loading = false;
+      })
+      .addCase(
+        getAllEstablishments.fulfilled,
+        (state, action: PayloadAction<EstablishmentType[]>) => {
+          state.loading = false;
+          state.establishments = action.payload;
+        }
+      )
+      .addCase(getAllEstablishments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
@@ -180,7 +201,7 @@ const establishmentSlice = createSlice({
         getEstablishmentById.fulfilled,
         (state, action: PayloadAction<EstablishmentType>) => {
           state.loading = false;
-          state.establishment = action.payload;
+          state.selectedEstablishment = action.payload;
         }
       )
       .addCase(getEstablishmentById.rejected, (state, action) => {
@@ -191,48 +212,112 @@ const establishmentSlice = createSlice({
       .addCase(
         updateEstablishment.fulfilled,
         (state, action: PayloadAction<EstablishmentType>) => {
-          state.establishment = action.payload;
+          state.loading = false;
+
+          const index = state.establishments.findIndex(
+            est => est.id === action.payload.id
+          );
+
+          if (index !== -1) {
+            state.establishments[index] = action.payload;
+          }
+
+          if (state.selectedEstablishment?.id === action.payload.id) {
+            state.selectedEstablishment = action.payload;
+          }
         }
       )
       .addCase(updateEstablishment.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       })
 
       .addCase(deleteEstablishment.pending, state => {
+        state.error = null;
         state.loading = true;
       })
-      .addCase(deleteEstablishment.fulfilled, state => {
-        state.loading = false;
-        state.establishment = null;
-      })
+      .addCase(
+        deleteEstablishment.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.loading = false;
+          state.establishments = state.establishments.filter(
+            establishment => establishment.id !== action.payload
+          );
+
+          if (state.selectedEstablishment?.id === action.payload) {
+            state.selectedEstablishment = null;
+          }
+        }
+      )
       .addCase(deleteEstablishment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
 
+      .addCase(getEstablishmentComments.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(getEstablishmentComments.fulfilled, (state, action) => {
-        if (state.establishment) {
-          state.establishment.comments = action.payload;
+        state.loading = false;
+        if (state.selectedEstablishment?.id === action.payload.id) {
+          state.selectedEstablishment.comments = action.payload.comments;
+        }
+        const index = state.establishments.findIndex(
+          est => est.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.establishments[index].comments = action.payload.comments;
         }
       })
       .addCase(getEstablishmentComments.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       })
 
+      .addCase(addFeatureToEstablishment.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(addFeatureToEstablishment.fulfilled, (state, action) => {
-        if (state.establishment) {
-          state.establishment.features.push(action.payload);
+        state.loading = false;
+        if (state.selectedEstablishment?.id === action.payload.id) {
+          state.selectedEstablishment.features.push(action.payload.feature);
+        }
+
+        const index = state.establishments.findIndex(
+          est => est.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.loading = false;
+          state.establishments[index].features.push(action.payload.feature);
         }
       })
       .addCase(addFeatureToEstablishment.rejected, (state, action) => {
         state.error = action.payload as string;
       })
 
+      .addCase(removeFeatureFromEstablishment.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(removeFeatureFromEstablishment.fulfilled, (state, action) => {
-        if (state.establishment) {
-          state.establishment.features = state.establishment.features.filter(
-            feature => feature.id !== action.payload.featureId
-          );
+        state.loading = false;
+
+        if (state.selectedEstablishment?.id === action.payload.id) {
+          state.selectedEstablishment.features =
+            state.selectedEstablishment.features.filter(
+              feature => feature.id !== action.payload.featureId
+            );
+        }
+
+        const index = state.establishments.findIndex(
+          est => est.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.establishments[index].features = state.establishments[
+            index
+          ].features.filter(feature => feature.id !== action.payload.featureId);
         }
       })
       .addCase(removeFeatureFromEstablishment.rejected, (state, action) => {
@@ -241,5 +326,5 @@ const establishmentSlice = createSlice({
   },
 });
 
-export const { clearEstablishment } = establishmentSlice.actions;
+export const { clearEstablishments } = establishmentSlice.actions;
 export default establishmentSlice.reducer;

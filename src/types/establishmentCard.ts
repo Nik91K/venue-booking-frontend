@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 
 export type EstablishmentType = {
+  id: number;
   image: string;
   title: string;
   type: string;
