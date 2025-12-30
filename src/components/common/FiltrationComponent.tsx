@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { X, SlidersHorizontal } from 'lucide-react';
 
@@ -32,7 +31,7 @@ const FiltrationComponent = () => {
 
   return (
     <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between min-h-[40px]">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-5 w-5" />
           <h2 className="text-lg font-semibold">Filters</h2>
@@ -43,23 +42,6 @@ const FiltrationComponent = () => {
             Clear all
           </Button>
         )}
-      </div>
-
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">Price Range</Label>
-        <div className="space-y-2">
-          <Slider
-            value={priceRange}
-            onValueChange={setPriceRange}
-            max={100}
-            step={5}
-            className="w-full"
-          />
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}</span>
-          </div>
-        </div>
       </div>
 
       <div className="space-y-3">

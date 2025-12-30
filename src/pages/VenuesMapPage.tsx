@@ -3,7 +3,6 @@ import MapComponent from '@/components/common/map/Map';
 import MapProvider from '@/components/common/map/MapProvider';
 import EstablishmentCard from '@/components/common/EstablishmentCard';
 import FiltrationComponent from '@/components/common/FiltrationComponent';
-import { ESTABLISHMENT_CARD } from '@/fixtures/establishmentCard.fixture';
 import { Button } from '@/components/ui/button';
 import { Heart, Search } from 'lucide-react';
 import {
@@ -11,38 +10,75 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
+import { getAllEstablishments } from '@/api/slices/establishmentSlice';
+import { useAppSelector, useAppDispatch } from '@/api/hooks';
+import { useEffect } from 'react';
 
 const VenuesMapPage = () => {
+  const dispatch = useAppDispatch();
+  const { loading, establishments, error } = useAppSelector(
+    state => state.establishment
+  );
+
+  useEffect(() => {
+    if (establishments.length === 0 && !loading) {
+      dispatch(getAllEstablishments());
+    }
+  }, [establishments, loading, dispatch]);
+
   return (
     <LayoutPage>
-      <div>
+      <div className="flex flex-col h-full">
         <MapProvider>
-          <div className="w-full h-96">
+          <div className="w-full h-64 md:h-80 lg:h-96">
             <MapComponent />
           </div>
         </MapProvider>
-        <div className="flex justify-around">
-          <div>
-            <div className="flex items-center justify-around m-2 gap-2">
-              <InputGroup>
-                <InputGroupInput placeholder="Search..." />
+        <div className="flex flex-col lg:flex-row gap-4 p-4 ">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-4">
+              <InputGroup className="flex-1">
+                <InputGroupInput placeholder="Search venues..." />
                 <InputGroupAddon>
-                  <Search />
+                  <Search className="w-4 h-4" />
                 </InputGroupAddon>
-                <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+                <InputGroupAddon align="inline-end">
+                  {establishments.length} results
+                </InputGroupAddon>
               </InputGroup>
-              <Button className="cursor-pointer" variant={'secondary'}>
-                <Heart color="#f66151" />
+              <Button variant="secondary" size="icon">
+                <Heart className="w-5 h-5" color="#f66151" />
               </Button>
             </div>
-            <div className="grid grid-cols-3 gap-4 m-2">
-              {ESTABLISHMENT_CARD.map(establishment => (
-                <EstablishmentCard establishment={establishment} />
-              ))}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {loading ? (
+                <div className="col-span-full flex justify-center items-center py-12">
+                  <Spinner />
+                </div>
+              ) : error ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-red-500">{error}</p>
+                </div>
+              ) : establishments.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-gray-500">No establishments found</p>
+                </div>
+              ) : (
+                establishments.map(establishment => (
+                  <EstablishmentCard
+                    key={establishment.id}
+                    establishment={establishment}
+                  />
+                ))
+              )}
             </div>
           </div>
-          <div>
-            <FiltrationComponent />
+          <div className="lg:w-80 xl:w-96 flex-shrink-0">
+            <div className="sticky top-4">
+              <FiltrationComponent />
+            </div>
           </div>
         </div>
       </div>

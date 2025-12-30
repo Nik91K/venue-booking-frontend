@@ -2,10 +2,12 @@ import type { LucideIcon } from 'lucide-react';
 
 export type EstablishmentType = {
   id: number;
-  image: string;
-  title: string;
+  name: string;
+  description: string;
+  coverPhoto: string;
+  images: string[];
   type: string;
-  location: string;
+  address: string;
   locationDetails: LocationDetails;
   workingHours: Date;
   features: Features[];
@@ -29,7 +31,7 @@ type Features = {
 
 export interface CommentType {
   id: number;
-  userId: number;
   text: string;
+  rating: number;
   createdAt: string;
 }

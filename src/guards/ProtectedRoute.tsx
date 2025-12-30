@@ -10,7 +10,7 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  redirectTo = '/login',
+  redirectTo = '/',
   allowedRoles = [],
 }) => {
   const dispatch = useAppDispatch();
