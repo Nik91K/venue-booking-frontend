@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LayoutPage from '@/layoutPage';
 import MapComponent from '@/components/common/map/Map';
 import MapProvider from '@/components/common/map/MapProvider';
@@ -13,19 +15,27 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { getAllEstablishments } from '@/api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
-import { useEffect } from 'react';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { loading, establishments, error } = useAppSelector(
     state => state.establishment
   );
+  const { user } = useAppSelector(state => state.auth);
+
+  const userRole = user?.role || 'GUEST';
 
   useEffect(() => {
-    if (establishments.length === 0 && !loading) {
+    if (establishments.length === 0) {
       dispatch(getAllEstablishments());
     }
-  }, [establishments, loading, dispatch]);
+  }, [dispatch]);
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   return (
     <LayoutPage>
@@ -35,7 +45,7 @@ const VenuesMapPage = () => {
             <MapComponent />
           </div>
         </MapProvider>
-        <div className="flex flex-col lg:flex-row gap-4 p-4 ">
+        <div className="flex flex-col lg:flex-row gap-4 p-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-4">
               <InputGroup className="flex-1">
@@ -70,12 +80,14 @@ const VenuesMapPage = () => {
                   <EstablishmentCard
                     key={establishment.id}
                     establishment={establishment}
+                    role={userRole}
+                    onLogin={handleLogin}
                   />
                 ))
               )}
             </div>
           </div>
-          <div className="lg:w-80 xl:w-96 flex-shrink-0">
+          <div className="lg:w-80 xl:w-96 shrink-0">
             <div className="sticky top-4">
               <FiltrationComponent />
             </div>

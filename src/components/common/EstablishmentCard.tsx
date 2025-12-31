@@ -1,15 +1,35 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, Clock, Heart } from 'lucide-react';
 import type { EstablishmentType as EstablishmentCardType } from '@/types/establishmentCard';
-import { useState } from 'react';
+import type { Role } from '@/types/common';
+import UniversalAlertDialog from './AlertDialog';
 
 interface EstablishmentCardProps {
   establishment: EstablishmentCardType;
+  role: Role;
+  onLogin?: () => void;
 }
 
-const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
+const EstablishmentCard = ({
+  establishment,
+  role,
+  onLogin,
+}: EstablishmentCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleBooking = () => {
+    console.log('Booking confirmed for', establishment.name);
+  };
+
+  const handleLogin = () => {
+    if (onLogin) {
+      onLogin();
+    } else {
+      window.location.href = '/login';
+    }
+  };
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
@@ -46,11 +66,11 @@ const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
 
           <div className="flex flex-col gap-2 text-sm text-gray-600">
             <div className="flex items-start gap-1">
-              <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
               <p className="line-clamp-2 flex-1">{establishment.address}</p>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4 flex-shrink-0" />
+              <Clock className="w-4 h-4 shrink-0" />
               <p className="text-xs">Open now • Closes at 10:00 PM</p>
             </div>
           </div>
@@ -89,9 +109,25 @@ const EstablishmentCard = ({ establishment }: EstablishmentCardProps) => {
               </span>
             </div>
           </div>
-          <Button variant="orange" size="sm" className="font-medium">
-            Book Now
-          </Button>
+
+          {role === 'GUEST' ? (
+            <UniversalAlertDialog
+              triggerText="Book Now"
+              title="Login Required"
+              description="You need to be logged in to make a reservation. Please log in or create an account to continue."
+              actionText="Go to Login"
+              onAction={handleLogin}
+            />
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="font-medium"
+              onClick={handleBooking}
+            >
+              Book Now
+            </Button>
+          )}
         </div>
       </div>
     </div>
