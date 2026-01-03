@@ -1,16 +1,17 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, Clock, Heart } from 'lucide-react';
-import type { EstablishmentType as EstablishmentCardType } from '@/types/establishmentCard';
+import type { EstablishmentType } from '@/types/establishmentCard';
 import type { Role } from '@/types/common';
-import UniversalAlertDialog from './AlertDialog';
+import AlertDialogConponent from './AlertDialog';
 
-interface EstablishmentCardProps {
-  establishment: EstablishmentCardType;
+type EstablishmentCardProps = {
+  establishment: EstablishmentType;
   role: Role;
   onLogin?: () => void;
-}
+};
 
 const EstablishmentCard = ({
   establishment,
@@ -19,7 +20,9 @@ const EstablishmentCard = ({
 }: EstablishmentCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleBooking = () => {
+  const handleBooking = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Booking confirmed for', establishment.name);
   };
 
@@ -31,12 +34,17 @@ const EstablishmentCard = ({
     }
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
   };
 
   return (
-    <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white flex flex-col h-full">
+    <Link
+      to={`/establishment/${establishment.id}`}
+      className="block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white flex-col h-full"
+    >
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 group">
         <img
           src={establishment.coverPhoto}
@@ -111,13 +119,15 @@ const EstablishmentCard = ({
           </div>
 
           {role === 'GUEST' ? (
-            <UniversalAlertDialog
-              triggerText="Book Now"
-              title="Login Required"
-              description="You need to be logged in to make a reservation. Please log in or create an account to continue."
-              actionText="Go to Login"
-              onAction={handleLogin}
-            />
+            <div onClick={e => e.preventDefault()}>
+              <AlertDialogConponent
+                triggerText="Book Now"
+                title="Login Required"
+                description="You need to be logged in to make a reservation. Please log in or create an account to continue."
+                actionText="Go to Login"
+                onAction={handleLogin}
+              />
+            </div>
           ) : (
             <Button
               variant="secondary"
@@ -130,7 +140,7 @@ const EstablishmentCard = ({
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

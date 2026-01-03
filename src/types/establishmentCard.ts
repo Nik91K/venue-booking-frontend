@@ -34,4 +34,6 @@ export interface CommentType {
   text: string;
   rating: number;
   createdAt: string;
+  establishmentId: number;
+  userId: number;
 }

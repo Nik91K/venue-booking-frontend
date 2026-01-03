@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage.tsx';
 import VenuesMapPage from './pages/VenuesMapPage.tsx';
 import AdminDashboard from './pages/admin/AdminDashboard.tsx';
 import AdminUsersPage from './pages/admin/UserManagement.tsx';
+import EstablishmentPage from './pages/VenuePage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/explore" element={<VenuesMapPage />} />
+        <Route path="/establishment/:id" element={<EstablishmentPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
