@@ -4,16 +4,21 @@ export type EstablishmentType = {
   id: number;
   name: string;
   description: string;
+  totalSeats: number;
   coverPhoto: string;
-  images: string[];
-  type: string;
+  createdAt: string;
+  photos: string[];
+  type: {
+    id: number;
+    name: string;
+    image: string;
+  };
   address: string;
-  locationDetails: LocationDetails;
-  workingHours: Date;
+  locationDetails?: LocationDetails;
+  workingHours?: string;
   features: Features[];
   comments: CommentType[];
-  rating: number;
-  reviews: number;
+  ownerId: number;
 };
 
 export type LocationDetails = {
@@ -29,11 +34,11 @@ type Features = {
   title: string;
 };
 
-export interface CommentType {
+export type CommentType = {
   id: number;
   text: string;
   rating: number;
   createdAt: string;
   establishmentId: number;
   userId: number;
-}
+};

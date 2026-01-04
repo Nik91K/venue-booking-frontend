@@ -6,6 +6,7 @@ import { Star, MapPin, Clock, Heart } from 'lucide-react';
 import type { EstablishmentType } from '@/types/establishmentCard';
 import type { Role } from '@/types/common';
 import AlertDialogConponent from './AlertDialog';
+import { Skeleton } from '../ui/skeleton';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
@@ -19,6 +20,7 @@ const EstablishmentCard = ({
   onLogin,
 }: EstablishmentCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleBooking = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,10 +48,14 @@ const EstablishmentCard = ({
       className="block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white flex-col h-full"
     >
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 group">
+        {!imageLoaded && (
+          <Skeleton className="absolute inset-0 w-full h-full" />
+        )}
         <img
           src={establishment.coverPhoto}
           alt={establishment.name}
           className="w-full h-full object-cover transition-transform"
+          onLoad={() => setImageLoaded(true)}
         />
         <button
           onClick={toggleFavorite}
@@ -109,12 +115,8 @@ const EstablishmentCard = ({
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-1">
               <Star size={16} className="fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold text-gray-900">
-                {establishment.rating}
-              </span>
-              <span className="text-xs text-gray-500">
-                ({establishment.reviews})
-              </span>
+              <span className="font-semibold text-gray-900">rating</span>
+              <span className="text-xs text-gray-500">(5)</span>
             </div>
           </div>
 
