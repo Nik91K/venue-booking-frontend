@@ -10,14 +10,17 @@ import {
 import { ArrowUpIcon, MessageCircle, Star } from 'lucide-react';
 import { useState } from 'react';
 
-const CommentForm = ({ id }: { id: number }) => {
-  const dispatch = useAppDispatch();
+type CommentFormProps = {
+  establishmentId: number;
+};
 
+const CommentForm = ({ establishmentId }: CommentFormProps) => {
+  const dispatch = useAppDispatch();
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     text: '',
-    rating: 5,
+    rating: 0,
   });
-  const [hoverRating, setHoverRating] = useState(0);
 
   const handleRatingClick = (value: number) => {
     setFormData(prev => ({ ...prev, rating: value }));
@@ -29,15 +32,26 @@ const CommentForm = ({ id }: { id: number }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError(null);
+    if (formData.rating < 1) {
+      setError('Select rating');
+      return;
+    }
+
+    if (formData.text.trim().length < 10) {
+      setError('Enter more than 10 characters');
+      return;
+    }
 
     try {
       await dispatch(
         createComment({
           text: formData.text,
           rating: formData.rating,
-          establishmentId: Number(id),
+          establishmentId: Number(establishmentId),
         })
       ).unwrap();
+      setFormData({ text: '', rating: 0 });
     } catch (error) {
       console.log(error);
     }
@@ -53,13 +67,11 @@ const CommentForm = ({ id }: { id: number }) => {
             {[1, 2, 3, 4, 5].map(star => (
               <Star
                 key={star}
-                className={`w-6 h-6 cursor-pointer text-gray-300 ${
-                  (hoverRating || formData.rating) >= star
+                className={`w-4 h-4 cursor-pointer text-gray-300 ${
+                  formData.rating >= star
                     ? 'text-yellow-300 fill-amber-300'
                     : 'text-gray-300'
                 }`}
-                onMouseEnter={() => setHoverRating(star)}
-                onMouseLeave={() => setHoverRating(0)}
                 onClick={() => handleRatingClick(star)}
               />
             ))}
@@ -88,6 +100,7 @@ const CommentForm = ({ id }: { id: number }) => {
             </InputGroupAddon>
           </InputGroup>
         </div>
+        {error && <p className="text-sm text-destructive">{error}</p>}
       </Card>
     </form>
   );

@@ -172,8 +172,8 @@ const EstablishmentPage = () => {
             </div>
           </div>
         </div>
-        <CommentForm id={Number(id)} />
-        <CommentComponent id={Number(id)} />
+        <CommentForm establishmentId={Number(id)} />
+        <CommentComponent establishment={selectedEstablishment} />
       </div>
     </LayoutPage>
   );

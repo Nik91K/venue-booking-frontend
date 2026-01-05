@@ -1,74 +1,74 @@
 import { useAppDispatch, useAppSelector } from '@/api/hooks';
-import {
-  getEstablishmentById,
-  getEstablishmentComments,
-} from '@/api/slices/establishmentSlice';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import LayoutPage from '@/layoutPage';
-import { Star } from 'lucide-react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { getUserById } from '@/api/slices/authSlice';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { EstablishmentType } from '@/types/establishmentCard';
 
-const CommentComponent = ({ id }: { id: number }) => {
+type CommentProps = {
+  establishment: EstablishmentType;
+};
+
+const CommentComponent = ({ establishment }: CommentProps) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { selectedEstablishment, error } = useAppSelector(
-    state => state.establishment
-  );
-  const establishment = selectedEstablishment;
+
+  const { selectedUser } = useAppSelector(state => state.auth);
+
   useEffect(() => {
-    if (!id) return;
-
-    if (!selectedEstablishment || selectedEstablishment.id !== id) {
-      dispatch(getEstablishmentById(Number(id)));
-      dispatch(getEstablishmentComments(Number(id)));
+    if (establishment?.comments.length) {
+      establishment?.comments.forEach(comment => {
+        if (!selectedUser[comment.userId]) {
+          dispatch(getUserById(comment.userId));
+        }
+      });
     }
-  }, [id, dispatch]);
-
-  if (error || !establishment) {
-    return (
-      <LayoutPage>
-        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-          <p className="text-lg">Establishment not found</p>
-          <Button onClick={() => navigate('/explore')}>
-            Back to Establishments
-          </Button>
-        </div>
-      </LayoutPage>
-    );
-  }
+  }, [establishment?.comments, selectedUser, dispatch]);
 
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">{`${establishment.comments.length} Reviews`}</h2>
-      {establishment.comments.map(comment => (
-        <Card key={comment.id} className="p-6">
-          <div className="flex gap-4">
-            <div className="shrink-0">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center font-semibold">
-                avatar
-              </div>
-            </div>
+      {establishment.comments?.map(comment => {
+        const user = selectedUser[comment.userId];
+        return (
+          <Card className="p-6">
+            <div className="flex gap-4">
+              <Avatar className="w-10 h-10">
+                <AvatarImage src={user?.avatarUrl} />
+                <AvatarFallback>
+                  <Skeleton className="w-full h-full rounded-full" />
+                </AvatarFallback>
+              </Avatar>
 
-            <div className="flex-1">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="font-semibold">username</h3>
-                  <p className="text-xs text-gray-500">{establishment.name}</p>
+              <div className="flex-1 space-y-2">
+                <div className="flex justify-between">
+                  {user ? (
+                    <h3 className="font-semibold">{user.name}</h3>
+                  ) : (
+                    <Skeleton className="h-4 w-24" />
+                  )}
+
+                  {comment ? (
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
+                    </span>
+                  ) : (
+                    <Skeleton className="h-3 w-20" />
+                  )}
                 </div>
-                <span className="text-sm text-gray-500">
-                  {comment.createdAt}
-                </span>
+
+                <div className="space-y-2">
+                  {comment ? (
+                    <p className="text-sm leading-relaxed">{comment.text}</p>
+                  ) : (
+                    <Skeleton className="h-4 w-full" />
+                  )}
+                </div>
               </div>
-              <div className="flex gap-1 mb-3">
-                <Star />
-              </div>
-              <p className="text-gray-300 leading-relaxed">{comment.text}</p>
             </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        );
+      })}
     </div>
   );
 };

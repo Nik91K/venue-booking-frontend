@@ -5,7 +5,7 @@ import type { RootState } from '../store';
 
 interface AuthState {
   user: UserType | null;
-  selectedUser: UserType | null;
+  selectedUser: Record<number, UserType>;
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
@@ -14,7 +14,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  selectedUser: null,
+  selectedUser: {},
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
   loading: false,
@@ -124,7 +124,7 @@ export const getUserById = createAsyncThunk(
   'auth/getUserById',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}/${id}`);
+      const response = await axios.get(`${API_URL}${SLICE_URL}/users/${id}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -138,6 +138,9 @@ const authSlice = createSlice({
   reducers: {
     clearUser: state => {
       state.user = null;
+    },
+    clearSelectedUsers: state => {
+      state.selectedUser = {};
     },
   },
   extraReducers: builder => {
@@ -211,6 +214,7 @@ const authSlice = createSlice({
 
       .addCase(logout.fulfilled, state => {
         state.user = null;
+        state.selectedUser = {};
         state.accessToken = null;
         state.refreshToken = null;
         localStorage.removeItem('accessToken');
@@ -223,7 +227,7 @@ const authSlice = createSlice({
       })
       .addCase(getUserById.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.selectedUser[action.payload.id] = action.payload;
       })
       .addCase(getUserById.rejected, state => {
         state.loading = false;
@@ -231,5 +235,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearUser } = authSlice.actions;
+export const { clearUser, clearSelectedUsers } = authSlice.actions;
 export default authSlice.reducer;
