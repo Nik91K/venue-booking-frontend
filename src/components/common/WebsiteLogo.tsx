@@ -1,6 +1,8 @@
 import type { WebsiteLogoProps } from '@/types/common';
 import { Link } from 'react-router-dom';
 import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const WebsiteLogo: React.FC<WebsiteLogoProps> = ({
   image,
@@ -9,7 +11,12 @@ const WebsiteLogo: React.FC<WebsiteLogoProps> = ({
 }) => {
   return (
     <Link to={imageLink || '/'}>
-      <img src={image} alt={imageTitle} className="rounded-full w-13 h-13" />
+      <Avatar className="w-10 h-10">
+        <AvatarImage src={image} alt={imageTitle} />
+        <AvatarFallback className="p-0">
+          <Skeleton className="w-full h-full rounded-full" />
+        </AvatarFallback>
+      </Avatar>
     </Link>
   );
 };
