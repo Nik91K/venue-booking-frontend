@@ -11,6 +11,8 @@ import { ArrowLeft, Clock, Heart, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CarouselComponent } from '@/components/common/CarouselComponent';
+import CommentForm from '@/components/common/comment/CommentForm';
+import CommentComponent from '@/components/common/comment/CommentComponent';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,8 +24,8 @@ const EstablishmentPage = () => {
     state => state.establishment
   );
   const { user } = useAppSelector(state => state.auth);
-  const userRole = user?.role || 'GUEST';
 
+  const userRole = user?.role || 'GUEST';
   const establishment = selectedEstablishment;
 
   useEffect(() => {
@@ -70,7 +72,7 @@ const EstablishmentPage = () => {
 
   return (
     <LayoutPage>
-      <div className="py-6 px-4 sm:px-6 lg:px-8 space-y-6 max-w-7xl mx-auto">
+      <div className="py-6 px-4 sm:px-6 lg:px-8 space-y-6">
         <Button
           variant="secondary"
           size="sm"
@@ -170,6 +172,8 @@ const EstablishmentPage = () => {
             </div>
           </div>
         </div>
+        <CommentForm id={Number(id)} />
+        <CommentComponent id={Number(id)} />
       </div>
     </LayoutPage>
   );
