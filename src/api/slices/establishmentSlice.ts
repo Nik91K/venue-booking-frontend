@@ -11,6 +11,13 @@ interface EstablishmentState {
   selectedEstablishment: EstablishmentType | null;
   loading: boolean;
   error: string | null;
+  page: number;
+  take: number;
+  order: 'ASC' | 'DESC';
+  pageCount: number;
+  itemCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }
 
 const initialState: EstablishmentState = {
@@ -18,6 +25,19 @@ const initialState: EstablishmentState = {
   selectedEstablishment: null,
   loading: false,
   error: null,
+  page: 1,
+  take: 9,
+  order: 'ASC',
+  pageCount: 0,
+  itemCount: 0,
+  hasPreviousPage: false,
+  hasNextPage: false,
+};
+
+type GetAllEstablishmentsParams = {
+  page?: number;
+  take?: number;
+  order?: 'ASC' | 'DESC';
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -54,9 +74,14 @@ export const createEstablishment = createAsyncThunk(
 
 export const getAllEstablishments = createAsyncThunk(
   'establishment/getAll',
-  async (_, { rejectWithValue }) => {
+  async (
+    { page = 1, take = 10, order = 'ASC' }: GetAllEstablishmentsParams,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}`);
+      const response = await axios.get(`${API_URL}${SLICE_URL}`, {
+        params: { page, take, order },
+      });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -159,6 +184,12 @@ const establishmentSlice = createSlice({
       state.selectedEstablishment = null;
       state.error = null;
     },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+    },
+    setTake: (state, action: PayloadAction<number>) => {
+      state.take = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -179,13 +210,32 @@ const establishmentSlice = createSlice({
       })
 
       .addCase(getAllEstablishments.pending, state => {
-        state.loading = false;
+        state.loading = true;
       })
       .addCase(
         getAllEstablishments.fulfilled,
-        (state, action: PayloadAction<EstablishmentType[]>) => {
+        (
+          state,
+          action: PayloadAction<{
+            data: EstablishmentType[];
+            meta: {
+              page: number;
+              take: number;
+              itemCount: number;
+              pageCount: number;
+              hasPreviousPage: boolean;
+              hasNextPage: boolean;
+            };
+          }>
+        ) => {
           state.loading = false;
-          state.establishments = action.payload;
+          state.establishments = action.payload.data;
+          state.page = action.payload.meta.page;
+          state.take = action.payload.meta.take;
+          state.itemCount = action.payload.meta.itemCount;
+          state.pageCount = action.payload.meta.pageCount;
+          state.hasPreviousPage = action.payload.meta.hasPreviousPage;
+          state.hasNextPage = action.payload.meta.hasNextPage;
         }
       )
       .addCase(getAllEstablishments.rejected, (state, action) => {

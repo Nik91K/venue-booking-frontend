@@ -15,23 +15,33 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { getAllEstablishments } from '@/api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
+import PaginationComponent from '@/components/common/PaginationComponent';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { loading, establishments, error } = useAppSelector(
-    state => state.establishment
-  );
+  const {
+    loading,
+    establishments,
+    error,
+    page,
+    take,
+    hasNextPage,
+    hasPreviousPage,
+    pageCount,
+  } = useAppSelector(state => state.establishment);
   const { user } = useAppSelector(state => state.auth);
 
   const userRole = user?.role || 'GUEST';
 
   useEffect(() => {
-    if (establishments.length === 0) {
-      dispatch(getAllEstablishments());
-    }
-  }, [dispatch]);
+    dispatch(getAllEstablishments({ page, take }));
+  }, [page, take, dispatch]);
+
+  const handlePageChange = (newPage: number) => {
+    dispatch({ type: 'establishment/setPage', payload: newPage });
+  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -86,6 +96,15 @@ const VenuesMapPage = () => {
                 ))
               )}
             </div>
+            {!loading && establishments.length > 0 && (
+              <PaginationComponent
+                page={page}
+                handlePageChange={handlePageChange}
+                hasNextPage={hasNextPage}
+                hasPreviousPage={hasPreviousPage}
+                pageCount={pageCount}
+              />
+            )}
           </div>
           <div className="lg:w-80 xl:w-96 shrink-0">
             <div className="sticky top-4">
