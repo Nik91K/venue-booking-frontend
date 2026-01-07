@@ -99,7 +99,7 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
   ],
-  SUBER_ADMIN: [
+  SUPER_ADMIN: [
     {
       label: 'Dashboard',
       items: [

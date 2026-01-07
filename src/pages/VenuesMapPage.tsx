@@ -16,6 +16,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { getAllEstablishments } from '@/api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import PaginationComponent from '@/components/common/PaginationComponent';
+import { addError } from '@/api/slices/errorSlice';
+import { convertError } from '@/hooks/logger/errorConverter';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -34,6 +36,12 @@ const VenuesMapPage = () => {
   const { user } = useAppSelector(state => state.auth);
 
   const userRole = user?.role || 'GUEST';
+
+  useEffect(() => {
+    if (error) {
+      dispatch(addError(convertError(error)));
+    }
+  });
 
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));

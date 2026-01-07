@@ -13,6 +13,8 @@ import { Separator } from '@/components/ui/separator';
 import { CarouselComponent } from '@/components/common/CarouselComponent';
 import CommentForm from '@/components/common/comment/CommentForm';
 import CommentComponent from '@/components/common/comment/CommentComponent';
+import { addError } from '@/api/slices/errorSlice';
+import { convertError } from '@/hooks/logger/errorConverter';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,6 +44,12 @@ const EstablishmentPage = () => {
   const handleBooking = () => {
     console.log('Booking for:', establishment?.name);
   };
+
+  useEffect(() => {
+    if (error) {
+      dispatch(addError(convertError(new Error(error))));
+    }
+  });
 
   if (loading) {
     return (

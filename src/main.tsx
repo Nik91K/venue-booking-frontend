@@ -1,3 +1,4 @@
+import './instrument.ts';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -23,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/admin"
-          element={<ProtectedRoute allowedRoles={['SUBER_ADMIN']} />}
+          element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}
         >
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />

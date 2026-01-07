@@ -9,7 +9,7 @@ export type WebsiteLogoProps = {
   imageLink?: string;
 };
 
-export type Role = 'GUEST' | 'USER' | 'MODERATOR' | 'OWNER' | 'SUBER_ADMIN';
+export type Role = 'GUEST' | 'USER' | 'MODERATOR' | 'OWNER' | 'SUPER_ADMIN';
 
 export type InputType =
   | 'text'
@@ -18,9 +18,3 @@ export type InputType =
   | 'file'
   | 'image'
   | 'search';
-
-export type RouteHeaderConfig = {
-  showLinks: boolean;
-  showEstablishment: boolean;
-  variant: 'default' | 'minimal' | 'establishment';
-};

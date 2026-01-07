@@ -26,7 +26,7 @@ export const HEADER: Record<Role, HeaderConfig> = {
     image: 'https://placehold.co/50x50',
     backgroundColor: 'bg-violet-900',
   },
-  SUBER_ADMIN: {
+  SUPER_ADMIN: {
     imageTitle: 'Company logo',
     imageLink: '/',
     image: 'https://placehold.co/50x50',

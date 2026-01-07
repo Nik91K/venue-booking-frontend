@@ -31,7 +31,7 @@ const FiltrationComponent = () => {
 
   return (
     <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">
-      <div className="flex items-center justify-between min-h-[40px]">
+      <div className="flex items-center justify-between min-h-10">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-5 w-5" />
           <h2 className="text-lg font-semibold">Filters</h2>

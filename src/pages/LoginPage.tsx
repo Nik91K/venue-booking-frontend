@@ -11,6 +11,7 @@ import type { AppDispatch, RootState } from '@/api/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateLoginForm } from '@/hooks/authorization';
 import { Card } from '@/components/ui/card';
+import { addError } from '@/api/slices/errorSlice';
 
 const LoginPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.login.header,
@@ -34,7 +35,18 @@ const LoginPage: React.FC<AuthorizationProps> = ({
     const validationErrors = validateLoginForm(formData);
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length > 0) return;
+    if (Object.keys(validationErrors).length > 0) {
+      Object.entries(validationErrors).forEach(([error, message]) => {
+        dispatch(
+          addError({
+            title: `Validation Error: ${error}`,
+            message,
+            type: 'error',
+          })
+        );
+      });
+      return;
+    }
 
     try {
       await dispatch(

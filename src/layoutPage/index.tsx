@@ -6,6 +6,9 @@ import AppSidebar from '@/components/layout/Sidebar';
 import { Spinner } from '@/components/ui/spinner';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import { getCurrentUser } from '@/api/slices/authSlice';
+import { addError } from '@/api/slices/errorSlice';
+import { convertError } from '@/hooks/logger/errorConverter';
+import ErrorComponent from '@/components/common/ErrorComponent';
 
 const LayoutPage = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
@@ -19,8 +22,13 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
     }
   }, [accessToken, user, loading, dispatch]);
 
+  useEffect(() => {
+    if (error) {
+      dispatch(addError(convertError(error)));
+    }
+  });
+
   if (loading) return <Spinner />;
-  if (error) return <p>{error}</p>;
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -38,7 +46,10 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
             avatar={user?.avatarUrl || 'avatar'}
             email={user?.email || 'Guest'}
           />
-          <main className="flex-1 max-w-7xl mx-auto px-4">{children}</main>
+          <main className="flex-1 max-w-7xl mx-auto px-4">
+            <ErrorComponent />
+            {children}
+          </main>
           <Footer role={user?.role || 'GUEST'} />
         </div>
       </SidebarInset>
