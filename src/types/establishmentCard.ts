@@ -42,3 +42,10 @@ export type CommentType = {
   establishmentId: number;
   userId: number;
 };
+
+export type BookingType = {
+  establishment: number;
+  bookingDate: Date;
+  bookingTime: string;
+  numberOfGuests: number;
+};

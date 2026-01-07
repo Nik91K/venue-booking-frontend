@@ -10,13 +10,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 type AlertDialogProps = {
   triggerText: string;
   triggerClassName?: string;
   title: string;
   description: string;
+  children?: React.ReactNode;
   cancelText?: string;
   actionText: string;
   onAction?: () => void;
@@ -29,6 +30,7 @@ const AlertDialogConponent = ({
   description,
   cancelText = 'Cancel',
   actionText,
+  children,
   onAction,
   onCancel,
 }: AlertDialogProps) => {
@@ -60,6 +62,7 @@ const AlertDialogConponent = ({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
+        <div>{children}</div>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>
             {cancelText}
