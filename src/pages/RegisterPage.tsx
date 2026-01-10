@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { validateRegistrationForm } from '@/hooks/authorization';
 import { Card } from '@/components/ui/card';
 import { addError } from '@/api/slices/errorSlice';
+import { convertError } from '@/hooks/logger/errorConverter';
 
 const RegisterPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.registration.header,
@@ -62,7 +63,7 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
       ).unwrap();
       navigate('/explore');
     } catch (error: any) {
-      console.log(error.error);
+      dispatch(addError(convertError(error)));
     }
   };
 

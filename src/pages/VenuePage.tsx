@@ -1,5 +1,5 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -15,6 +15,8 @@ import CommentForm from '@/components/common/comment/CommentForm';
 import CommentComponent from '@/components/common/comment/CommentComponent';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
+import BookingOrderForm from '@/components/common/BookingOrderForm';
+import type { BookingOrderFormRef } from '@/types/establishmentCard';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,15 +43,17 @@ const EstablishmentPage = () => {
     navigate('/login');
   };
 
-  const handleBooking = () => {
-    console.log('Booking for:', establishment?.name);
-  };
-
   useEffect(() => {
     if (error) {
       dispatch(addError(convertError(new Error(error))));
     }
   });
+
+  const bookingFormRef = useRef<BookingOrderFormRef>(null);
+
+  const handleAction = () => {
+    bookingFormRef.current?.submit();
+  };
 
   if (loading) {
     return (
@@ -168,14 +172,19 @@ const EstablishmentPage = () => {
                   triggerClassName="w-full"
                 />
               ) : (
-                <Button
-                  size="lg"
-                  className="w-full"
-                  variant="orange"
-                  onClick={handleBooking}
+                <AlertDialogConponent
+                  triggerText="Book Now"
+                  title="Login Required"
+                  description="Fill in the details below to create a new booking order."
+                  actionText="Create Booking"
+                  onAction={handleAction}
+                  triggerClassName="w-full"
                 >
-                  Book Now
-                </Button>
+                  <BookingOrderForm
+                    establishmentId={Number(id)}
+                    ref={bookingFormRef}
+                  />
+                </AlertDialogConponent>
               )}
             </div>
           </div>

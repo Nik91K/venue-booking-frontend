@@ -49,3 +49,7 @@ export type BookingType = {
   bookingTime: string;
   numberOfGuests: number;
 };
+
+export type BookingOrderFormRef = {
+  submit: () => void;
+};
