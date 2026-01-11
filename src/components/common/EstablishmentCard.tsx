@@ -114,9 +114,8 @@ const EstablishmentCard = ({
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-1">
+              <span className="text-gray-600">{establishment.rating}</span>
               <Star size={16} className="fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold text-gray-900">rating</span>
-              <span className="text-xs text-gray-500">(5)</span>
             </div>
           </div>
 

@@ -5,6 +5,8 @@ import { getUserById } from '@/api/slices/authSlice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { EstablishmentType } from '@/types/establishmentCard';
+import { numToStars } from '@/hooks/numToStars';
+import { Star } from 'lucide-react';
 
 type CommentProps = {
   establishment: EstablishmentType;
@@ -43,7 +45,17 @@ const CommentComponent = ({ establishment }: CommentProps) => {
               <div className="flex-1 space-y-2">
                 <div className="flex justify-between">
                   {user ? (
-                    <h3 className="font-semibold">{user.name}</h3>
+                    <div>
+                      <h3 className="font-semibold">{user.name}</h3>
+                      <div className="flex items-center">
+                        {numToStars(comment.rating).map((_, i) => (
+                          <Star
+                            key={i}
+                            className="w-4 h-4 text-yellow-300 fill-amber-300"
+                          />
+                        ))}
+                      </div>
+                    </div>
                   ) : (
                     <Skeleton className="h-4 w-24" />
                   )}

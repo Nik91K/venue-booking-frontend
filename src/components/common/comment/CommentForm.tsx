@@ -7,14 +7,17 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import type { Role } from '@/types/common';
 import { ArrowUpIcon, MessageCircle, Star } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type CommentFormProps = {
   establishmentId: number;
+  role: Role;
 };
 
-const CommentForm = ({ establishmentId }: CommentFormProps) => {
+const CommentForm = ({ establishmentId, role }: CommentFormProps) => {
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -33,6 +36,11 @@ const CommentForm = ({ establishmentId }: CommentFormProps) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
+    if (role === 'GUEST') {
+      setError('You must be logged in to leave a comment');
+      return;
+    }
+
     if (formData.rating < 1) {
       setError('Select rating');
       return;
@@ -67,23 +75,43 @@ const CommentForm = ({ establishmentId }: CommentFormProps) => {
             {[1, 2, 3, 4, 5].map(star => (
               <Star
                 key={star}
-                className={`w-4 h-4 cursor-pointer text-gray-300 ${
+                className={`w-4 h-4 ${
+                  role === 'GUEST'
+                    ? 'cursor-not-allowed text-gray-300'
+                    : 'cursor-pointer text-gray-300'
+                } ${
                   formData.rating >= star
                     ? 'text-yellow-300 fill-amber-300'
-                    : 'text-gray-300'
+                    : ''
                 }`}
-                onClick={() => handleRatingClick(star)}
+                onClick={() => {
+                  if (role === 'GUEST') return;
+                  handleRatingClick(star);
+                }}
               />
             ))}
           </div>
+
+          {role === 'GUEST' && (
+            <Link to={'/login'} className="link text-xs">
+              Log in to rate
+            </Link>
+          )}
         </div>
         <div className="mb-3">
           <InputGroup>
             <InputGroupInput
-              placeholder="Type your text here..."
               type="text"
-              value={formData.text}
-              onChange={event => handleChange('text', event.target.value)}
+              placeholder={
+                role === 'GUEST'
+                  ? 'Log in to write comments'
+                  : 'Type your text here...'
+              }
+              value={role === 'GUEST' ? '' : formData.text}
+              disabled={role === 'GUEST'}
+              onChange={event =>
+                role !== 'GUEST' && handleChange('text', event.target.value)
+              }
             />
             <InputGroupAddon>
               <MessageCircle />
@@ -94,6 +122,7 @@ const CommentForm = ({ establishmentId }: CommentFormProps) => {
                 className="rounded-full"
                 size="icon-xs"
                 type="submit"
+                disabled={role === 'GUEST'}
               >
                 <ArrowUpIcon />
               </InputGroupButton>

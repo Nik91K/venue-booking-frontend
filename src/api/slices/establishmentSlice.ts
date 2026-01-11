@@ -38,6 +38,7 @@ type GetAllEstablishmentsParams = {
   page?: number;
   take?: number;
   order?: 'ASC' | 'DESC';
+  sortBy?: 'avgRating' | 'commentsCount' | 'weightedRating';
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -75,12 +76,17 @@ export const createEstablishment = createAsyncThunk(
 export const getAllEstablishments = createAsyncThunk(
   'establishment/getAll',
   async (
-    { page = 1, take = 10, order = 'ASC' }: GetAllEstablishmentsParams,
+    {
+      page = 1,
+      take = 10,
+      order = 'DESC',
+      sortBy = 'weightedRating',
+    }: GetAllEstablishmentsParams,
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.get(`${API_URL}${SLICE_URL}`, {
-        params: { page, take, order },
+        params: { page, take, order, sortBy },
       });
       return response.data;
     } catch (error: any) {

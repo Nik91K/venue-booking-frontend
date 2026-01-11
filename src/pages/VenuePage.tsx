@@ -7,7 +7,7 @@ import { getEstablishmentById } from '@/api/slices/establishmentSlice';
 import { getEstablishmentComments } from '@/api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import AlertDialogConponent from '@/components/common/AlertDialog';
-import { ArrowLeft, Clock, Heart, MapPin } from 'lucide-react';
+import { ArrowLeft, Clock, Heart, MapPin, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CarouselComponent } from '@/components/common/CarouselComponent';
@@ -17,6 +17,7 @@ import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import BookingOrderForm from '@/components/common/BookingOrderForm';
 import type { BookingOrderFormRef } from '@/types/establishmentCard';
+import { numToStars } from '@/hooks/numToStars';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -141,6 +142,14 @@ const EstablishmentPage = () => {
                   <p>Open now • Closes at 10:00 PM</p>
                 </div>
               </div>
+              <div className="flex items-start gap-1">
+                {numToStars(establishment.rating).map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 text-yellow-300 fill-amber-300"
+                  />
+                ))}
+              </div>
             </div>
             <Separator />
             <div>
@@ -189,7 +198,7 @@ const EstablishmentPage = () => {
             </div>
           </div>
         </div>
-        <CommentForm establishmentId={Number(id)} />
+        <CommentForm establishmentId={Number(id)} role={userRole} />
         <CommentComponent establishment={selectedEstablishment} />
       </div>
     </LayoutPage>

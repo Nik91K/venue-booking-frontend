@@ -5,6 +5,7 @@ export type EstablishmentType = {
   name: string;
   description: string;
   totalSeats: number;
+  rating: number;
   coverPhoto: string;
   createdAt: string;
   photos: string[];
