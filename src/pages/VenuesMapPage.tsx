@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LayoutPage from '@/layoutPage';
 import MapComponent from '@/components/common/map/Map';
@@ -35,7 +35,12 @@ const VenuesMapPage = () => {
   } = useAppSelector(state => state.establishment);
   const { user } = useAppSelector(state => state.auth);
 
+  const [establishment, setEstablishment] = useState(establishments);
   const userRole = user?.role || 'GUEST';
+
+  useEffect(() => {
+    setEstablishment(establishments);
+  }, [establishments]);
 
   useEffect(() => {
     if (error) {
@@ -72,7 +77,7 @@ const VenuesMapPage = () => {
                   <Search className="w-4 h-4" />
                 </InputGroupAddon>
                 <InputGroupAddon align="inline-end">
-                  {establishments.length} results
+                  {establishment.length} results
                 </InputGroupAddon>
               </InputGroup>
               <Button variant="secondary" size="icon">
@@ -89,12 +94,12 @@ const VenuesMapPage = () => {
                 <div className="col-span-full text-center py-12">
                   <p className="text-red-500">{error}</p>
                 </div>
-              ) : establishments.length === 0 ? (
+              ) : establishment.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <p className="text-gray-500">No establishments found</p>
                 </div>
               ) : (
-                establishments.map(establishment => (
+                establishment.map(establishment => (
                   <EstablishmentCard
                     key={establishment.id}
                     establishment={establishment}
@@ -104,7 +109,7 @@ const VenuesMapPage = () => {
                 ))
               )}
             </div>
-            {!loading && establishments.length > 0 && (
+            {!loading && establishment.length > 0 && (
               <PaginationComponent
                 page={page}
                 handlePageChange={handlePageChange}
@@ -116,7 +121,10 @@ const VenuesMapPage = () => {
           </div>
           <div className="lg:w-80 xl:w-96 shrink-0">
             <div className="sticky top-4">
-              <FiltrationComponent />
+              <FiltrationComponent
+                establishment={establishment}
+                setEstablishment={setEstablishment}
+              />
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Clock, Heart } from 'lucide-react';
+import { Star, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
 import type { EstablishmentType } from '@/types/establishmentCard';
 import type { Role } from '@/types/common';
 import AlertDialogConponent from './AlertDialog';
@@ -45,7 +45,7 @@ const EstablishmentCard = ({
   return (
     <Link
       to={`/establishment/${establishment.id}`}
-      className="block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white flex-col h-full"
+      className="block rounded-lg overflow-hidden bg-white flex-col h-full"
     >
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 group">
         {!imageLoaded && (
@@ -112,10 +112,16 @@ const EstablishmentCard = ({
         </div>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
-          <div className="flex flex-col gap-0.5">
-            <div className="flex items-center gap-1">
+          <div className="flex gap-1">
+            <div className="flex items-center gap-0.5">
               <span className="text-gray-600">{establishment.rating}</span>
               <Star size={16} className="fill-yellow-400 text-yellow-400" />
+            </div>
+            <div className="flex items-center gap-0.5">
+              <span className="text-gray-600">
+                {establishment.comments.length}
+              </span>
+              <MessageCircle size={16} className="text-gray-600" />
             </div>
           </div>
 

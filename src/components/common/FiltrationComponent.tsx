@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { X, SlidersHorizontal } from 'lucide-react';
+import type { EstablishmentType } from '@/types/establishmentCard';
 
-const FiltrationComponent = () => {
-  const [priceRange, setPriceRange] = useState([0, 100]);
+type FiltrationProps = {
+  establishment: EstablishmentType[];
+  setEstablishment: React.Dispatch<React.SetStateAction<EstablishmentType[]>>;
+};
+
+const FiltrationComponent = ({
+  establishment,
+  setEstablishment,
+}: FiltrationProps) => {
   const [rating, setRating] = useState('all');
 
   const cuisines = [
@@ -22,12 +30,16 @@ const FiltrationComponent = () => {
   ];
 
   const handleReset = () => {
-    setPriceRange([0, 100]);
     setRating('all');
   };
 
-  const hasActiveFilters =
-    priceRange[0] !== 0 || priceRange[1] !== 100 || rating !== 'all';
+  const handleApplyFilters = () => {
+    const numericRating = rating === 'all' ? 0 : parseFloat(rating);
+    const filtered = establishment.filter(est => est.rating >= numericRating);
+    setEstablishment(filtered);
+  };
+
+  const hasActiveFilters = rating !== 'all';
 
   return (
     <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">
@@ -89,7 +101,12 @@ const FiltrationComponent = () => {
           ))}
         </div>
       </div>
-      <Button className="w-full" size="lg" variant="secondary">
+      <Button
+        className="w-full"
+        size="lg"
+        variant="secondary"
+        onClick={handleApplyFilters}
+      >
         Apply Filters
       </Button>
     </div>
