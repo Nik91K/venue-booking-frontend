@@ -1,5 +1,5 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -16,14 +16,15 @@ import CommentComponent from '@/components/common/comment/CommentComponent';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import BookingOrderForm from '@/components/common/BookingOrderForm';
-import type { BookingOrderFormRef } from '@/types/establishmentCard';
-import { numToStars } from '@/hooks/numToStars';
+import { numToStars } from '@/hooks/useNumToStars';
+import { useBookingFormSubmit } from '@/hooks/useBookingForm';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(false);
+  const { bookingFormRef, submitBookingForm } = useBookingFormSubmit();
 
   const { loading, selectedEstablishment, error } = useAppSelector(
     state => state.establishment
@@ -49,12 +50,6 @@ const EstablishmentPage = () => {
       dispatch(addError(convertError(new Error(error))));
     }
   });
-
-  const bookingFormRef = useRef<BookingOrderFormRef>(null);
-
-  const handleAction = () => {
-    bookingFormRef.current?.submit();
-  };
 
   if (loading) {
     return (
@@ -183,10 +178,10 @@ const EstablishmentPage = () => {
               ) : (
                 <AlertDialogConponent
                   triggerText="Book Now"
-                  title="Login Required"
+                  title="Let's reserve this"
                   description="Fill in the details below to create a new booking order."
                   actionText="Create Booking"
-                  onAction={handleAction}
+                  onAction={submitBookingForm}
                   triggerClassName="w-full"
                 >
                   <BookingOrderForm

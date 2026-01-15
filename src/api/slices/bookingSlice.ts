@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type { BookingType } from '@/types/establishmentCard';
+import type { BookingType } from '@/types/establishment';
 
 interface BookingState {
   booking: BookingType | null;

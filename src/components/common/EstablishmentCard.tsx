@@ -1,32 +1,33 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
-import type { EstablishmentType } from '@/types/establishmentCard';
+import type {
+  BookingOrderFormRef,
+  EstablishmentType,
+} from '@/types/establishment';
 import type { Role } from '@/types/common';
 import AlertDialogConponent from './AlertDialog';
 import { Skeleton } from '../ui/skeleton';
+import BookingOrderForm from './BookingOrderForm';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
   role: Role;
   onLogin?: () => void;
+  handleAction?: () => void;
+  bookingFormRef?: React.Ref<BookingOrderFormRef>;
 };
 
 const EstablishmentCard = ({
   establishment,
   role,
   onLogin,
+  handleAction,
+  bookingFormRef,
 }: EstablishmentCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  const handleBooking = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('Booking confirmed for', establishment.name);
-  };
 
   const handleLogin = () => {
     if (onLogin) {
@@ -43,20 +44,19 @@ const EstablishmentCard = ({
   };
 
   return (
-    <Link
-      to={`/establishment/${establishment.id}`}
-      className="block rounded-lg overflow-hidden bg-white flex-col h-full"
-    >
+    <div className="block rounded-lg overflow-hidden bg-white flex-col h-full">
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 group">
         {!imageLoaded && (
           <Skeleton className="absolute inset-0 w-full h-full" />
         )}
-        <img
-          src={establishment.coverPhoto}
-          alt={establishment.name}
-          className="w-full h-full object-cover transition-transform"
-          onLoad={() => setImageLoaded(true)}
-        />
+        <Link to={`/establishment/${establishment.id}`}>
+          <img
+            src={establishment.coverPhoto}
+            alt={establishment.name}
+            className="w-full h-full object-cover transition-transform"
+            onLoad={() => setImageLoaded(true)}
+          />
+        </Link>
         <button
           onClick={toggleFavorite}
           className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-all duration-200 hover:scale-110"
@@ -71,7 +71,10 @@ const EstablishmentCard = ({
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <div className="grid gap-3 flex-1">
+        <Link
+          to={`/establishment/${establishment.id}`}
+          className="grid gap-3 flex-1"
+        >
           <div className="flex items-start justify-between gap-2">
             <h2 className="text-lg font-semibold text-gray-900 line-clamp-2 leading-tight">
               {establishment.name}
@@ -109,7 +112,7 @@ const EstablishmentCard = ({
               </Badge>
             )}
           </div>
-        </div>
+        </Link>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
           <div className="flex gap-1">
@@ -126,28 +129,30 @@ const EstablishmentCard = ({
           </div>
 
           {role === 'GUEST' ? (
-            <div onClick={e => e.preventDefault()}>
-              <AlertDialogConponent
-                triggerText="Book Now"
-                title="Login Required"
-                description="You need to be logged in to make a reservation. Please log in or create an account to continue."
-                actionText="Go to Login"
-                onAction={handleLogin}
-              />
-            </div>
+            <AlertDialogConponent
+              triggerText="Book Now"
+              title="Login Required"
+              description="You need to be logged in to make a reservation. Please log in or create an account to continue."
+              actionText="Go to Login"
+              onAction={handleLogin}
+            />
           ) : (
-            <Button
-              variant="secondary"
-              size="sm"
-              className="font-medium"
-              onClick={handleBooking}
+            <AlertDialogConponent
+              triggerText="Book Now"
+              title="Let's reserve this"
+              description="Fill in the details below to create a new booking order."
+              actionText="Create Booking"
+              onAction={handleAction}
             >
-              Book Now
-            </Button>
+              <BookingOrderForm
+                establishmentId={establishment.id}
+                ref={bookingFormRef}
+              />
+            </AlertDialogConponent>
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

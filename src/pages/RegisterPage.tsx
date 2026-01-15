@@ -10,7 +10,7 @@ import { AUTHORIZATION } from '@/fixtures/authorization.fixture';
 import { register } from '@/api/slices/authSlice';
 import type { AppDispatch, RootState } from '@/api/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateRegistrationForm } from '@/hooks/authorization';
+import { validateRegistrationForm } from '@/hooks/validation/authorization';
 import { Card } from '@/components/ui/card';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
@@ -31,13 +31,11 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const validationErrors = validateRegistrationForm(formData);
-    setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
       Object.entries(validationErrors).forEach(([error, message]) => {
         dispatch(
@@ -88,9 +86,6 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
               onChange={value => handleChange('username', value)}
               icon={<User />}
             />
-            {errors.username && (
-              <p className="text-red-500 text-sm">{errors.username}</p>
-            )}
           </div>
           <div className="flex flex-col">
             <FormFieldGroup
@@ -100,9 +95,6 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
               onChange={value => handleChange('phone', value)}
               icon={<Phone />}
             />
-            {errors.username && (
-              <p className="text-red-500 text-sm">{errors.phone}</p>
-            )}
           </div>
           <div className="flex flex-col">
             <FormFieldGroup
@@ -112,9 +104,6 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
               onChange={value => handleChange('email', value)}
               icon={<MailIcon />}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email}</p>
-            )}
           </div>
           <div className="flex flex-col">
             <FormFieldGroup
@@ -124,9 +113,6 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
               onChange={value => handleChange('password', value)}
               icon={<KeyRound />}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password}</p>
-            )}
           </div>
           <div className="flex flex-col">
             <FormFieldGroup
@@ -136,9 +122,6 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
               onChange={value => handleChange('confirmPassword', value)}
               icon={<KeyRound />}
             />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-            )}
           </div>
           <Button
             type="submit"

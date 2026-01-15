@@ -11,6 +11,8 @@ import type { Role } from '@/types/common';
 import { ArrowUpIcon, MessageCircle, Star } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { addError } from '@/api/slices/errorSlice';
+import { validateCommentForm } from '@/hooks/validation/comment';
 
 type CommentFormProps = {
   establishmentId: number;
@@ -19,7 +21,6 @@ type CommentFormProps = {
 
 const CommentForm = ({ establishmentId, role }: CommentFormProps) => {
   const dispatch = useAppDispatch();
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     text: '',
     rating: 0,
@@ -35,19 +36,19 @@ const CommentForm = ({ establishmentId, role }: CommentFormProps) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setError(null);
-    if (role === 'GUEST') {
-      setError('You must be logged in to leave a comment');
-      return;
-    }
 
-    if (formData.rating < 1) {
-      setError('Select rating');
-      return;
-    }
+    const validationErrors = validateCommentForm(formData);
 
-    if (formData.text.trim().length < 10) {
-      setError('Enter more than 10 characters');
+    if (Object.keys(validationErrors).length > 0) {
+      Object.entries(validationErrors).forEach(([error, message]) => {
+        dispatch(
+          addError({
+            title: `Validation Error: ${error}`,
+            message,
+            type: 'error',
+          })
+        );
+      });
       return;
     }
 
@@ -129,7 +130,6 @@ const CommentForm = ({ establishmentId, role }: CommentFormProps) => {
             </InputGroupAddon>
           </InputGroup>
         </div>
-        {error && <p className="text-sm text-destructive">{error}</p>}
       </Card>
     </form>
   );

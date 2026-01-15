@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { getUserById } from '@/api/slices/authSlice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import type { EstablishmentType } from '@/types/establishmentCard';
-import { numToStars } from '@/hooks/numToStars';
+import type { EstablishmentType } from '@/types/establishment';
+import { numToStars } from '@/hooks/useNumToStars';
 import { Star } from 'lucide-react';
 
 type CommentProps = {

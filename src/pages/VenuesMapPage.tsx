@@ -18,10 +18,12 @@ import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import PaginationComponent from '@/components/common/PaginationComponent';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
+import { useBookingFormSubmit } from '@/hooks/useBookingForm';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { bookingFormRef, submitBookingForm } = useBookingFormSubmit();
 
   const {
     loading,
@@ -105,6 +107,8 @@ const VenuesMapPage = () => {
                     establishment={establishment}
                     role={userRole}
                     onLogin={handleLogin}
+                    bookingFormRef={bookingFormRef}
+                    handleAction={submitBookingForm}
                   />
                 ))
               )}

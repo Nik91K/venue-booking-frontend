@@ -9,7 +9,7 @@ const ErrorComponent = () => {
   if (errors.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 space-y-3 z-50 w-90">
+    <div className="fixed top-4 right-4 space-y-3 z-50 w-90">
       {errors.map((error, index) => (
         <Alert key={index} variant="destructive">
           <AlertTitle>{error.title}</AlertTitle>

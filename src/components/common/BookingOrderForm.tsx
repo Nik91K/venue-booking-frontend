@@ -1,8 +1,8 @@
-import type { BookingType } from '@/types/establishmentCard';
+import type { BookingType } from '@/types/establishment';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useState, forwardRef, useImperativeHandle } from 'react';
-import type { BookingOrderFormRef } from '@/types/establishmentCard';
+import type { BookingOrderFormRef } from '@/types/establishment';
 import { useAppDispatch } from '@/api/hooks';
 import { createBooking } from '@/api/slices/bookingSlice';
 import { addError } from '@/api/slices/errorSlice';

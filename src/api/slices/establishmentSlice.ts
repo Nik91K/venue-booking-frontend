@@ -3,7 +3,7 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import type { EstablishmentType } from '@/types/establishmentCard';
+import type { EstablishmentType } from '@/types/establishment';
 import axios from 'axios';
 
 interface EstablishmentState {

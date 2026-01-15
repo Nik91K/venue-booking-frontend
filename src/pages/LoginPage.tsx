@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/api/slices/authSlice';
 import type { AppDispatch, RootState } from '@/api/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateLoginForm } from '@/hooks/authorization';
+import { validateLoginForm } from '@/hooks/validation/authorization';
 import { Card } from '@/components/ui/card';
 import { addError } from '@/api/slices/errorSlice';
 
@@ -27,13 +27,10 @@ const LoginPage: React.FC<AuthorizationProps> = ({
     password: '',
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const validationErrors = validateLoginForm(formData);
-    setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
       Object.entries(validationErrors).forEach(([error, message]) => {
@@ -81,9 +78,6 @@ const LoginPage: React.FC<AuthorizationProps> = ({
               value={formData.email}
               onChange={value => handleChange('email', value)}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
           </div>
           <div className="flex flex-col">
             <FormFieldGroup
@@ -92,9 +86,6 @@ const LoginPage: React.FC<AuthorizationProps> = ({
               value={formData.password}
               onChange={value => handleChange('password', value)}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
           </div>
           <Button
             type="submit"
