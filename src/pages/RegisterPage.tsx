@@ -78,51 +78,41 @@ const RegisterPage: React.FC<AuthorizationProps> = ({
         </div>
         <form onSubmit={handleSubmit} className="w-full grid gap-4">
           {loading && <p className="text-center text-gray-500">Loading...</p>}
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="text"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={value => handleChange('username', value)}
-              icon={<User />}
-            />
-          </div>
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="text"
-              placeholder="+380680000000"
-              value={formData.phone}
-              onChange={value => handleChange('phone', value)}
-              icon={<Phone />}
-            />
-          </div>
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={value => handleChange('email', value)}
-              icon={<MailIcon />}
-            />
-          </div>
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={value => handleChange('password', value)}
-              icon={<KeyRound />}
-            />
-          </div>
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="password"
-              placeholder="Repeat password"
-              value={formData.confirmPassword}
-              onChange={value => handleChange('confirmPassword', value)}
-              icon={<KeyRound />}
-            />
-          </div>
+          <FormFieldGroup
+            type="text"
+            placeholder="Enter your username"
+            value={formData.username}
+            onChange={value => handleChange('username', value)}
+            icon={<User />}
+          />
+          <FormFieldGroup
+            type="text"
+            placeholder="+380680000000"
+            value={formData.phone}
+            onChange={value => handleChange('phone', value)}
+            icon={<Phone />}
+          />
+          <FormFieldGroup
+            type="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={value => handleChange('email', value)}
+            icon={<MailIcon />}
+          />
+          <FormFieldGroup
+            type="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={value => handleChange('password', value)}
+            icon={<KeyRound />}
+          />
+          <FormFieldGroup
+            type="password"
+            placeholder="Repeat password"
+            value={formData.confirmPassword}
+            onChange={value => handleChange('confirmPassword', value)}
+            icon={<KeyRound />}
+          />
           <Button
             type="submit"
             variant="orange"

@@ -43,7 +43,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group';
 
-const SUPER_ADMINUsersPage = () => {
+const AdminUsersPage = () => {
   const [search, setSearch] = useState('');
   const [selectedRole, setSelectedRole] = useState<string>('all');
 
@@ -265,4 +265,4 @@ const SUPER_ADMINUsersPage = () => {
   );
 };
 
-export default SUPER_ADMINUsersPage;
+export default AdminUsersPage;

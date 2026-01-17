@@ -71,22 +71,18 @@ const LoginPage: React.FC<AuthorizationProps> = ({
         </div>
         <form onSubmit={handleSubmit} className="w-full grid gap-4">
           {loading && <p className="text-center text-gray-500">Loading...</p>}
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="text"
-              placeholder="m@example.com"
-              value={formData.email}
-              onChange={value => handleChange('email', value)}
-            />
-          </div>
-          <div className="flex flex-col">
-            <FormFieldGroup
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={value => handleChange('password', value)}
-            />
-          </div>
+          <FormFieldGroup
+            type="text"
+            placeholder="m@example.com"
+            value={formData.email}
+            onChange={value => handleChange('email', value)}
+          />
+          <FormFieldGroup
+            type="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={value => handleChange('password', value)}
+          />
           <Button
             type="submit"
             variant="orange"
@@ -96,7 +92,7 @@ const LoginPage: React.FC<AuthorizationProps> = ({
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </form>
-        <p className="text-center text-sm mt-6">
+        <p className="text-center text-sm">
           {link.text}
           <Link to={link.href} className="link font-medium">
             {link.linkText}

@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage.tsx';
 import VenuesMapPage from './pages/VenuesMapPage.tsx';
 import AdminDashboard from './pages/admin/AdminDashboard.tsx';
 import AdminUsersPage from './pages/admin/UserManagement.tsx';
+import AdminEstablishmentsPage from './pages/admin/EstablishmentsManagement.tsx';
 import EstablishmentPage from './pages/VenuePage.tsx';
 
 createRoot(document.getElementById('root')!).render(
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user" element={<AdminUsersPage />} />
+          <Route path="establishments" element={<AdminEstablishmentsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

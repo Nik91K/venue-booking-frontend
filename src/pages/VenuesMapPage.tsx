@@ -38,7 +38,6 @@ const VenuesMapPage = () => {
   const { user } = useAppSelector(state => state.auth);
 
   const [establishment, setEstablishment] = useState(establishments);
-  const userRole = user?.role || 'GUEST';
 
   useEffect(() => {
     setEstablishment(establishments);
@@ -105,7 +104,7 @@ const VenuesMapPage = () => {
                   <EstablishmentCard
                     key={establishment.id}
                     establishment={establishment}
-                    role={userRole}
+                    role={user?.role || 'GUEST'}
                     onLogin={handleLogin}
                     bookingFormRef={bookingFormRef}
                     handleAction={submitBookingForm}

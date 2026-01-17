@@ -3,7 +3,7 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import type { BookingType } from '@/types/establishment';
 
 interface BookingState {

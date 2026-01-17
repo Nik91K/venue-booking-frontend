@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import type { CommentType } from '@/types/establishment';
 
 interface CommentState {

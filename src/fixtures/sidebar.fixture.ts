@@ -8,17 +8,13 @@ import {
   CreditCard,
   Settings,
   Home,
-  User,
   FileCheck,
-  AlertTriangle,
-  Activity,
-  Shield,
   Users,
-  FileText,
   BarChart,
   Search,
   MessageSquare,
   Mail,
+  ShoppingBasket,
 } from 'lucide-react';
 
 export const SIDEBAR: Record<Role, SidebarSection[]> = {
@@ -49,62 +45,63 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
     {
-      label: 'Dashboard',
-      items: [{ title: 'Overview', path: '/dashboard', icon: Home }],
-    },
-    {
       label: 'Moderation',
       items: [
         {
           title: 'Review Queue',
-          path: '/moderator/reviews',
+          path: '/establishment/reviews',
           icon: FileCheck,
-        },
-        {
-          title: 'User Reports',
-          path: '/moderator/reports',
-          icon: AlertTriangle,
         },
       ],
     },
   ],
   OWNER: [
     {
-      label: 'Dashboard',
+      label: 'Explore',
       items: [
-        { title: 'Overview', path: '/admin/dashboard', icon: Home },
-        { title: 'Analytics', path: '/admin/analytics', icon: BarChart },
-        { title: 'Reports', path: '/admin/reports', icon: FileText },
-      ],
-    },
-    {
-      label: 'Administration',
-      items: [
-        { title: 'User Management', path: '/admin#users', icon: Users },
-        { title: 'Role Management', path: '/admin#roles', icon: Shield },
-        { title: 'Content Control', path: '/admin#content', icon: FileCheck },
-        { title: 'System Settings', path: '/admin#system', icon: Settings },
-        { title: 'Audit Logs', path: '/admin/logs', icon: Activity },
+        { title: 'Home', path: '/', icon: Home },
+        { title: 'Browse Services', path: '/explore', icon: Search },
       ],
     },
     {
       label: 'Moderation',
       items: [
-        { title: 'Review Queue', path: '/admin/reviews', icon: FileCheck },
         {
-          title: 'User Reports',
-          path: '/admin/reports',
-          icon: AlertTriangle,
+          title: 'Review Queue',
+          path: '/establishment/reviews',
+          icon: FileCheck,
+        },
+      ],
+    },
+    {
+      label: 'Establishmens',
+      items: [
+        {
+          title: 'Establishment Review',
+          path: '/owner/establishmes',
+          icon: FileCheck,
         },
       ],
     },
   ],
   SUPER_ADMIN: [
     {
+      label: 'Explore',
+      items: [
+        { title: 'Home', path: '/', icon: Home },
+        { title: 'Browse Services', path: '/explore', icon: Search },
+      ],
+    },
+    {
       label: 'Dashboard',
       items: [
-        { title: 'Admin Dashboard', path: '/admin/dashboard', icon: Home },
-        { title: 'User Dashboard', path: '/admin/user', icon: User },
+        { title: 'Admin Dashboard', path: '/admin/dashboard', icon: BarChart },
+        { title: 'User Dashboard', path: '/admin/user', icon: Users },
+        {
+          title: 'Establishments Dashboard',
+          path: '/admin/establishments',
+          icon: ShoppingBasket,
+        },
       ],
     },
   ],
