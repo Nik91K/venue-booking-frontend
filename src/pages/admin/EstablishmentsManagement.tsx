@@ -35,6 +35,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import PaginationComponent from '@/components/common/PaginationComponent';
+import { deleteEstablishment } from '@/api/slices/establishmentSlice';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -50,7 +51,6 @@ const AdminEstablishmentsPage = () => {
     hasPreviousPage,
     pageCount,
   } = useAppSelector(state => state.establishment);
-  const [establishment] = useState(establishments);
 
   useEffect(() => {
     if (error) {
@@ -61,6 +61,10 @@ const AdminEstablishmentsPage = () => {
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));
   }, [page, take, dispatch]);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteEstablishment(id));
+  };
 
   const handlePageChange = (newPage: number) => {
     dispatch({ type: 'establishment/setPage', payload: newPage });
@@ -98,7 +102,7 @@ const AdminEstablishmentsPage = () => {
                     className="pl-10"
                   />
                   <InputGroupAddon align="inline-end">
-                    {establishment.length} results
+                    {establishments.length} results
                   </InputGroupAddon>
                 </InputGroup>
               </div>
@@ -120,15 +124,15 @@ const AdminEstablishmentsPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {establishment.map(establishments => (
-                    <TableRow key={establishments.id}>
-                      <TableCell>{establishments.id}</TableCell>
-                      <TableCell>{establishments.name}</TableCell>
-                      <TableCell>{establishments.rating}</TableCell>
-                      <TableCell>{establishments.ownerId}</TableCell>
+                  {establishments.map(establishment => (
+                    <TableRow key={establishment.id}>
+                      <TableCell>{establishment.id}</TableCell>
+                      <TableCell>{establishment.name}</TableCell>
+                      <TableCell>{establishment.rating}</TableCell>
+                      <TableCell>{establishment.ownerId}</TableCell>
                       <TableCell>
                         <div className="text-center">
-                          {establishments.comments.length}
+                          {establishment.comments.length}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -140,14 +144,18 @@ const AdminEstablishmentsPage = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
                             <DropdownMenuItem>
                               Edit Establishment
                             </DropdownMenuItem>
-                            <DropdownMenuItem>View Bookings</DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Establishment booking
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">
-                              Delete User
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => handleDelete(establishment.id)}
+                            >
+                              Delete Establishment
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -156,7 +164,7 @@ const AdminEstablishmentsPage = () => {
                   ))}
                 </TableBody>
               </Table>
-              {!loading && establishment.length > 0 && (
+              {!loading && establishments.length > 0 && (
                 <PaginationComponent
                   page={page}
                   handlePageChange={handlePageChange}

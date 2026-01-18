@@ -52,6 +52,18 @@ export const createBooking = createAsyncThunk<
   }
 });
 
+export const getBookingByEstablishment = createAsyncThunk(
+  '/booking/establishment',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}${SLICE_URL}/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
 const bookingSlice = createSlice({
   name: 'booking',
   initialState,
@@ -72,6 +84,22 @@ const bookingSlice = createSlice({
       .addCase(createBooking.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Unknown error';
+      })
+
+      .addCase(getBookingByEstablishment.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getBookingByEstablishment.fulfilled,
+        (state, action: PayloadAction<BookingType>) => {
+          state.loading = false;
+          state.booking = action.payload;
+        }
+      )
+      .addCase(getBookingByEstablishment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
