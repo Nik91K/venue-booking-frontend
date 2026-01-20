@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { UserType } from '@/types/user';
-import axios from '../axiosConfig';
+import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 import type { RootState } from '../store';
 
 interface AuthState {
@@ -82,7 +83,7 @@ export const refreshAccessToken = createAsyncThunk<
     });
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
@@ -90,32 +91,22 @@ export const getCurrentUser = createAsyncThunk<
   UserType,
   void,
   { state: RootState }
->('auth/me', async (_, { getState, rejectWithValue }) => {
+>('auth/me', async (_, { rejectWithValue }) => {
   try {
-    const { accessToken } = getState().auth;
-    const response = await axios.get(`${API_URL}${SLICE_URL}/me`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data || error.message);
   }
 });
 
 export const logout = createAsyncThunk<void, void, { state: RootState }>(
   'auth/logout',
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { accessToken } = getState().auth;
-      await axios.post(
-        `${API_URL}${SLICE_URL}/logout`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      await axiosInstance.post(`${API_URL}${SLICE_URL}/logout`);
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -124,7 +115,9 @@ export const getUserById = createAsyncThunk(
   'auth/getUserById',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}/users/${id}`);
+      const response = await axiosInstance.get(
+        `${API_URL}${SLICE_URL}/users/${id}`
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);

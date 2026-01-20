@@ -3,11 +3,13 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import axios from '../axiosConfig';
-import type { BookingType } from '@/types/establishment';
+import axios from 'axios';
+import axiosInstance from '../axiosConfig';
+import type { BookingType } from '@/types/booking';
 
 interface BookingState {
   booking: BookingType | null;
+  bookings: BookingType[];
   accessToken: string | null;
   loading: boolean;
   error: string | null;
@@ -15,6 +17,7 @@ interface BookingState {
 
 const initialState: BookingState = {
   booking: null,
+  bookings: [],
   accessToken: localStorage.getItem('accessToken'),
   loading: false,
   error: null,
@@ -52,14 +55,22 @@ export const createBooking = createAsyncThunk<
   }
 });
 
-export const getBookingByEstablishment = createAsyncThunk(
-  '/booking/establishment',
-  async (id: number, { rejectWithValue }) => {
+export const getBookingsByEstablishment = createAsyncThunk<
+  BookingType[],
+  number,
+  { rejectValue: string }
+>(
+  'booking/getByEstablishment',
+  async (establishmentId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}/${id}`);
+      const response = await axiosInstance.get(
+        `${API_URL}${SLICE_URL}/establishment/${establishmentId}`
+      );
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch bookings'
+      );
     }
   }
 );
@@ -86,20 +97,20 @@ const bookingSlice = createSlice({
         state.error = action.payload || 'Unknown error';
       })
 
-      .addCase(getBookingByEstablishment.pending, state => {
+      .addCase(getBookingsByEstablishment.pending, state => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        getBookingByEstablishment.fulfilled,
-        (state, action: PayloadAction<BookingType>) => {
+        getBookingsByEstablishment.fulfilled,
+        (state, action: PayloadAction<BookingType[]>) => {
           state.loading = false;
-          state.booking = action.payload;
+          state.bookings = action.payload;
         }
       )
-      .addCase(getBookingByEstablishment.rejected, (state, action) => {
+      .addCase(getBookingsByEstablishment.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || 'Failed to fetch bookings';
       });
   },
 });

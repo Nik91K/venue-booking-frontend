@@ -44,13 +44,6 @@ export type CommentType = {
   userId: number;
 };
 
-export type BookingType = {
-  establishment: number;
-  bookingDate: Date;
-  bookingTime: string;
-  numberOfGuests: number;
-};
-
 export type BookingOrderFormRef = {
   submit: () => void;
 };

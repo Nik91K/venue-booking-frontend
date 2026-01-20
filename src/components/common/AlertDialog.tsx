@@ -22,6 +22,7 @@ type AlertDialogProps = {
   actionText: string;
   onAction?: () => void;
   onCancel?: () => void;
+  onOpenChange?: (open: boolean) => void;
 };
 const AlertDialogConponent = ({
   triggerText,
@@ -33,8 +34,17 @@ const AlertDialogConponent = ({
   children,
   onAction,
   onCancel,
+  onOpenChange,
 }: AlertDialogProps) => {
   const [open, setOpen] = useState(false);
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+
+    if (onOpenChange) {
+      onOpenChange(isOpen);
+    }
+  };
 
   const handleAction = () => {
     if (onAction) {
@@ -51,7 +61,7 @@ const AlertDialogConponent = ({
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
         <Button className={triggerClassName} variant={'secondary'}>
           {triggerText}

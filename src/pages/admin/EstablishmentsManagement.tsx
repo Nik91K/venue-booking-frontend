@@ -36,6 +36,9 @@ import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import PaginationComponent from '@/components/common/PaginationComponent';
 import { deleteEstablishment } from '@/api/slices/establishmentSlice';
+import AlertDialogConponent from '@/components/common/AlertDialog';
+import { getBookingsByEstablishment } from '@/api/slices/bookingSlice';
+import { getEstablishmentById } from '@/api/slices/establishmentSlice';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -51,16 +54,24 @@ const AdminEstablishmentsPage = () => {
     hasPreviousPage,
     pageCount,
   } = useAppSelector(state => state.establishment);
+  const { bookings, loading: bookingsLoading } = useAppSelector(
+    state => state.booking
+  );
 
   useEffect(() => {
     if (error) {
       dispatch(addError(convertError(error)));
     }
-  });
+  }, [error, dispatch]);
 
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));
   }, [page, take, dispatch]);
+
+  const handleViewBookings = (establishmentId: number) => {
+    getEstablishmentById(establishmentId);
+    dispatch(getBookingsByEstablishment(establishmentId));
+  };
 
   const handleDelete = (id: number) => {
     dispatch(deleteEstablishment(id));
@@ -85,7 +96,7 @@ const AdminEstablishmentsPage = () => {
         </div>
         <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle>Establishmets</CardTitle>
+            <CardTitle>Establishments</CardTitle>
             <CardDescription>Search and filter establishments</CardDescription>
           </CardHeader>
           <CardContent>
@@ -118,8 +129,8 @@ const AdminEstablishmentsPage = () => {
                     <TableHead>Id</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Rating</TableHead>
-                    <TableHead>Comm</TableHead>
                     <TableHead>Owner</TableHead>
+                    <TableHead>Comments</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -147,9 +158,61 @@ const AdminEstablishmentsPage = () => {
                             <DropdownMenuItem>
                               Edit Establishment
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Establishment booking
-                            </DropdownMenuItem>
+                            <AlertDialogConponent
+                              triggerText="View Bookings"
+                              title={`Bookings for ${establishment.name}`}
+                              description="View all reservations for this establishment"
+                              actionText="Close"
+                              onOpenChange={open => {
+                                if (open) {
+                                  handleViewBookings(establishment.id);
+                                }
+                              }}
+                            >
+                              {bookingsLoading ? (
+                                <p>Loading bookings...</p>
+                              ) : bookings.length > 0 ? (
+                                <div className="space-y-4 max-h-96 overflow-y-auto">
+                                  {bookings.map(booking => (
+                                    <div
+                                      key={booking.id}
+                                      className="p-4 border rounded-lg"
+                                    >
+                                      <p>
+                                        Establishment name:{' '}
+                                        {booking.establishment.name}
+                                      </p>
+
+                                      <p>Booking ID: {booking.id}</p>
+                                      <p>
+                                        Date:{' '}
+                                        {new Date(
+                                          booking.bookingDate
+                                        ).toLocaleDateString()}
+                                      </p>
+                                      <p>Time: {booking.bookingTime}</p>
+                                      <p>Guests: {booking.numberOfGuests}</p>
+                                      <p>
+                                        Status:{' '}
+                                        <span
+                                          className={`text-${booking.status == `CONFIRMED` ? 'green-500' : 'red-500'}`}
+                                        >
+                                          {booking.status}
+                                        </span>
+                                      </p>
+                                      {booking.user && (
+                                        <p className="text-sm">
+                                          User: {booking.user.name} (
+                                          {booking.user.email})
+                                        </p>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p>No bookings found for this establishment.</p>
+                              )}
+                            </AlertDialogConponent>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-destructive"

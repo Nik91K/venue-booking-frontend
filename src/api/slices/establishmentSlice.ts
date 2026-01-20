@@ -4,7 +4,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 import type { EstablishmentType } from '@/types/establishment';
-import axios from '../axiosConfig';
+import axios from 'axios';
 
 interface EstablishmentState {
   establishments: EstablishmentType[];
