@@ -1,5 +1,5 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -7,7 +7,7 @@ import { getEstablishmentById } from '@/api/slices/establishmentSlice';
 import { getEstablishmentComments } from '@/api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import AlertDialogConponent from '@/components/common/AlertDialog';
-import { ArrowLeft, Clock, Heart, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CarouselComponent } from '@/components/common/CarouselComponent';
@@ -18,12 +18,12 @@ import { convertError } from '@/hooks/logger/errorConverter';
 import BookingOrderForm from '@/components/common/BookingOrderForm';
 import { numToStars } from '@/hooks/useNumToStars';
 import { useBookingFormSubmit } from '@/hooks/useBookingForm';
+import FavoriteButton from '@/components/common/FavoriteButton';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [isFavorite, setIsFavorite] = useState(false);
   const { bookingFormRef, submitBookingForm } = useBookingFormSubmit();
 
   const { loading, selectedEstablishment, error } = useAppSelector(
@@ -74,10 +74,6 @@ const EstablishmentPage = () => {
     );
   }
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
-
   return (
     <LayoutPage>
       <div className="py-6 px-4 sm:px-6 lg:px-8 space-y-6">
@@ -105,17 +101,10 @@ const EstablishmentPage = () => {
                     {establishment.type.name}
                   </Badge>
                 </div>
-                <button
-                  onClick={toggleFavorite}
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all self-start"
-                  aria-label="Add to favorites"
-                >
-                  <Heart
-                    className={`w-6 h-6 transition-colors ${
-                      isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'
-                    }`}
-                  />
-                </button>
+                <FavoriteButton
+                  role={userRole}
+                  establishmentId={establishment.id}
+                />
               </div>
               <p className="text-white-700 leading-relaxed">
                 {establishment.description}

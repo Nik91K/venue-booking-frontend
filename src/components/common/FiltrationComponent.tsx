@@ -68,19 +68,19 @@ const FiltrationComponent = ({
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="4.5" id="rating-4.5" />
             <Label htmlFor="rating-4.5" className="font-normal cursor-pointer">
-              4.5+ ⭐
+              4.5+
             </Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="4.0" id="rating-4.0" />
             <Label htmlFor="rating-4.0" className="font-normal cursor-pointer">
-              4.0+ ⭐
+              4.0+
             </Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="3.5" id="rating-3.5" />
             <Label htmlFor="rating-3.5" className="font-normal cursor-pointer">
-              3.5+ ⭐
+              3.5+
             </Label>
           </div>
         </RadioGroup>

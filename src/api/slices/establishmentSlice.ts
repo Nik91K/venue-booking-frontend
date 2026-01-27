@@ -178,6 +178,68 @@ export const removeFeatureFromEstablishment = createAsyncThunk(
   }
 );
 
+export const addFavorite = createAsyncThunk(
+  'establishment/id/favorite',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await axios.post(
+        `${API_URL}${SLICE_URL}/${id}/favorite`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const removeFavorite = createAsyncThunk(
+  'establishment/id/unfavorite',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+
+      const response = await axios.delete(
+        `${API_URL}${SLICE_URL}/${id}/favorite`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const getAllFavorites = createAsyncThunk(
+  'establishment/favorites',
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+
+      const response = await axios.get(`${API_URL}${SLICE_URL}/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const establishmentSlice = createSlice({
   name: 'establishment',
   initialState,
@@ -377,6 +439,47 @@ const establishmentSlice = createSlice({
         }
       })
       .addCase(removeFeatureFromEstablishment.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+
+      .addCase(addFavorite.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addFavorite.fulfilled, state => {
+        state.loading = false;
+        if (state.selectedEstablishment) {
+          state.selectedEstablishment.isFavorite = true;
+        }
+      })
+      .addCase(addFavorite.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+
+      .addCase(removeFavorite.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeFavorite.fulfilled, state => {
+        state.loading = false;
+        if (state.selectedEstablishment) {
+          state.selectedEstablishment.isFavorite = false;
+        }
+      })
+      .addCase(removeFavorite.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+
+      .addCase(getAllFavorites.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllFavorites.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.establishments = action.payload;
+      })
+      .addCase(getAllFavorites.rejected, (state, action) => {
         state.error = action.payload as string;
       });
   },

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Star, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
+import { Star, MapPin, Clock, MessageCircle } from 'lucide-react';
 import type {
   BookingOrderFormRef,
   EstablishmentType,
@@ -10,6 +10,7 @@ import type { Role } from '@/types/common';
 import AlertDialogConponent from './AlertDialog';
 import { Skeleton } from '../ui/skeleton';
 import BookingOrderForm from './BookingOrderForm';
+import FavoriteButton from './FavoriteButton';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
@@ -26,7 +27,6 @@ const EstablishmentCard = ({
   handleAction,
   bookingFormRef,
 }: EstablishmentCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleLogin = () => {
@@ -37,14 +37,8 @@ const EstablishmentCard = ({
     }
   };
 
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-  };
-
   return (
-    <div className="block rounded-lg overflow-hidden bg-white flex-col h-full">
+    <div className="flex rounded-lg overflow-hidden bg-white flex-col h-full">
       <div className="relative w-full h-48 overflow-hidden bg-gray-200 group">
         {!imageLoaded && (
           <Skeleton className="absolute inset-0 w-full h-full" />
@@ -57,17 +51,11 @@ const EstablishmentCard = ({
             onLoad={() => setImageLoaded(true)}
           />
         </Link>
-        <button
-          onClick={toggleFavorite}
-          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-all duration-200 hover:scale-110"
-          aria-label="Add to favorites"
-        >
-          <Heart
-            className={`w-5 h-5 transition-colors ${
-              isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'
-            }`}
-          />
-        </button>
+        <FavoriteButton
+          establishmentId={establishment.id}
+          role={role}
+          className={`absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-all duration-200 hover:scale-105`}
+        />
       </div>
 
       <div className="p-4 flex flex-col flex-1">
@@ -92,25 +80,13 @@ const EstablishmentCard = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            {establishment.features.slice(0, 3).map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="flex items-center gap-1 text-xs"
-                >
-                  <Icon size={12} />
-                  <span>{feature.title}</span>
-                </Badge>
-              );
-            })}
-            {establishment.features.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{establishment.features.length - 3}
-              </Badge>
-            )}
+          <div className="flex items-center gap-2">
+            <Badge
+              className="flex items-center gap-1 text-xs"
+              variant={'default'}
+            >
+              {establishment.type.name || 'Unknown Type'}
+            </Badge>
           </div>
         </Link>
 

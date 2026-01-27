@@ -47,7 +47,7 @@ const VenuesMapPage = () => {
     if (error) {
       dispatch(addError(convertError(error)));
     }
-  });
+  }, [error, dispatch]);
 
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));

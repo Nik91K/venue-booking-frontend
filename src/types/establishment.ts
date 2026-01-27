@@ -9,17 +9,14 @@ export type EstablishmentType = {
   coverPhoto: string;
   createdAt: string;
   photos: string[];
-  type: {
-    id: number;
-    name: string;
-    image: string;
-  };
+  type: VenueType;
   address: string;
   locationDetails?: LocationDetails;
   workingHours?: string;
   features: Features[];
   comments: CommentType[];
   ownerId: number;
+  isFavorite: boolean;
 };
 
 export type LocationDetails = {
@@ -33,6 +30,11 @@ type Features = {
   id: number;
   icon: LucideIcon;
   title: string;
+};
+
+type VenueType = {
+  id: number;
+  name: string;
 };
 
 export type CommentType = {
