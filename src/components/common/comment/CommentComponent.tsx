@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/api/hooks';
 import { Card } from '@/components/ui/card';
 import { useEffect } from 'react';
-import { getUserById } from '@/api/slices/authSlice';
+import { getUserById } from '@/api/slices/userSlice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { EstablishmentType } from '@/types/establishment';
@@ -15,7 +15,7 @@ type CommentProps = {
 const CommentComponent = ({ establishment }: CommentProps) => {
   const dispatch = useAppDispatch();
 
-  const { selectedUser } = useAppSelector(state => state.auth);
+  const { selectedUser } = useAppSelector(state => state.users);
 
   useEffect(() => {
     if (establishment?.comments.length) {

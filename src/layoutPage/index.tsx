@@ -5,30 +5,28 @@ import React, { useEffect } from 'react';
 import AppSidebar from '@/components/layout/Sidebar';
 import { Spinner } from '@/components/ui/spinner';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
-import { getCurrentUser } from '@/api/slices/authSlice';
+import { getCurrentUser } from '@/api/slices/userSlice';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import ErrorComponent from '@/components/common/ErrorComponent';
 
 const LayoutPage = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
-  const { user, loading, error, accessToken } = useAppSelector(
-    state => state.auth
-  );
+  const { user, loading, error } = useAppSelector(state => state.users);
+  const { accessToken } = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    if (accessToken && !user && !loading) {
-      dispatch(getCurrentUser());
-    }
-  }, [accessToken, user, loading, dispatch]);
+    if (!accessToken) return;
+    if (user) return;
+
+    dispatch(getCurrentUser());
+  }, [accessToken, user, dispatch]);
 
   useEffect(() => {
     if (error) {
       dispatch(addError(convertError(error)));
     }
-  });
-
-  if (loading) return <Spinner />;
+  }, [error, dispatch]);
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -48,6 +46,7 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
           />
           <main className="flex-1 max-w-7xl mx-auto px-4">
             <ErrorComponent />
+            {loading && <Spinner />}
             {children}
           </main>
           <Footer role={user?.role || 'GUEST'} />

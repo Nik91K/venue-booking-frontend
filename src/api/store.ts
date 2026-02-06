@@ -5,6 +5,7 @@ import establishmentSlice from './slices/establishmentSlice';
 import commentSlice from './slices/commentSlice';
 import errorsSlice from './slices/errorSlice';
 import bookingSlice from './slices/bookingSlice';
+import userSlice from './slices/userSlice';
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   actionTransformer: action => {
@@ -27,14 +28,18 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
     return filtered;
   },
   stateTransformer: state => {
-    const { auth, ...safeState } = state;
+    const { auth, users, ...rest } = state;
 
     return {
-      ...safeState,
+      ...rest,
       auth: {
-        isAuthenticated: auth?.user !== null,
+        isAuthenticated: Boolean(auth?.user),
         user: auth.user ? { id: auth.user.id, email: auth.user.email } : null,
-        selectedUser: Object.keys(auth.selectedUser).length,
+      },
+      users: {
+        usersCount: users?.selectedUser
+          ? Object.keys(users.selectedUser).length
+          : 0,
       },
     };
   },
@@ -44,6 +49,7 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
 export const store = configureStore({
   reducer: {
     auth: authSlice,
+    users: userSlice,
     establishment: establishmentSlice,
     comment: commentSlice,
     errors: errorsSlice,

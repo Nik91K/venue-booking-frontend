@@ -98,7 +98,7 @@ const EstablishmentCard = ({
             </div>
             <div className="flex items-center gap-0.5">
               <span className="text-gray-600">
-                {establishment.comments.length}
+                {establishment.commentsCount}
               </span>
               <MessageCircle size={16} className="text-gray-600" />
             </div>

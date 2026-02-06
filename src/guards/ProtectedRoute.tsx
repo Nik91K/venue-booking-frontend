@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import { useAppSelector, useAppDispatch } from '@/api/hooks';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getCurrentUser } from '@/api/slices/authSlice';
+import { getCurrentUser } from '@/api/slices/userSlice';
 
 type ProtectedRouteProps = {
   allowedRoles?: string[];
@@ -14,7 +14,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles = [],
 }) => {
   const dispatch = useAppDispatch();
-  const { user, accessToken, loading } = useAppSelector(state => state.auth);
+  const { user, loading } = useAppSelector(state => state.users);
+  const { accessToken } = useAppSelector(state => state.auth);
 
   useEffect(() => {
     if (accessToken && !user && !loading) {

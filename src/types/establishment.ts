@@ -14,6 +14,7 @@ export type EstablishmentType = {
   locationDetails?: LocationDetails;
   workingHours?: string;
   features: Features[];
+  commentsCount: number;
   comments: CommentType[];
   ownerId: number;
   isFavorite: boolean;

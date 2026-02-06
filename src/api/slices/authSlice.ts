@@ -6,7 +6,6 @@ import type { RootState } from '../store';
 
 interface AuthState {
   user: UserType | null;
-  selectedUser: Record<number, UserType>;
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
@@ -15,7 +14,6 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  selectedUser: {},
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
   loading: false,
@@ -74,7 +72,10 @@ export const login = createAsyncThunk(
 export const refreshAccessToken = createAsyncThunk<
   { accessToken: string; refreshToken: string },
   void,
-  { state: RootState }
+  {
+    state: RootState;
+    rejectValue: { status?: number; message: string };
+  }
 >('auth/refresh', async (_, { getState, rejectWithValue }) => {
   try {
     const { refreshToken } = getState().auth;
@@ -83,20 +84,11 @@ export const refreshAccessToken = createAsyncThunk<
     });
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response?.data || error.message);
-  }
-});
-
-export const getCurrentUser = createAsyncThunk<
-  UserType,
-  void,
-  { state: RootState }
->('auth/me', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data || error.message);
+    return rejectWithValue({
+      status: error.response?.status,
+      message:
+        error.response?.data?.message || error.message || 'Refresh failed',
+    });
   }
 });
 
@@ -111,29 +103,12 @@ export const logout = createAsyncThunk<void, void, { state: RootState }>(
   }
 );
 
-export const getUserById = createAsyncThunk(
-  'auth/getUserById',
-  async (id: number, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get(
-        `${API_URL}${SLICE_URL}/users/${id}`
-      );
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     clearUser: state => {
       state.user = null;
-    },
-    clearSelectedUsers: state => {
-      state.selectedUser = {};
     },
   },
   extraReducers: builder => {
@@ -179,54 +154,30 @@ const authSlice = createSlice({
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
-      .addCase(refreshAccessToken.rejected, state => {
-        state.user = null;
-        state.accessToken = null;
-        state.refreshToken = null;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-      })
+      .addCase(refreshAccessToken.rejected, (state, action) => {
+        const status = action.payload?.status;
 
-      .addCase(getCurrentUser.pending, state => {
-        state.loading = true;
-      })
+        if (status === 401 || status === 403) {
+          state.user = null;
+          state.accessToken = null;
+          state.refreshToken = null;
 
-      .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
 
-      .addCase(getCurrentUser.rejected, state => {
-        state.loading = false;
-        state.user = null;
-        state.accessToken = null;
-        state.refreshToken = null;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        state.error = action.payload?.message || 'Session refresh failed';
       })
 
       .addCase(logout.fulfilled, state => {
         state.user = null;
-        state.selectedUser = {};
         state.accessToken = null;
         state.refreshToken = null;
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-      })
-
-      .addCase(getUserById.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getUserById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.selectedUser[action.payload.id] = action.payload;
-      })
-      .addCase(getUserById.rejected, state => {
-        state.loading = false;
       });
   },
 });
 
-export const { clearUser, clearSelectedUsers } = authSlice.actions;
+export const { clearUser } = authSlice.actions;
 export default authSlice.reducer;
