@@ -19,6 +19,7 @@ import PaginationComponent from '@/components/common/PaginationComponent';
 import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@/hooks/useBookingForm';
+import { getSchedulesByEstablishment } from '@/api/slices/scheduleSlice';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ const VenuesMapPage = () => {
     pageCount,
   } = useAppSelector(state => state.establishment);
   const { user } = useAppSelector(state => state.auth);
+  const { schedule } = useAppSelector(state => state.schedule);
 
   const [establishment, setEstablishment] = useState(establishments);
 
@@ -52,6 +54,16 @@ const VenuesMapPage = () => {
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));
   }, [page, take, dispatch]);
+
+  useEffect(() => {
+    if (establishment.length) {
+      establishment.forEach(est => {
+        if (!schedule[est.id]) {
+          dispatch(getSchedulesByEstablishment(est.id));
+        }
+      });
+    }
+  }, [establishment, schedule, dispatch]);
 
   const handlePageChange = (newPage: number) => {
     dispatch({ type: 'establishment/setPage', payload: newPage });
@@ -100,14 +112,15 @@ const VenuesMapPage = () => {
                   <p className="text-gray-500">No establishments found</p>
                 </div>
               ) : (
-                establishment.map(establishment => (
+                establishment.map(est => (
                   <EstablishmentCard
-                    key={establishment.id}
-                    establishment={establishment}
+                    key={est.id}
+                    establishment={est}
                     role={user?.role || 'GUEST'}
                     onLogin={handleLogin}
                     bookingFormRef={bookingFormRef}
                     handleAction={submitBookingForm}
+                    schedules={schedule[est.id] || []}
                   />
                 ))
               )}

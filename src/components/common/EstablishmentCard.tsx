@@ -11,6 +11,9 @@ import AlertDialogConponent from './AlertDialog';
 import { Skeleton } from '../ui/skeleton';
 import BookingOrderForm from './BookingOrderForm';
 import FavoriteButton from './FavoriteButton';
+import type { ScheduleType } from '@/types/shedule';
+import { getEstablishmentStatus } from '@/hooks/useSchedule';
+import { useMemo } from 'react';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
@@ -18,6 +21,7 @@ type EstablishmentCardProps = {
   onLogin?: () => void;
   handleAction?: () => void;
   bookingFormRef?: React.Ref<BookingOrderFormRef>;
+  schedules?: ScheduleType[];
 };
 
 const EstablishmentCard = ({
@@ -26,6 +30,7 @@ const EstablishmentCard = ({
   onLogin,
   handleAction,
   bookingFormRef,
+  schedules,
 }: EstablishmentCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -36,6 +41,10 @@ const EstablishmentCard = ({
       window.location.href = '/login';
     }
   };
+
+  const status = useMemo(() => {
+    return getEstablishmentStatus(schedules || []);
+  }, [schedules]);
 
   return (
     <div className="flex rounded-lg overflow-hidden bg-white flex-col h-full">
@@ -76,7 +85,7 @@ const EstablishmentCard = ({
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4 shrink-0" />
-              <p className="text-xs">Open now • Closes at 10:00 PM</p>
+              <p className="font-medium">{status.open ? 'Open' : 'Closed'}</p>
             </div>
           </div>
 
