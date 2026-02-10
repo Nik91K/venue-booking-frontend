@@ -9,6 +9,7 @@ import axios from 'axios';
 interface EstablishmentState {
   establishments: EstablishmentType[];
   selectedEstablishment: EstablishmentType | null;
+  favorites: EstablishmentType[];
   loading: boolean;
   error: string | null;
   page: number;
@@ -23,6 +24,7 @@ interface EstablishmentState {
 const initialState: EstablishmentState = {
   establishments: [],
   selectedEstablishment: null,
+  favorites: [],
   loading: false,
   error: null,
   page: 1,
@@ -477,7 +479,7 @@ const establishmentSlice = createSlice({
       .addCase(getAllFavorites.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.establishments = action.payload;
+        state.favorites = action.payload;
       })
       .addCase(getAllFavorites.rejected, (state, action) => {
         state.error = action.payload as string;

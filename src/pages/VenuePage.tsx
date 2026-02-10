@@ -1,5 +1,5 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -19,6 +19,8 @@ import BookingOrderForm from '@/components/common/BookingOrderForm';
 import { numToStars } from '@/hooks/useNumToStars';
 import { useBookingFormSubmit } from '@/hooks/useBookingForm';
 import FavoriteButton from '@/components/common/FavoriteButton';
+import { getSchedulesByEstablishment } from '@/api/slices/scheduleSlice';
+import { getEstablishmentStatus } from '@/hooks/useSchedule';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +31,8 @@ const EstablishmentPage = () => {
   const { loading, selectedEstablishment, error } = useAppSelector(
     state => state.establishment
   );
-  const { user } = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.users);
+  const { schedule } = useAppSelector(state => state.schedule);
 
   const userRole = user?.role || 'GUEST';
   const establishment = selectedEstablishment;
@@ -44,6 +47,19 @@ const EstablishmentPage = () => {
   const handleLogin = () => {
     navigate('/login');
   };
+
+  useEffect(() => {
+    if (selectedEstablishment) {
+      if (!schedule[selectedEstablishment.id]) {
+        dispatch(getSchedulesByEstablishment(selectedEstablishment.id));
+      }
+    }
+  }, [selectedEstablishment, schedule, dispatch]);
+
+  const status = useMemo(() => {
+    if (!selectedEstablishment) return { open: false };
+    return getEstablishmentStatus(schedule[selectedEstablishment?.id] || []);
+  }, [schedule, selectedEstablishment]);
 
   useEffect(() => {
     if (error) {
@@ -119,20 +135,24 @@ const EstablishmentPage = () => {
                   <p>{establishment.address}</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 shrink-0 mt-1" />
-                <div>
-                  <p className="font-medium text-white-900">Hours</p>
-                  <p>Open now • Closes at 10:00 PM</p>
-                </div>
+                <p className="font-medium text-white-900">
+                  {' '}
+                  {status.open ? 'Open' : 'Closed'}{' '}
+                </p>
               </div>
               <div className="flex items-start gap-1">
-                {numToStars(establishment.rating).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 text-yellow-300 fill-amber-300"
-                  />
-                ))}
+                {establishment.rating ? (
+                  numToStars(establishment.rating).map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-5 h-5 text-yellow-300 fill-amber-300"
+                    />
+                  ))
+                ) : (
+                  <p className="text-gray-500">No ratings yet</p>
+                )}
               </div>
             </div>
             <Separator />

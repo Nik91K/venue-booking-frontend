@@ -20,6 +20,7 @@ import { addError } from '@/api/slices/errorSlice';
 import { convertError } from '@/hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@/hooks/useBookingForm';
 import { getSchedulesByEstablishment } from '@/api/slices/scheduleSlice';
+import { getAllFavorites } from '@/api/slices/establishmentSlice';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -36,10 +37,11 @@ const VenuesMapPage = () => {
     hasPreviousPage,
     pageCount,
   } = useAppSelector(state => state.establishment);
-  const { user } = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.users);
   const { schedule } = useAppSelector(state => state.schedule);
 
   const [establishment, setEstablishment] = useState(establishments);
+  const [showingFavorites, setShowingFavorites] = useState(false);
 
   useEffect(() => {
     setEstablishment(establishments);
@@ -63,7 +65,30 @@ const VenuesMapPage = () => {
         }
       });
     }
-  }, [establishment, schedule, dispatch]);
+  }, [establishment]);
+
+  const showFavorites = async () => {
+    if (!user || user.role === 'GUEST') {
+      navigate('/login');
+      return;
+    }
+
+    if (showingFavorites) {
+      setEstablishment(establishments);
+      setShowingFavorites(false);
+      return;
+    }
+
+    try {
+      const res = await dispatch(getAllFavorites());
+      const favorites = res.payload ?? [];
+      setEstablishment(favorites);
+      setShowingFavorites(true);
+    } catch (error) {
+      dispatch(addError(convertError(error)));
+      setEstablishment([]);
+    }
+  };
 
   const handlePageChange = (newPage: number) => {
     dispatch({ type: 'establishment/setPage', payload: newPage });
@@ -93,7 +118,7 @@ const VenuesMapPage = () => {
                   {establishment.length} results
                 </InputGroupAddon>
               </InputGroup>
-              <Button variant="secondary" size="icon">
+              <Button variant="secondary" size="icon" onClick={showFavorites}>
                 <Heart className="w-5 h-5" color="#f66151" />
               </Button>
             </div>
@@ -112,17 +137,20 @@ const VenuesMapPage = () => {
                   <p className="text-gray-500">No establishments found</p>
                 </div>
               ) : (
-                establishment.map(est => (
-                  <EstablishmentCard
-                    key={est.id}
-                    establishment={est}
-                    role={user?.role || 'GUEST'}
-                    onLogin={handleLogin}
-                    bookingFormRef={bookingFormRef}
-                    handleAction={submitBookingForm}
-                    schedules={schedule[est.id] || []}
-                  />
-                ))
+                establishment.map(
+                  est =>
+                    est && (
+                      <EstablishmentCard
+                        key={est.id}
+                        establishment={est}
+                        role={user?.role || 'GUEST'}
+                        onLogin={handleLogin}
+                        bookingFormRef={bookingFormRef}
+                        handleAction={submitBookingForm}
+                        schedules={schedule[est.id] || []}
+                      />
+                    )
+                )
               )}
             </div>
             {!loading && establishment.length > 0 && (

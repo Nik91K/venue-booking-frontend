@@ -94,7 +94,7 @@ const EstablishmentCard = ({
               className="flex items-center gap-1 text-xs"
               variant={'default'}
             >
-              {establishment.type.name || 'Unknown Type'}
+              {establishment.type?.name ?? 'Unknown Type'}
             </Badge>
           </div>
         </Link>

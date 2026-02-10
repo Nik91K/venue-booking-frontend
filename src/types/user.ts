@@ -8,4 +8,5 @@ export type UserType = {
   avatarUrl: string;
   role: Role;
   createdAt: string;
+  favorites: number[];
 };
