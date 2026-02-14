@@ -143,7 +143,7 @@ const AdminEstablishmentsPage = () => {
                       <TableCell>{establishment.ownerId}</TableCell>
                       <TableCell>
                         <div className="text-center">
-                          {establishment.comments.length}
+                          {establishment.commentsCount || 0}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">

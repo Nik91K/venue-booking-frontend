@@ -120,6 +120,8 @@ const EstablishmentPage = () => {
                 <FavoriteButton
                   role={userRole}
                   establishmentId={establishment.id}
+                  isFavorite={establishment.isFavorite || false}
+                  className=""
                 />
               </div>
               <p className="text-white-700 leading-relaxed">
@@ -138,8 +140,7 @@ const EstablishmentPage = () => {
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 shrink-0 mt-1" />
                 <p className="font-medium text-white-900">
-                  {' '}
-                  {status.open ? 'Open' : 'Closed'}{' '}
+                  {status.open ? 'Open' : 'Closed'}
                 </p>
               </div>
               <div className="flex items-start gap-1">

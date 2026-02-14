@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import type { EstablishmentType } from '@/types/establishment';
 import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 
 interface EstablishmentState {
   establishments: EstablishmentType[];
@@ -64,7 +65,7 @@ export const createEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${API_URL}${SLICE_URL}`,
         establishmentData
       );
@@ -116,7 +117,10 @@ export const updateEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.patch(`${API_URL}${SLICE_URL}/${id}`, data);
+      const response = await axiosInstance.patch(
+        `${API_URL}${SLICE_URL}/${id}`,
+        data
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -128,7 +132,7 @@ export const deleteEstablishment = createAsyncThunk(
   'establishment/delete',
   async (id: number, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}${SLICE_URL}/${id}`);
+      await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -155,7 +159,7 @@ export const addFeatureToEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${API_URL}${SLICE_URL}/${id}/features/${featureId}`
       );
       return { id, feature: response.data };
@@ -172,7 +176,9 @@ export const removeFeatureFromEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      await axios.delete(`${API_URL}${SLICE_URL}/${id}/features/${featureId}`);
+      await axiosInstance.delete(
+        `${API_URL}${SLICE_URL}/${id}/features/${featureId}`
+      );
       return { id, featureId };
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -184,15 +190,8 @@ export const addFavorite = createAsyncThunk(
   'establishment/id/favorite',
   async (id: number, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await axios.post(
-        `${API_URL}${SLICE_URL}/${id}/favorite`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await axiosInstance.post(
+        `${API_URL}${SLICE_URL}/${id}/favorite`
       );
       return response.data;
     } catch (error: any) {
@@ -205,17 +204,9 @@ export const removeFavorite = createAsyncThunk(
   'establishment/id/unfavorite',
   async (id: number, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('accessToken');
-
-      const response = await axios.delete(
-        `${API_URL}${SLICE_URL}/${id}/favorite`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await axiosInstance.delete(
+        `${API_URL}${SLICE_URL}/${id}/favorite`
       );
-
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -227,14 +218,9 @@ export const getAllFavorites = createAsyncThunk(
   'establishment/favorites',
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem('accessToken');
-
-      const response = await axios.get(`${API_URL}${SLICE_URL}/favorites`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await axiosInstance.get(
+        `${API_URL}${SLICE_URL}/favorites`
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -445,13 +431,22 @@ const establishmentSlice = createSlice({
       })
 
       .addCase(addFavorite.pending, state => {
-        state.loading = true;
+        state.loading = false;
         state.error = null;
       })
-      .addCase(addFavorite.fulfilled, state => {
+      .addCase(addFavorite.fulfilled, (state, action) => {
         state.loading = false;
-        if (state.selectedEstablishment) {
+        const establishmentId = action.meta.arg;
+
+        if (state.selectedEstablishment?.id === establishmentId) {
           state.selectedEstablishment.isFavorite = true;
+        }
+
+        const index = state.establishments.findIndex(
+          est => est.id == establishmentId
+        );
+        if (index !== -1) {
+          state.establishments[index].isFavorite = true;
         }
       })
       .addCase(addFavorite.rejected, (state, action) => {
@@ -462,10 +457,19 @@ const establishmentSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(removeFavorite.fulfilled, state => {
+      .addCase(removeFavorite.fulfilled, (state, action) => {
         state.loading = false;
-        if (state.selectedEstablishment) {
+        const establishmentId = action.meta.arg;
+
+        if (state.selectedEstablishment?.id === establishmentId) {
           state.selectedEstablishment.isFavorite = false;
+        }
+
+        const index = state.establishments.findIndex(
+          est => est.id == establishmentId
+        );
+        if (index !== -1) {
+          state.establishments[index].isFavorite = false;
         }
       })
       .addCase(removeFavorite.rejected, (state, action) => {
