@@ -41,16 +41,43 @@ export const createBooking = createAsyncThunk<
   { rejectValue: string }
 >('/booking/create', async (data, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem('accessToken');
-    const response = await axios.post(`${API_URL}${SLICE_URL}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, data);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.message || 'Failed to create booking'
+    );
+  }
+});
+
+export const getAllBookings = createAsyncThunk<
+  BookingType[],
+  void,
+  { rejectValue: string }
+>('booking/getAll', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`${API_URL}${SLICE_URL}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || 'Failed to fetch bookings'
+    );
+  }
+});
+
+export const getCurrentUserBookings = createAsyncThunk<
+  BookingType[],
+  void,
+  { rejectValue: string }
+>('booking/getCurrentUser', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(
+      `${API_URL}${SLICE_URL}/my-bookings`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || 'Failed to fetch user bookings'
     );
   }
 });
@@ -63,7 +90,7 @@ export const getBookingsByEstablishment = createAsyncThunk<
   'booking/getByEstablishment',
   async (establishmentId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
+      const response = await axios.get(
         `${API_URL}${SLICE_URL}/establishment/${establishmentId}`
       );
       return response.data;
@@ -74,6 +101,23 @@ export const getBookingsByEstablishment = createAsyncThunk<
     }
   }
 );
+
+export const getBookingById = createAsyncThunk<
+  BookingType,
+  number,
+  { rejectValue: string }
+>('booking/getById', async (bookingId, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(
+      `${API_URL}${SLICE_URL}/${bookingId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || 'Failed to fetch booking'
+    );
+  }
+});
 
 const bookingSlice = createSlice({
   name: 'booking',
@@ -97,6 +141,32 @@ const bookingSlice = createSlice({
         state.error = action.payload || 'Unknown error';
       })
 
+      .addCase(getAllBookings.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllBookings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bookings = action.payload;
+      })
+      .addCase(getAllBookings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Unknown error';
+      })
+
+      .addCase(getCurrentUserBookings.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCurrentUserBookings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bookings = action.payload;
+      })
+      .addCase(getCurrentUserBookings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Unknown error';
+      })
+
       .addCase(getBookingsByEstablishment.pending, state => {
         state.loading = true;
         state.error = null;
@@ -111,6 +181,19 @@ const bookingSlice = createSlice({
       .addCase(getBookingsByEstablishment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Failed to fetch bookings';
+      })
+
+      .addCase(getBookingById.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getBookingById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.booking = action.payload;
+      })
+      .addCase(getBookingById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to fetch booking';
       });
   },
 });
