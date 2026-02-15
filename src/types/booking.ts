@@ -1,5 +1,5 @@
-import type { UserType } from './user';
-import type { EstablishmentType } from './establishment';
+import type { UserType } from '@/types/user';
+import type { EstablishmentType } from '@/types/establishment';
 
 export type BookingType = {
   id: number;

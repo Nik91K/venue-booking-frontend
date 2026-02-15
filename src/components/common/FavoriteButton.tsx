@@ -1,10 +1,10 @@
 import { Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { addFavorite, removeFavorite } from '@/api/slices/establishmentSlice';
+import { addFavorite, removeFavorite } from '@api/slices/establishmentSlice';
 import type { Role } from '@/types/common';
-import { useAppDispatch } from '@/api/hooks';
-import { addError } from '@/api/slices/errorSlice';
-import { convertError } from '@/hooks/logger/errorConverter';
+import { useAppDispatch } from '@api/hooks';
+import { addError } from '@api/slices/errorSlice';
+import { convertError } from '@hooks/logger/errorConverter';
 
 type FavoriteButtonProps = {
   establishmentId?: number;

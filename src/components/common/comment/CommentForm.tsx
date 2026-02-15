@@ -1,18 +1,18 @@
-import { useAppDispatch } from '@/api/hooks';
-import { createComment } from '@/api/slices/commentSlice';
-import { Card } from '@/components/ui/card';
+import { useAppDispatch } from '@api/hooks';
+import { createComment } from '@api/slices/commentSlice';
+import { Card } from '@components/ui/card';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group';
+} from '@components/ui/input-group';
 import type { Role } from '@/types/common';
 import { ArrowUpIcon, MessageCircle, Star } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { addError } from '@/api/slices/errorSlice';
-import { validateCommentForm } from '@/hooks/validation/comment';
+import { addError } from '@api/slices/errorSlice';
+import { validateCommentForm } from '@hooks/validation/comment';
 
 type CommentFormProps = {
   establishmentId: number;

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Spinner } from '@/components/ui/spinner';
-import { useAppSelector, useAppDispatch } from '@/api/hooks';
+import { Spinner } from '@components/ui/spinner';
+import { useAppSelector, useAppDispatch } from '@api/hooks';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getCurrentUser } from '@/api/slices/userSlice';
+import { getCurrentUser } from '@api/slices/userSlice';
 
 type ProtectedRouteProps = {
   allowedRoles?: string[];

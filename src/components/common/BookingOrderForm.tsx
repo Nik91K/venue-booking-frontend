@@ -1,12 +1,12 @@
-import type { BookingType } from '@/types/establishment';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import type { BookingType } from '@/types/booking';
+import { Label } from '@components/ui/label';
+import { Input } from '@components/ui/input';
 import { useState, forwardRef, useImperativeHandle } from 'react';
 import type { BookingOrderFormRef } from '@/types/establishment';
-import { useAppDispatch } from '@/api/hooks';
-import { createBooking } from '@/api/slices/bookingSlice';
-import { addError } from '@/api/slices/errorSlice';
-import { convertError } from '@/hooks/logger/errorConverter';
+import { useAppDispatch } from '@api/hooks';
+import { createBooking } from '@api/slices/bookingSlice';
+import { addError } from '@api/slices/errorSlice';
+import { convertError } from '@hooks/logger/errorConverter';
 
 type BookingOrderProps = {
   onSubmit?: (booking: BookingType) => void;
@@ -17,7 +17,7 @@ const BookingOrderForm = forwardRef<BookingOrderFormRef, BookingOrderProps>(
   ({ establishmentId }, ref) => {
     const dispatch = useAppDispatch();
 
-    const [formData, setFormData] = useState<BookingType>({
+    const [formData, setFormData] = useState({
       establishment: establishmentId,
       bookingDate: new Date(),
       bookingTime: '',

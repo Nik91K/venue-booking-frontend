@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import * as Sentry from '@sentry/react';
-import authSlice from './slices/authSlice';
-import establishmentSlice from './slices/establishmentSlice';
-import commentSlice from './slices/commentSlice';
-import errorsSlice from './slices/errorSlice';
-import bookingSlice from './slices/bookingSlice';
-import userSlice from './slices/userSlice';
-import scheduleSlice from './slices/scheduleSlice';
+import authSlice from '@api/slices/authSlice';
+import establishmentSlice from '@api/slices/establishmentSlice';
+import commentSlice from '@api/slices/commentSlice';
+import errorsSlice from '@api/slices/errorSlice';
+import bookingSlice from '@api/slices/bookingSlice';
+import userSlice from '@api/slices/userSlice';
+import scheduleSlice from '@api/slices/scheduleSlice';
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   actionTransformer: action => {

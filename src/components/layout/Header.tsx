@@ -1,12 +1,12 @@
 import React from 'react';
-import { HEADER } from '@/fixtures/header.fixture';
+import { HEADER } from '@fixtures/header.fixture';
 import type { HeaderConfig } from '@/types/header';
 import { Link } from 'react-router-dom';
-import WebsiteLogo from '../common/WebsiteLogo';
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Button } from '../ui/button';
+import WebsiteLogo from '@components/common/WebsiteLogo';
+import { SidebarTrigger } from '@components/ui/sidebar';
+import { Button } from '@components/ui/button';
 import type { Role } from '@/types/common';
-import UserDropdownMenu from '../common/UserDropdownMenu';
+import UserDropdownMenu from '@components/common/UserDropdownMenu';
 
 type HeaderProps = {
   username: string;

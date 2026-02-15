@@ -1,8 +1,8 @@
 import type { WebsiteLogoProps } from '@/types/common';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { Skeleton } from '@components/ui/skeleton';
 
 const WebsiteLogo: React.FC<WebsiteLogoProps> = ({
   image,

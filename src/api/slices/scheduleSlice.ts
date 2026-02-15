@@ -1,7 +1,7 @@
 import type { ScheduleDays, ScheduleType } from '@/types/shedule';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import axiosInstance from '../axiosConfig';
+import axiosInstance from '@api/axiosConfig';
 
 interface ScheduleState {
   schedule: Record<number, ScheduleType[]>;

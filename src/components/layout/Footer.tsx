@@ -1,9 +1,9 @@
 import React from 'react';
-import { FOOTER } from '@/fixtures/footer.fixture';
+import { FOOTER } from '@fixtures/footer.fixture';
 import type { FooterProps } from '@/types/footer';
 import { Link } from 'react-router-dom';
-import { Button } from '../ui/button';
-import WebsiteLogo from '../common/WebsiteLogo';
+import { Button } from '@components/ui/button';
+import WebsiteLogo from '@components/common/WebsiteLogo';
 
 const Footer: React.FC<FooterProps> = ({
   image = FOOTER.image,

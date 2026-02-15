@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from '@/api/hooks';
-import { Card } from '@/components/ui/card';
+import { useAppDispatch, useAppSelector } from '@api/hooks';
+import { Card } from '@components/ui/card';
 import { useEffect } from 'react';
-import { getUserById } from '@/api/slices/userSlice';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getUserById } from '@api/slices/userSlice';
+import { Skeleton } from '@components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import type { EstablishmentType } from '@/types/establishment';
-import { numToStars } from '@/hooks/useNumToStars';
+import { numToStars } from '@hooks/useNumToStars';
 import { Star } from 'lucide-react';
 
 type CommentProps = {

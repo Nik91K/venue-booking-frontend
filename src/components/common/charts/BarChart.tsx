@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from '@/components/ui/chart';
+} from '@components/ui/chart';
 
 type ChartData = Record<string, string | number>;
 

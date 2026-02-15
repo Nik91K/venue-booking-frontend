@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import type { EstablishmentType } from '@/types/establishment';
 import axios from 'axios';
-import axiosInstance from '../axiosConfig';
+import axiosInstance from '@api/axiosConfig';
 
 interface EstablishmentState {
   establishments: EstablishmentType[];

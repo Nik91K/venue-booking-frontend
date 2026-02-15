@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@components/ui/badge';
 import { Star, MapPin, Clock, MessageCircle } from 'lucide-react';
 import type {
   BookingOrderFormRef,
   EstablishmentType,
 } from '@/types/establishment';
 import type { Role } from '@/types/common';
-import AlertDialogConponent from './AlertDialog';
-import { Skeleton } from '../ui/skeleton';
-import BookingOrderForm from './BookingOrderForm';
-import FavoriteButton from './FavoriteButton';
+import AlertDialogConponent from '@components/common/AlertDialog';
+import { Skeleton } from '@components/ui/skeleton';
+import BookingOrderForm from '@components/common/BookingOrderForm';
+import FavoriteButton from '@components/common/FavoriteButton';
 import type { ScheduleType } from '@/types/shedule';
-import { getEstablishmentStatus } from '@/hooks/useSchedule';
+import { getEstablishmentStatus } from '@hooks/useSchedule';
 import { useMemo } from 'react';
 
 type EstablishmentCardProps = {

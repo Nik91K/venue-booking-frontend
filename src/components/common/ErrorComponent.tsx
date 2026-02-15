@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useAppDispatch, useAppSelector } from '@/api/hooks';
-import { clearErrors } from '@/api/slices/errorSlice';
+import { Alert, AlertDescription, AlertTitle } from '@components/ui/alert';
+import { useAppDispatch, useAppSelector } from '@api/hooks';
+import { clearErrors } from '@api/slices/errorSlice';
 
 const ErrorComponent = () => {
   const dispatch = useAppDispatch();

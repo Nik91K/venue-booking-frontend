@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { CommentType } from '@/types/establishment';
-import axiosInstance from '../axiosConfig';
+import axiosInstance from '@api/axiosConfig';
 
 interface CommentState {
   comment: CommentType[];

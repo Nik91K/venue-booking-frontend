@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { store } from './store';
-import { refreshAccessToken } from './slices/authSlice';
+import { store } from '@api/store';
+import { refreshAccessToken } from '@api/slices/authSlice';
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

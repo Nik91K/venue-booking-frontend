@@ -1,13 +1,13 @@
 import LayoutPage from '@/layoutPage';
-import { mockUsers } from '@/fixtures/charts.fixture';
+import { mockUsers } from '@fixtures/charts.fixture';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from '@components/ui/card';
+import { Button } from '@components/ui/button';
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +23,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
+} from '@components/ui/dropdown-menu';
+import { Badge } from '@components/ui/badge';
 import {
   Users,
   Search,
@@ -41,7 +41,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from '@/components/ui/input-group';
+} from '@components/ui/input-group';
 
 const AdminUsersPage = () => {
   const [search, setSearch] = useState('');

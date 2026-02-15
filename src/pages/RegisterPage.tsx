@@ -1,19 +1,19 @@
 import React from 'react';
 import LayoutPage from '@/layoutPage';
-import FormFieldGroup from '@/components/common/FormFieldGroup';
+import FormFieldGroup from '@components/common/FormFieldGroup';
 import { Button } from '@/components/ui/button';
 import { MailIcon, KeyRound, User, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { AuthorizationProps } from '@/types/authorization';
-import { AUTHORIZATION } from '@/fixtures/authorization.fixture';
-import { register } from '@/api/slices/authSlice';
-import type { AppDispatch, RootState } from '@/api/store';
+import { AUTHORIZATION } from '@fixtures/authorization.fixture';
+import { register } from '@api/slices/authSlice';
+import type { AppDispatch, RootState } from '@api/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateRegistrationForm } from '@/hooks/validation/authorization';
-import { Card } from '@/components/ui/card';
-import { addError } from '@/api/slices/errorSlice';
-import { convertError } from '@/hooks/logger/errorConverter';
+import { validateRegistrationForm } from '@hooks/validation/authorization';
+import { Card } from '@components/ui/card';
+import { addError } from '@api/slices/errorSlice';
+import { convertError } from '@hooks/logger/errorConverter';
 
 const RegisterPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.registration.header,

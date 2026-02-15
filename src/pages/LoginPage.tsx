@@ -1,17 +1,17 @@
 import React from 'react';
 import LayoutPage from '@/layoutPage';
-import FormFieldGroup from '@/components/common/FormFieldGroup';
-import { Button } from '@/components/ui/button';
+import FormFieldGroup from '@components/common/FormFieldGroup';
+import { Button } from '@components/ui/button';
 import { useState } from 'react';
 import type { AuthorizationProps } from '@/types/authorization';
-import { AUTHORIZATION } from '@/fixtures/authorization.fixture';
+import { AUTHORIZATION } from '@fixtures/authorization.fixture';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '@/api/slices/authSlice';
-import type { AppDispatch, RootState } from '@/api/store';
+import { login } from '@api/slices/authSlice';
+import type { AppDispatch, RootState } from '@api/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { validateLoginForm } from '@/hooks/validation/authorization';
-import { Card } from '@/components/ui/card';
-import { addError } from '@/api/slices/errorSlice';
+import { validateLoginForm } from '@hooks/validation/authorization';
+import { Card } from '@components/ui/card';
+import { addError } from '@api/slices/errorSlice';
 
 const LoginPage: React.FC<AuthorizationProps> = ({
   header = AUTHORIZATION.login.header,

@@ -1,6 +1,6 @@
 import LayoutPage from '@/layoutPage';
-import { BarChartComponent } from '@/components/common/charts/BarChart';
-import type { ChartConfig } from '@/components/ui/chart';
+import { BarChartComponent } from '@components/common/charts/BarChart';
+import type { ChartConfig } from '@components/ui/chart';
 import {
   bookingsByTimeSlot,
   bookingsByWeekday,

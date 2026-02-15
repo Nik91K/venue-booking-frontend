@@ -4,16 +4,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '../ui/button';
-import DropdownMenuItems from './DropdownMenu';
-import { USER_MENU } from '@/fixtures/sidebar.fixture';
-import { useAppDispatch } from '@/api/hooks';
-import { logout } from '@/api/slices/authSlice';
+} from '@components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { Button } from '@components/ui/button';
+import DropdownMenuItems from '@components/common/DropdownMenu';
+import { USER_MENU } from '@fixtures/sidebar.fixture';
+import { useAppDispatch } from '@api/hooks';
+import { logout } from '@api/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Skeleton } from '@/components/ui/skeleton';
-import { SidebarMenuButton } from '../ui/sidebar';
+import { Skeleton } from '@components/ui/skeleton';
+import { SidebarMenuButton } from '@components/ui/sidebar';
 import type React from 'react';
 
 type UserFooterProps = {

@@ -1,18 +1,18 @@
-import './instrument.ts';
+import '@/instrument.ts';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './api/store.ts';
-import './index.css';
-import ProtectedRoute from './guards/ProtectedRoute.tsx';
-import App from './App.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
+import { store } from '@api/store.ts';
+import '@/index.css';
+import ProtectedRoute from '@/guards/ProtectedRoute.tsx';
+import App from '@/App.tsx';
+import RegisterPage from '@/pages/RegisterPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
-import VenuesMapPage from './pages/VenuesMapPage.tsx';
-import AdminDashboard from './pages/admin/AdminDashboard.tsx';
-import AdminUsersPage from './pages/admin/UserManagement.tsx';
-import AdminEstablishmentsPage from './pages/admin/EstablishmentsManagement.tsx';
-import EstablishmentPage from './pages/VenuePage.tsx';
+import VenuesMapPage from '@/pages/VenuesMapPage.tsx';
+import AdminDashboard from '@/pages/admin/AdminDashboard.tsx';
+import AdminUsersPage from '@/pages/admin/UserManagement.tsx';
+import AdminEstablishmentsPage from '@/pages/admin/EstablishmentsManagement.tsx';
+import EstablishmentPage from '@/pages/VenuePage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

@@ -1,4 +1,4 @@
-import type { NavLink, Role } from './common';
+import type { NavLink, Role } from '@/types/common';
 
 export type FooterProps = {
   image?: string;

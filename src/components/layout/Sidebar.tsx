@@ -9,15 +9,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-} from '@/components/ui/sidebar';
-import { SIDEBAR } from '@/fixtures/sidebar.fixture';
+} from '@components/ui/sidebar';
+import { SIDEBAR } from '@fixtures/sidebar.fixture';
 import { ChevronUp, LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@components/ui/button';
 import { Link } from 'react-router-dom';
 import type { Role } from '@/types/common';
-import { SIDEBAR_FOOTER } from '@/fixtures/sidebar.fixture';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import UserDropdownMenu from '../common/UserDropdownMenu';
+import { SIDEBAR_FOOTER } from '@fixtures/sidebar.fixture';
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import UserDropdownMenu from '@components/common/UserDropdownMenu';
 
 type AppSidebarProps = {
   username: string;

@@ -4,7 +4,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from '@/components/ui/input-group';
+} from '@components/ui/input-group';
 import type React from 'react';
 
 type FormTypeProps = {
