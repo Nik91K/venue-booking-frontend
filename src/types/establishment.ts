@@ -33,7 +33,7 @@ type Features = {
   title: string;
 };
 
-type VenueType = {
+export type VenueType = {
   id: number;
   name: string;
 };
@@ -49,4 +49,15 @@ export type CommentType = {
 
 export type BookingOrderFormRef = {
   submit: () => void;
+};
+
+export type UpdateEstablishmentType = {
+  name: string;
+  description: string;
+  totalSeats: number;
+  coverPhoto: string;
+  photos: string[];
+  type: VenueType;
+  address: string;
+  locationDetails?: LocationDetails;
 };

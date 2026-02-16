@@ -4,6 +4,7 @@ import {
   getAllEstablishments,
   deleteEstablishment,
   getEstablishmentById,
+  updateEstablishment,
 } from '@api/slices/establishmentSlice';
 import {
   Table,
@@ -39,8 +40,9 @@ import {
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import PaginationComponent from '@components/common/PaginationComponent';
-import AlertDialogConponent from '@components/common/AlertDialog';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
+import EditEstablishmentDialog from '@components/common/adminComponents/EditEstablishmentDialog';
+import EstablishmentBookingsDialog from '@components/common/adminComponents/EstablishmentBookingsDialog';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -69,6 +71,18 @@ const AdminEstablishmentsPage = () => {
   useEffect(() => {
     dispatch(getAllEstablishments({ page, take }));
   }, [page, take, dispatch]);
+
+  const handleUpdateEstablishment = (
+    establishmentId: number,
+    updateData: { name?: string; description?: string; address?: string }
+  ) => {
+    dispatch(
+      updateEstablishment({
+        id: establishmentId,
+        data: updateData,
+      })
+    );
+  };
 
   const handleViewBookings = (establishmentId: number) => {
     getEstablishmentById(establishmentId);
@@ -155,66 +169,22 @@ const AdminEstablishmentsPage = () => {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent
+                            align="end"
+                            className="flex flex-col gap-2"
+                          >
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              Edit Establishment
-                            </DropdownMenuItem>
-                            <AlertDialogConponent
-                              triggerText="View Bookings"
-                              title={`Bookings for ${establishment.name}`}
-                              description="View all reservations for this establishment"
-                              actionText="Close"
-                              onOpenChange={open => {
-                                if (open) {
-                                  handleViewBookings(establishment.id);
-                                }
-                              }}
-                            >
-                              {bookingsLoading ? (
-                                <p>Loading bookings...</p>
-                              ) : bookings.length > 0 ? (
-                                <div className="space-y-4 max-h-96 overflow-y-auto">
-                                  {bookings.map(booking => (
-                                    <div
-                                      key={booking.id}
-                                      className="p-4 border rounded-lg"
-                                    >
-                                      <p>
-                                        Establishment name:{' '}
-                                        {booking.establishment.name}
-                                      </p>
-
-                                      <p>Booking ID: {booking.id}</p>
-                                      <p>
-                                        Date:{' '}
-                                        {new Date(
-                                          booking.bookingDate
-                                        ).toLocaleDateString()}
-                                      </p>
-                                      <p>Time: {booking.bookingTime}</p>
-                                      <p>Guests: {booking.numberOfGuests}</p>
-                                      <p>
-                                        Status:{' '}
-                                        <span
-                                          className={`text-${booking.status == `CONFIRMED` ? 'green-500' : 'red-500'}`}
-                                        >
-                                          {booking.status}
-                                        </span>
-                                      </p>
-                                      {booking.user && (
-                                        <p className="text-sm">
-                                          User: {booking.user.name} (
-                                          {booking.user.email})
-                                        </p>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <p>No bookings found for this establishment.</p>
-                              )}
-                            </AlertDialogConponent>
+                            <EditEstablishmentDialog
+                              establishment={establishment}
+                              onUpdate={handleUpdateEstablishment}
+                            />
+                            <EstablishmentBookingsDialog
+                              establishmentId={establishment.id}
+                              establishmentName={establishment.name}
+                              bookings={bookings}
+                              loading={bookingsLoading}
+                              onOpen={handleViewBookings}
+                            />
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-destructive"
