@@ -13,14 +13,16 @@ import {
   InputGroupAddon,
 } from '@components/ui/input-group';
 import { Spinner } from '@components/ui/spinner';
-import { getAllEstablishments } from '@api/slices/establishmentSlice';
+import {
+  getAllEstablishments,
+  getAllFavorites,
+} from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import PaginationComponent from '@components/common/PaginationComponent';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import { getSchedulesByEstablishment } from '@api/slices/scheduleSlice';
-import { getAllFavorites } from '@api/slices/establishmentSlice';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();

@@ -1,11 +1,10 @@
 export type ErrorType = 'error' | 'warning' | 'info';
 
 export type UserError = {
+  id: number;
   title: string;
   message: string;
   type: ErrorType;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
 };
+
+export type CreateUserError = Omit<UserError, 'id'>;

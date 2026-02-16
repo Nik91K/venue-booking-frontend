@@ -1,6 +1,10 @@
 import LayoutPage from '@/layoutPage';
 import { useEffect, useState } from 'react';
-import { getAllEstablishments } from '@api/slices/establishmentSlice';
+import {
+  getAllEstablishments,
+  deleteEstablishment,
+  getEstablishmentById,
+} from '@api/slices/establishmentSlice';
 import {
   Table,
   TableBody,
@@ -30,15 +34,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from '@components/ui/dropdown-menu';
-import { DropdownMenuItem } from '@components/ui/dropdown-menu';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import PaginationComponent from '@components/common/PaginationComponent';
-import { deleteEstablishment } from '@api/slices/establishmentSlice';
 import AlertDialogConponent from '@components/common/AlertDialog';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
-import { getEstablishmentById } from '@api/slices/establishmentSlice';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();

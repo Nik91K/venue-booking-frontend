@@ -1,25 +1,26 @@
-import type { UserError } from '@/types/error';
+import type { UserError, CreateUserError } from '@/types/error';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type ErrorState = {
+  id: number;
   list: UserError[];
 };
 
-const initialState: ErrorState = { list: [] };
+const initialState: ErrorState = { id: 0, list: [] };
 
-const errorsSlice = createSlice({
+const errorSlice = createSlice({
   name: 'errors',
   initialState,
   reducers: {
-    addError: (state, action: PayloadAction<UserError>) => {
-      state.list.push(action.payload);
+    addError: (state, action: PayloadAction<CreateUserError>) => {
+      state.list.push({ ...action.payload, id: state.id++ });
     },
-    clearErrors: state => {
-      state.list = [];
+    clearError: (state, action: PayloadAction<number>) => {
+      state.list = state.list.filter(error => error.id !== action.payload);
     },
   },
 });
 
-export const { addError, clearErrors } = errorsSlice.actions;
-export default errorsSlice.reducer;
+export const { addError, clearError } = errorSlice.actions;
+export default errorSlice.reducer;

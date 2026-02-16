@@ -3,8 +3,10 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@components/ui/button';
 import { Spinner } from '@components/ui/spinner';
-import { getEstablishmentById } from '@api/slices/establishmentSlice';
-import { getEstablishmentComments } from '@api/slices/establishmentSlice';
+import {
+  getEstablishmentById,
+  getEstablishmentComments,
+} from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import AlertDialogConponent from '@components/common/AlertDialog';
 import { ArrowLeft, Clock, MapPin, Star } from 'lucide-react';
