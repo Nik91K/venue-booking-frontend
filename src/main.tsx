@@ -14,6 +14,7 @@ import AdminUsersPage from '@pages/admin/UserManagement.tsx';
 import AdminEstablishmentsPage from '@pages/admin/EstablishmentsManagement.tsx';
 import EstablishmentPage from '@pages/VenuePage.tsx';
 import NotFoundPage from '@pages/NotFoundPage.tsx';
+import OwnerDashboard from './pages/owner/OwnerDashboard';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -32,6 +33,12 @@ createRoot(document.getElementById('root')!).render(
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user" element={<AdminUsersPage />} />
           <Route path="establishments" element={<AdminEstablishmentsPage />} />
+        </Route>
+        <Route
+          path="/owner"
+          element={<ProtectedRoute allowedRoles={['OWNER']} />}
+        >
+          <Route index element={<OwnerDashboard />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

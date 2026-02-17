@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LayoutPage from '@/layoutPage';
 import MapComponent from '@components/common/map/Map';
 import MapProvider from '@components/common/map/MapProvider';
-import EstablishmentCard from '@components/common/EstablishmentCard';
+import EstablishmentCard from '@components/common/cards/EstablishmentCard';
 import FiltrationComponent from '@components/common/FiltrationComponent';
 import { Button } from '@components/ui/button';
 import { Heart, Search } from 'lucide-react';

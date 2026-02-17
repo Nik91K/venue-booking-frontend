@@ -8,37 +8,19 @@ import {
   CardTitle,
 } from '@components/ui/card';
 import { Button } from '@components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu';
-import { Badge } from '@components/ui/badge';
-import {
-  Search,
-  MoreHorizontal,
-  Mail,
-  Phone,
-  Calendar,
-  UserX,
-} from 'lucide-react';
+import { Search, UserX } from 'lucide-react';
 import { useState } from 'react';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from '@components/ui/input-group';
+import DataTable from '@components/common/DataTable';
+import userColumns from '@components/adminComponents/columns/UserColumns';
+import {
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@components/ui/dropdown-menu';
 
 const AdminUsersPage = () => {
   const [search, setSearch] = useState('');
@@ -51,6 +33,18 @@ const AdminUsersPage = () => {
     const matchesRole = selectedRole === 'all' || user.role === selectedRole;
     return matchesSearch && matchesRole;
   });
+
+  const userRowActions = () => (
+    <>
+      <DropdownMenuItem>View Details</DropdownMenuItem>
+      <DropdownMenuItem>Edit User</DropdownMenuItem>
+      <DropdownMenuItem>View Bookings</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem className="text-destructive">
+        Delete User
+      </DropdownMenuItem>
+    </>
+  );
 
   return (
     <LayoutPage>
@@ -124,75 +118,12 @@ const AdminUsersPage = () => {
             </div>
 
             <div className="rounded-md border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Bookings</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map(user => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{user.name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            Last active: {user.lastActive}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Mail className="h-3 w-3 text-muted-foreground" />
-                            {user.email}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Phone className="h-3 w-3" />
-                            {user.phone}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge>{user.role}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {user.bookings}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Calendar className="h-3 w-3 text-muted-foreground" />
-                          {user.joinedAt}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Edit User</DropdownMenuItem>
-                            <DropdownMenuItem>View Bookings</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">
-                              Delete User
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <DataTable
+                data={filteredUsers}
+                emptyMessage="No users found"
+                columns={userColumns}
+                rowActions={userRowActions}
+              />
             </div>
 
             {filteredUsers.length === 0 && (

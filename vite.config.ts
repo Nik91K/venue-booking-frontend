@@ -14,7 +14,6 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@api': path.resolve(__dirname, 'src/api'),
       '@fixtures': path.resolve(__dirname, 'src/fixtures'),
-      '@types': path.resolve(__dirname, 'src/types'),
     },
   },
 });

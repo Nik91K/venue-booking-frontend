@@ -3,12 +3,12 @@ import type {
   UpdateEstablishmentType,
 } from '@/types/establishment';
 import { useEffect, useState } from 'react';
-import AlertDialogConponent from '@components/common/AlertDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
 
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Input } from '@components/ui/input';
+import { Textarea } from '@components/ui/textarea';
+import { Label } from '@components/ui/label';
+import { Separator } from '@components/ui/separator';
 
 type Props = {
   establishment: EstablishmentType;

@@ -8,7 +8,7 @@ import {
   getEstablishmentComments,
 } from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
-import AlertDialogConponent from '@components/common/AlertDialog';
+import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
 import { ArrowLeft, Clock, MapPin, Star } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { Separator } from '@components/ui/separator';

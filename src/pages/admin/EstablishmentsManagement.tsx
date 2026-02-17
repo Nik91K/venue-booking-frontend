@@ -6,14 +6,6 @@ import {
   getEstablishmentById,
   updateEstablishment,
 } from '@api/slices/establishmentSlice';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@components/ui/table';
 import { useAppDispatch, useAppSelector } from '@api/hooks';
 import {
   Card,
@@ -27,22 +19,21 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@components/ui/input-group';
-import { MoreHorizontal, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   DropdownMenuItem,
 } from '@components/ui/dropdown-menu';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import PaginationComponent from '@components/common/PaginationComponent';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
-import EditEstablishmentDialog from '@components/common/adminComponents/EditEstablishmentDialog';
-import EstablishmentBookingsDialog from '@components/common/adminComponents/EstablishmentBookingsDialog';
+import EditEstablishmentDialog from '@components/common/dialog/EditEstablishmentDialog';
+import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
+import AdminEstablishmentColumns from '@components/adminComponents/columns/AdminEstablishmentColumns';
+import DataTable from '@components/common/DataTable';
+import type { EstablishmentType } from '@/types/establishment';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -97,6 +88,29 @@ const AdminEstablishmentsPage = () => {
     dispatch({ type: 'establishment/setPage', payload: newPage });
   };
 
+  const userRowActions = (establishment: EstablishmentType) => (
+    <>
+      <EditEstablishmentDialog
+        establishment={establishment}
+        onUpdate={handleUpdateEstablishment}
+      />
+      <EstablishmentBookingsDialog
+        establishmentId={establishment.id}
+        establishmentName={establishment.name}
+        bookings={bookings}
+        loading={bookingsLoading}
+        onOpen={() => handleViewBookings(establishment.id)}
+      />
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        className="text-destructive"
+        onClick={() => handleDelete(establishment.id)}
+      >
+        Delete Establishment
+      </DropdownMenuItem>
+    </>
+  );
+
   return (
     <LayoutPage>
       <div className="space-y-6 p-6">
@@ -139,66 +153,13 @@ const AdminEstablishmentsPage = () => {
             </div>
 
             <div className="rounded-md border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Id</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Rating</TableHead>
-                    <TableHead>Owner</TableHead>
-                    <TableHead>Comments</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {establishments.map(establishment => (
-                    <TableRow key={establishment.id}>
-                      <TableCell>{establishment.id}</TableCell>
-                      <TableCell>{establishment.name}</TableCell>
-                      <TableCell>{establishment.rating}</TableCell>
-                      <TableCell>{establishment.ownerId}</TableCell>
-                      <TableCell>
-                        <div className="text-center">
-                          {establishment.commentsCount || 0}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="flex flex-col gap-2"
-                          >
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <EditEstablishmentDialog
-                              establishment={establishment}
-                              onUpdate={handleUpdateEstablishment}
-                            />
-                            <EstablishmentBookingsDialog
-                              establishmentId={establishment.id}
-                              establishmentName={establishment.name}
-                              bookings={bookings}
-                              loading={bookingsLoading}
-                              onOpen={handleViewBookings}
-                            />
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={() => handleDelete(establishment.id)}
-                            >
-                              Delete Establishment
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <DataTable
+                data={establishments}
+                columns={AdminEstablishmentColumns}
+                emptyMessage="No establishments found"
+                loading={loading}
+                rowActions={userRowActions}
+              />
               {!loading && establishments.length > 0 && (
                 <PaginationComponent
                   page={page}

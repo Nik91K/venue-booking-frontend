@@ -12,8 +12,7 @@
       "@hooks/*": ["./src/hooks/*"],
       "@pages/*": ["./src/pages/*"],
       "@api/*": ["./src/api/*"],
-      "@fixtures/*": ["./src/fixtures/*"],
-      "@types/*": ["./src/types/*"]
+      "@fixtures/*": ["./src/fixtures/*"]
     }
   }
 }

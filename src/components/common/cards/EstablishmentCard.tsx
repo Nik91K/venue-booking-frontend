@@ -7,7 +7,7 @@ import type {
   EstablishmentType,
 } from '@/types/establishment';
 import type { Role } from '@/types/common';
-import AlertDialogConponent from '@components/common/AlertDialog';
+import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
 import { Skeleton } from '@components/ui/skeleton';
 import BookingOrderForm from '@components/common/BookingOrderForm';
 import FavoriteButton from '@components/common/FavoriteButton';
