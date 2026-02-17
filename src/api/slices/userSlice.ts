@@ -5,6 +5,7 @@ import type { RootState } from '@api/store';
 
 interface UserState {
   user: UserType | null;
+  users: UserType[];
   selectedUser: Record<number, UserType>;
   accessToken: string | null;
   refreshToken: string | null;
@@ -14,6 +15,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
+  users: [],
   selectedUser: {},
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
@@ -32,7 +34,7 @@ export const getCurrentUser = createAsyncThunk<
   UserType,
   void,
   { state: RootState }
->('users/me', async (_, { rejectWithValue }) => {
+>('user/me', async (_, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
     return response.data;
@@ -41,17 +43,44 @@ export const getCurrentUser = createAsyncThunk<
   }
 });
 
-export const getUserById = createAsyncThunk(
-  'users/getUserById',
-  async (id: number, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
+export const getUserById = createAsyncThunk<
+  UserType,
+  { id: number },
+  { rejectValue: string }
+>('user/getUserById', async ({ id }: { id: number }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
   }
-);
+});
+
+export const getAllUsers = createAsyncThunk<
+  UserType[],
+  void,
+  { rejectValue: string }
+>('users/all', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
+  }
+});
+
+export const deleteUser = createAsyncThunk<
+  UserType,
+  { id: number },
+  { rejectValue: string }
+>('user/delete', async ({ id }: { id: number }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
+  }
+});
 
 const userSlice = createSlice({
   name: 'users',
@@ -92,7 +121,40 @@ const userSlice = createSlice({
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || 'Something went wrong';
+      })
+
+      .addCase(getAllUsers.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(getAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Something went wrong';
+      })
+
+      .addCase(deleteUser.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const deletedId = action.meta.arg.id;
+        state.users = state.users.filter(user => user.id !== deletedId);
+        delete state.selectedUser[deletedId];
+
+        if (state.user?.id == deletedId) {
+          state.user = null;
+        }
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Something went wrong';
       });
   },
 });
