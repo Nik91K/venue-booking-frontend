@@ -1,4 +1,4 @@
-import type { ScheduleDays, ScheduleType } from '@/types/shedule';
+import type { ScheduleDays, ScheduleType } from '@/types/schedule';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import axiosInstance from '@api/axiosConfig';

@@ -1,6 +1,6 @@
-import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
 import type { BookingType } from '@/types/booking';
-import BookingCard from '@/components/common/cards/BookingCard';
+import BookingCard from '@components/common/cards/BookingCard';
 
 type Props = {
   establishmentId: number;

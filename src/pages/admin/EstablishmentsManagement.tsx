@@ -1,5 +1,5 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   getAllEstablishments,
   deleteEstablishment,
@@ -27,11 +27,10 @@ import {
 } from '@components/ui/dropdown-menu';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
-import PaginationComponent from '@components/common/PaginationComponent';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
 import EditEstablishmentDialog from '@components/common/dialog/EditEstablishmentDialog';
 import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
-import AdminEstablishmentColumns from '@components/adminComponents/columns/AdminEstablishmentColumns';
+import AdminEstablishmentColumns from '@components/tableColumns/establishmentColumns';
 import DataTable from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
 
@@ -74,6 +73,21 @@ const AdminEstablishmentsPage = () => {
       })
     );
   };
+
+  const filteredEstablishments = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    if (!normalizedSearch) {
+      return establishments;
+    }
+
+    return establishments.filter(
+      establishment =>
+        establishment.name.toLowerCase().includes(normalizedSearch) ||
+        establishment.address.toLowerCase().includes(normalizedSearch) ||
+        establishment.id.toString().includes(normalizedSearch)
+    );
+  }, [establishments, search]);
 
   const handleViewBookings = (establishmentId: number) => {
     getEstablishmentById(establishmentId);
@@ -143,7 +157,7 @@ const AdminEstablishmentsPage = () => {
                     className="pl-10"
                   />
                   <InputGroupAddon align="inline-end">
-                    {establishments.length} results
+                    {filteredEstablishments.length} results
                   </InputGroupAddon>
                 </InputGroup>
               </div>
@@ -151,25 +165,20 @@ const AdminEstablishmentsPage = () => {
                 <Button size="sm">All</Button>
               </div>
             </div>
-
-            <div className="rounded-md border border-border">
-              <DataTable
-                data={establishments}
-                columns={AdminEstablishmentColumns}
-                emptyMessage="No establishments found"
-                loading={loading}
-                rowActions={userRowActions}
-              />
-              {!loading && establishments.length > 0 && (
-                <PaginationComponent
-                  page={page}
-                  handlePageChange={handlePageChange}
-                  hasNextPage={hasNextPage}
-                  hasPreviousPage={hasPreviousPage}
-                  pageCount={pageCount}
-                />
-              )}
-            </div>
+            <DataTable
+              data={filteredEstablishments}
+              columns={AdminEstablishmentColumns}
+              emptyMessage="No establishments found"
+              loading={loading}
+              rowActions={userRowActions}
+              pagination={{
+                page,
+                hasNextPage,
+                hasPreviousPage,
+                pageCount,
+                onPageChange: handlePageChange,
+              }}
+            />
           </CardContent>
         </Card>
       </div>

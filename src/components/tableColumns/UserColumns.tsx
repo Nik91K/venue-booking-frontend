@@ -1,19 +1,14 @@
-import { mockUsers } from '@fixtures/charts.fixture';
+import type { UserType } from '@/types/user';
 import { Badge } from '@components/ui/badge';
 import { Mail, Phone, Calendar } from 'lucide-react';
 import type { DataTableColumn } from '@components/common/DataTable';
 
-type User = (typeof mockUsers)[number];
-
-const userColumns: DataTableColumn<User>[] = [
+const userColumns: DataTableColumn<UserType>[] = [
   {
     header: 'User',
     render: user => (
       <div>
         <div className="font-medium">{user.name}</div>
-        <div className="text-xs text-muted-foreground">
-          Last active: {user.lastActive}
-        </div>
       </div>
     ),
   },
@@ -27,7 +22,7 @@ const userColumns: DataTableColumn<User>[] = [
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Phone className="h-3 w-3" />
-          {user.phone}
+          {user.phoneNumber}
         </div>
       </div>
     ),
@@ -38,14 +33,14 @@ const userColumns: DataTableColumn<User>[] = [
   },
   {
     header: 'Bookings',
-    render: user => <div className="text-right">{user.bookings}</div>,
+    render: user => <div className="text-right">{user.bookings.length}</div>,
   },
   {
     header: 'Joined',
     render: user => (
       <div className="flex items-center gap-2 text-sm">
         <Calendar className="h-3 w-3 text-muted-foreground" />
-        {user.joinedAt}
+        {user.createdAt}
       </div>
     ),
   },

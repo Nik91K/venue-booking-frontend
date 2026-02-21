@@ -59,7 +59,7 @@ const DataTable = <T extends { id: number | string }>({
 
   return (
     <div className="rounded-md border border-border">
-      <Table>
+      <Table className="min-w-5xl">
         <TableHeader>
           <TableRow>
             {columns.map(col => (
@@ -85,7 +85,10 @@ const DataTable = <T extends { id: number | string }>({
                 colSpan={totalCols}
                 className="text-center py-8 text-muted-foreground"
               >
-                {emptyMessage}
+                <h3 className="text-lg font-semibold mb-2">{emptyMessage}</h3>
+                <p className="text-muted-foreground">
+                  Try searching for something else
+                </p>
               </TableCell>
             </TableRow>
           ) : (

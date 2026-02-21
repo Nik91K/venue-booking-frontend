@@ -11,7 +11,7 @@ import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
 import { Skeleton } from '@components/ui/skeleton';
 import BookingOrderForm from '@components/common/BookingOrderForm';
 import FavoriteButton from '@components/common/FavoriteButton';
-import type { ScheduleType } from '@/types/shedule';
+import type { ScheduleType } from '@/types/schedule';
 import { getEstablishmentStatus } from '@hooks/useSchedule';
 import { useMemo } from 'react';
 

@@ -1,5 +1,5 @@
-import { SCHEDULE_DAYS } from '@/types/shedule';
-import type { ScheduleType, ScheduleDays } from '@/types/shedule';
+import { SCHEDULE_DAYS } from '@/types/schedule';
+import type { ScheduleType, ScheduleDays } from '@/types/schedule';
 
 const timeToMinutes = (time: string) => {
   const [h, m] = time.split(':').map(Number);

@@ -1,5 +1,4 @@
 import LayoutPage from '@/layoutPage';
-import { mockUsers } from '@fixtures/charts.fixture';
 import {
   Card,
   CardContent,
@@ -8,39 +7,62 @@ import {
   CardTitle,
 } from '@components/ui/card';
 import { Button } from '@components/ui/button';
-import { Search, UserX } from 'lucide-react';
-import { useState } from 'react';
+import { Search } from 'lucide-react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from '@components/ui/input-group';
 import DataTable from '@components/common/DataTable';
-import userColumns from '@components/adminComponents/columns/UserColumns';
-import {
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from '@components/ui/dropdown-menu';
+import userColumns from '@components/tableColumns/UserColumns';
+import { DropdownMenuItem } from '@components/ui/dropdown-menu';
+import { getAllUsers, deleteUser } from '@api/slices/userSlice';
+import { useAppSelector, useAppDispatch } from '@api/hooks';
+import type { UserType } from '@/types/user';
+import { ROLES } from '@/constants/roles';
 
 const AdminUsersPage = () => {
+  const dispatch = useAppDispatch();
   const [search, setSearch] = useState('');
-  const [selectedRole, setSelectedRole] = useState<string>('all');
+  const [selectedRole, setSelectedRole] = useState('all');
 
-  const filteredUsers = mockUsers.filter(user => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase());
-    const matchesRole = selectedRole === 'all' || user.role === selectedRole;
-    return matchesSearch && matchesRole;
-  });
+  const { users, loading } = useAppSelector(state => state.users);
 
-  const userRowActions = () => (
+  const roleFilters = [
+    'all',
+    ...Object.values(ROLES).filter(role => role !== ROLES.GUEST),
+  ];
+  const filteredUsers = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase();
+
+    return users.filter(user => {
+      const matchesSearch =
+        normalizedSearch === '' ||
+        user.name.toLowerCase().includes(normalizedSearch) ||
+        user.email.toLowerCase().includes(normalizedSearch) ||
+        user.phoneNumber.toLowerCase().includes(normalizedSearch);
+      const matchesRole = selectedRole === 'all' || user.role === selectedRole;
+      return matchesSearch && matchesRole;
+    });
+  }, [users, search, selectedRole]);
+
+  useEffect(() => {
+    if (users.length === 0) {
+      dispatch(getAllUsers());
+    }
+  }, [dispatch]);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteUser({ id }));
+  };
+
+  const userRowActions = (user: UserType) => (
     <>
-      <DropdownMenuItem>View Details</DropdownMenuItem>
-      <DropdownMenuItem>Edit User</DropdownMenuItem>
-      <DropdownMenuItem>View Bookings</DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem className="text-destructive">
+      <DropdownMenuItem
+        className="text-destructive"
+        onClick={() => handleDelete(user.id)}
+      >
         Delete User
       </DropdownMenuItem>
     </>
@@ -73,68 +95,36 @@ const AdminUsersPage = () => {
                     <Search />
                   </InputGroupAddon>
                   <InputGroupInput
-                    placeholder="Search by name or email..."
+                    placeholder="Search by email, name, or phone number..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="pl-10"
                   />
                   <InputGroupAddon align="inline-end">
-                    12 results
+                    {filteredUsers.length} results
                   </InputGroupAddon>
                 </InputGroup>
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant={selectedRole === 'all' ? 'default' : 'outline'}
-                  onClick={() => setSelectedRole('all')}
-                  size="sm"
-                >
-                  All
-                </Button>
-                <Button
-                  variant={selectedRole === 'USER' ? 'default' : 'outline'}
-                  onClick={() => setSelectedRole('USER')}
-                  size="sm"
-                >
-                  Users
-                </Button>
-                <Button
-                  variant={selectedRole === 'OWNER' ? 'default' : 'outline'}
-                  onClick={() => setSelectedRole('OWNER')}
-                  size="sm"
-                >
-                  Owner
-                </Button>
-                <Button
-                  variant={
-                    selectedRole === 'SUPER_ADMIN' ? 'default' : 'outline'
-                  }
-                  onClick={() => setSelectedRole('SUPER_ADMIN')}
-                  size="sm"
-                >
-                  Admin
-                </Button>
+                {roleFilters.map(role => (
+                  <Button
+                    key={role}
+                    variant={selectedRole === role ? 'default' : 'outline'}
+                    onClick={() => setSelectedRole(role)}
+                    size="sm"
+                  >
+                    {role}
+                  </Button>
+                ))}
               </div>
             </div>
-
-            <div className="rounded-md border border-border">
-              <DataTable
-                data={filteredUsers}
-                emptyMessage="No users found"
-                columns={userColumns}
-                rowActions={userRowActions}
-              />
-            </div>
-
-            {filteredUsers.length === 0 && (
-              <div className="text-center py-12">
-                <UserX className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No users found</h3>
-                <p className="text-muted-foreground">
-                  Try to find something else
-                </p>
-              </div>
-            )}
+            <DataTable
+              data={filteredUsers}
+              loading={loading}
+              emptyMessage="No users found"
+              columns={userColumns}
+              rowActions={userRowActions}
+            />
           </CardContent>
         </Card>
       </div>
