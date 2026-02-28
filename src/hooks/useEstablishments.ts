@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useAppDispatch, useAppSelector } from '@api/hooks';
 import { getAllEstablishments } from '@api/slices/establishmentSlice';
@@ -23,12 +23,15 @@ export const useEstablishments = () => {
     [dispatch, meta?.take]
   );
 
+  useEffect(() => {
+    fetchEstablishments('', 1);
+  }, []);
+
   const handlePageChange = (newPage: number) => {
     fetchEstablishments(search, newPage);
   };
 
   const debouncedFetch = useDebouncedCallback((value: string) => {
-    handlePageChange(1);
     fetchEstablishments(value, 1);
   }, 400);
 

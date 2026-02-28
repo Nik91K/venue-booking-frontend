@@ -3,7 +3,6 @@ import DataTable from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
 import {
   getEstablishmentByOwner,
-  getEstablishmentById,
   deleteEstablishment,
   updateEstablishment,
 } from '@api/slices/establishmentSlice';
@@ -67,7 +66,6 @@ const OwnerDashboard = () => {
   };
 
   const handleViewBookings = (establishmentId: number) => {
-    getEstablishmentById(establishmentId);
     dispatch(getBookingsByEstablishment(establishmentId));
   };
 

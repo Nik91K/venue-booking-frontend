@@ -2,7 +2,6 @@ import LayoutPage from '@/layoutPage';
 import { useEffect } from 'react';
 import {
   deleteEstablishment,
-  getEstablishmentById,
   updateEstablishment,
 } from '@api/slices/establishmentSlice';
 import { useAppDispatch, useAppSelector } from '@api/hooks';
@@ -67,7 +66,6 @@ const AdminEstablishmentsPage = () => {
   };
 
   const handleViewBookings = (establishmentId: number) => {
-    dispatch(getEstablishmentById(establishmentId));
     dispatch(getBookingsByEstablishment(establishmentId));
   };
 
