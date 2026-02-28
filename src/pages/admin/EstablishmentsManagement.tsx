@@ -1,7 +1,6 @@
 import LayoutPage from '@/layoutPage';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import {
-  getAllEstablishments,
   deleteEstablishment,
   getEstablishmentById,
   updateEstablishment,
@@ -20,7 +19,6 @@ import {
   InputGroupInput,
 } from '@components/ui/input-group';
 import { Search } from 'lucide-react';
-import { Button } from '@components/ui/button';
 import {
   DropdownMenuSeparator,
   DropdownMenuItem,
@@ -30,24 +28,22 @@ import { convertError } from '@hooks/logger/errorConverter';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
 import EditEstablishmentDialog from '@components/common/dialog/EditEstablishmentDialog';
 import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
-import AdminEstablishmentColumns from '@components/tableColumns/establishmentColumns';
+import EstablishmentColumns from '@components/tableColumns/establishmentColumns';
 import DataTable from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
+import { useEstablishments } from '@hooks/useEstablishments';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
-  const [search, setSearch] = useState('');
-
   const {
-    loading,
     establishments,
+    loading,
     error,
-    page,
-    take,
-    hasNextPage,
-    hasPreviousPage,
-    pageCount,
-  } = useAppSelector(state => state.establishment);
+    meta,
+    search,
+    handlePageChange,
+    handleSearchChange,
+  } = useEstablishments();
   const { bookings, loading: bookingsLoading } = useAppSelector(
     state => state.booking
   );
@@ -57,10 +53,6 @@ const AdminEstablishmentsPage = () => {
       dispatch(addError(convertError(error)));
     }
   }, [error, dispatch]);
-
-  useEffect(() => {
-    dispatch(getAllEstablishments({ page, take }));
-  }, [page, take, dispatch]);
 
   const handleUpdateEstablishment = (
     establishmentId: number,
@@ -74,32 +66,13 @@ const AdminEstablishmentsPage = () => {
     );
   };
 
-  const filteredEstablishments = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    if (!normalizedSearch) {
-      return establishments;
-    }
-
-    return establishments.filter(
-      establishment =>
-        establishment.name.toLowerCase().includes(normalizedSearch) ||
-        establishment.address.toLowerCase().includes(normalizedSearch) ||
-        establishment.id.toString().includes(normalizedSearch)
-    );
-  }, [establishments, search]);
-
   const handleViewBookings = (establishmentId: number) => {
-    getEstablishmentById(establishmentId);
+    dispatch(getEstablishmentById(establishmentId));
     dispatch(getBookingsByEstablishment(establishmentId));
   };
 
   const handleDelete = (id: number) => {
     dispatch(deleteEstablishment(id));
-  };
-
-  const handlePageChange = (newPage: number) => {
-    dispatch({ type: 'establishment/setPage', payload: newPage });
   };
 
   const userRowActions = (establishment: EstablishmentType) => (
@@ -153,29 +126,26 @@ const AdminEstablishmentsPage = () => {
                   <InputGroupInput
                     placeholder="Search by name or id..."
                     value={search}
-                    onChange={e => setSearch(e.target.value)}
+                    onChange={handleSearchChange}
                     className="pl-10"
                   />
                   <InputGroupAddon align="inline-end">
-                    {filteredEstablishments.length} results
+                    {establishments.length}
                   </InputGroupAddon>
                 </InputGroup>
               </div>
-              <div className="flex gap-2">
-                <Button size="sm">All</Button>
-              </div>
             </div>
             <DataTable
-              data={filteredEstablishments}
-              columns={AdminEstablishmentColumns}
+              data={establishments}
+              columns={EstablishmentColumns}
               emptyMessage="No establishments found"
               loading={loading}
               rowActions={userRowActions}
               pagination={{
-                page,
-                hasNextPage,
-                hasPreviousPage,
-                pageCount,
+                page: meta?.page ?? 1,
+                hasNextPage: meta?.hasNextPage ?? false,
+                hasPreviousPage: meta?.hasPreviousPage ?? false,
+                pageCount: meta?.pageCount ?? 0,
                 onPageChange: handlePageChange,
               }}
             />

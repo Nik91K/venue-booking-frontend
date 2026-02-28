@@ -8,7 +8,7 @@ import {
   getEstablishmentComments,
 } from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
-import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
 import { ArrowLeft, Clock, MapPin, Star } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { Separator } from '@components/ui/separator';
@@ -206,7 +206,10 @@ const EstablishmentPage = () => {
           </div>
         </div>
         <CommentForm establishmentId={Number(id)} role={userRole} />
-        <CommentComponent establishment={selectedEstablishment} />
+        <CommentComponent
+          establishmentId={establishment.id}
+          establishment={establishment}
+        />
       </div>
     </LayoutPage>
   );

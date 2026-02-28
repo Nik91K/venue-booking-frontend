@@ -6,6 +6,7 @@ import {
 import type { EstablishmentType } from '@/types/establishment';
 import axios from 'axios';
 import axiosInstance from '@api/axiosConfig';
+import type { PageType, PaginationType } from '@/types/pagination';
 
 interface EstablishmentState {
   establishments: EstablishmentType[];
@@ -13,13 +14,7 @@ interface EstablishmentState {
   favorites: EstablishmentType[];
   loading: boolean;
   error: string | null;
-  page: number;
-  take: number;
-  order: 'ASC' | 'DESC';
-  pageCount: number;
-  itemCount: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
+  meta: PaginationType | null;
 }
 
 const initialState: EstablishmentState = {
@@ -28,18 +23,13 @@ const initialState: EstablishmentState = {
   favorites: [],
   loading: false,
   error: null,
-  page: 1,
-  take: 9,
-  order: 'ASC',
-  pageCount: 0,
-  itemCount: 0,
-  hasPreviousPage: false,
-  hasNextPage: false,
+  meta: null,
 };
 
 type GetAllEstablishmentsParams = {
   page?: number;
   take?: number;
+  search?: string;
   order?: 'ASC' | 'DESC';
   sortBy?: 'avgRating' | 'commentsCount' | 'weightedRating';
 };
@@ -81,15 +71,16 @@ export const getAllEstablishments = createAsyncThunk(
   async (
     {
       page = 1,
-      take = 10,
+      take = 9,
       order = 'DESC',
       sortBy = 'weightedRating',
+      search = '',
     }: GetAllEstablishmentsParams,
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.get(`${API_URL}${SLICE_URL}`, {
-        params: { page, take, order, sortBy },
+        params: { page, take, order, sortBy, ...(search && { search }) },
       });
       return response.data;
     } catch (error: any) {
@@ -109,6 +100,19 @@ export const getEstablishmentById = createAsyncThunk(
     }
   }
 );
+
+export const getEstablishmentByOwner = createAsyncThunk<
+  EstablishmentType[],
+  void,
+  { rejectValue: string }
+>('establishment/owner', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
 
 export const updateEstablishment = createAsyncThunk(
   'establishment/update',
@@ -240,12 +244,6 @@ const establishmentSlice = createSlice({
       state.selectedEstablishment = null;
       state.error = null;
     },
-    setPage: (state, action: PayloadAction<number>) => {
-      state.page = action.payload;
-    },
-    setTake: (state, action: PayloadAction<number>) => {
-      state.take = action.payload;
-    },
   },
   extraReducers: builder => {
     builder
@@ -270,28 +268,10 @@ const establishmentSlice = createSlice({
       })
       .addCase(
         getAllEstablishments.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            data: EstablishmentType[];
-            meta: {
-              page: number;
-              take: number;
-              itemCount: number;
-              pageCount: number;
-              hasPreviousPage: boolean;
-              hasNextPage: boolean;
-            };
-          }>
-        ) => {
+        (state, action: PayloadAction<PageType<EstablishmentType>>) => {
           state.loading = false;
           state.establishments = action.payload.data;
-          state.page = action.payload.meta.page;
-          state.take = action.payload.meta.take;
-          state.itemCount = action.payload.meta.itemCount;
-          state.pageCount = action.payload.meta.pageCount;
-          state.hasPreviousPage = action.payload.meta.hasPreviousPage;
-          state.hasNextPage = action.payload.meta.hasNextPage;
+          state.meta = action.payload.meta;
         }
       )
       .addCase(getAllEstablishments.rejected, (state, action) => {
@@ -313,6 +293,19 @@ const establishmentSlice = createSlice({
       .addCase(getEstablishmentById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+
+      .addCase(getEstablishmentByOwner.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getEstablishmentByOwner.fulfilled, (state, action) => {
+        state.loading = false;
+        state.establishments = action.payload;
+      })
+      .addCase(getEstablishmentByOwner.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Something went wrong';
       })
 
       .addCase(

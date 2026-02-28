@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { UserType } from '@/types/user';
 import axiosInstance from '@api/axiosConfig';
 import type { RootState } from '@api/store';
+import type { PageType, PaginationType } from '@/types/pagination';
 
 interface UserState {
   user: UserType | null;
   users: UserType[];
   selectedUser: Record<number, UserType>;
+  meta: PaginationType | null;
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
@@ -19,6 +21,7 @@ const initialState: UserState = {
   selectedUser: {},
   accessToken: localStorage.getItem('accessToken') || null,
   refreshToken: localStorage.getItem('refreshToken') || null,
+  meta: null,
   loading: false,
   error: null,
 };
@@ -45,9 +48,9 @@ export const getCurrentUser = createAsyncThunk<
 
 export const getUserById = createAsyncThunk<
   UserType,
-  { id: number },
+  number,
   { rejectValue: string }
->('user/getUserById', async ({ id }: { id: number }, { rejectWithValue }) => {
+>('user/getUserById', async (id, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
     return response.data;
@@ -57,12 +60,14 @@ export const getUserById = createAsyncThunk<
 });
 
 export const getAllUsers = createAsyncThunk<
-  UserType[],
-  void,
+  PageType<UserType>,
+  { page?: number; take?: number; order?: 'ASC' | 'DESC' },
   { rejectValue: string }
->('users/all', async (_, { rejectWithValue }) => {
+>('users/all', async (params = {}, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`);
+    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`, {
+      params,
+    });
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);
@@ -73,7 +78,7 @@ export const deleteUser = createAsyncThunk<
   UserType,
   { id: number },
   { rejectValue: string }
->('user/delete', async ({ id }: { id: number }, { rejectWithValue }) => {
+>('user/delete', async ({ id }, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
     return response.data;
@@ -121,7 +126,7 @@ const userSlice = createSlice({
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Something went wrong';
+        state.error = action.payload as string;
       })
 
       .addCase(getAllUsers.pending, state => {
@@ -130,7 +135,8 @@ const userSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload;
+        state.users = action.payload.data;
+        state.meta = action.payload.meta;
       })
       .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false;
@@ -148,7 +154,7 @@ const userSlice = createSlice({
         state.users = state.users.filter(user => user.id !== deletedId);
         delete state.selectedUser[deletedId];
 
-        if (state.user?.id == deletedId) {
+        if (state.user?.id === deletedId) {
           state.user = null;
         }
       })

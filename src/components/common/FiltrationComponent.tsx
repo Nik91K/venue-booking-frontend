@@ -1,20 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@components/ui/button';
 import { Label } from '@components/ui/label';
 import { Checkbox } from '@components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@components/ui/radio-group';
 import { X, SlidersHorizontal } from 'lucide-react';
-import type { EstablishmentType } from '@/types/establishment';
 
 type FiltrationProps = {
-  establishment: EstablishmentType[];
-  setEstablishment: React.Dispatch<React.SetStateAction<EstablishmentType[]>>;
+  onFilter: (minRaiting: number) => void;
 };
 
-const FiltrationComponent = ({
-  establishment,
-  setEstablishment,
-}: FiltrationProps) => {
+const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
   const [rating, setRating] = useState('all');
 
   const cuisines = [
@@ -30,13 +25,13 @@ const FiltrationComponent = ({
   ];
 
   const handleReset = () => {
+    onFilter(0);
     setRating('all');
   };
 
   const handleApplyFilters = () => {
     const numericRating = rating === 'all' ? 0 : parseFloat(rating);
-    const filtered = establishment.filter(est => est.rating >= numericRating);
-    setEstablishment(filtered);
+    onFilter(numericRating);
   };
 
   const hasActiveFilters = rating !== 'all';

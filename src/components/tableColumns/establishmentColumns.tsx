@@ -2,7 +2,7 @@ import type { DataTableColumn } from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
 type EstablishmentColumn = DataTableColumn<EstablishmentType>;
 
-const AdminEstablishmentColumns: EstablishmentColumn[] = [
+const EstablishmentColumns: EstablishmentColumn[] = [
   { header: 'Id', render: 'id' },
   { header: 'Name', render: 'name' },
   { header: 'Rating', render: 'rating' },
@@ -13,4 +13,4 @@ const AdminEstablishmentColumns: EstablishmentColumn[] = [
   },
 ];
 
-export default AdminEstablishmentColumns;
+export default EstablishmentColumns;

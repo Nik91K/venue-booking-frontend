@@ -3,15 +3,18 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { CommentType } from '@/types/establishment';
 import axiosInstance from '@api/axiosConfig';
+import type { PageType, PaginationType } from '@/types/pagination';
 
 interface CommentState {
   comment: CommentType[];
+  meta: PaginationType | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: CommentState = {
   comment: [],
+  meta: null,
   loading: false,
   error: null,
 };
@@ -30,7 +33,6 @@ export const createComment = createAsyncThunk<
 >('comment/create', async (data, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, data);
-
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -40,12 +42,14 @@ export const createComment = createAsyncThunk<
 });
 
 export const getAllComments = createAsyncThunk<
-  CommentType[],
-  void,
+  PageType<CommentType>,
+  { page?: number; take?: number; order?: 'ASC' | 'DESC' },
   { rejectValue: string }
->('comment/getAll', async (_, { rejectWithValue }) => {
+>('comment/getAll', async (params = {}, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${API_URL}${SLICE_URL}/comments`);
+    const response = await axios.get(`${API_URL}${SLICE_URL}/comments`, {
+      params,
+    });
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -55,15 +59,21 @@ export const getAllComments = createAsyncThunk<
 });
 
 export const getCommentsByEstablishment = createAsyncThunk<
-  CommentType[],
-  { establishmentId: number },
+  PageType<CommentType>,
+  {
+    establishmentId: number;
+    page?: number;
+    take?: number;
+    order?: 'ASC' | 'DESC';
+  },
   { rejectValue: string }
 >(
   'comment/getByEstablishment',
-  async ({ establishmentId }, { rejectWithValue }) => {
+  async ({ establishmentId, ...params }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_URL}${SLICE_URL}/establishment/${establishmentId}`
+        `${API_URL}${SLICE_URL}/establishment/${establishmentId}`,
+        { params }
       );
       return response.data;
     } catch (error: any) {
@@ -119,6 +129,7 @@ const commentSlice = createSlice({
   reducers: {
     clearComment: state => {
       state.comment = [];
+      state.meta = null;
       state.error = null;
       state.loading = false;
     },
@@ -147,7 +158,8 @@ const commentSlice = createSlice({
       })
       .addCase(getAllComments.fulfilled, (state, action) => {
         state.loading = false;
-        state.comment = action.payload;
+        state.comment = action.payload.data;
+        state.meta = action.payload.meta;
       })
       .addCase(getAllComments.rejected, (state, action) => {
         state.loading = false;
@@ -160,7 +172,12 @@ const commentSlice = createSlice({
       })
       .addCase(getCommentsByEstablishment.fulfilled, (state, action) => {
         state.loading = false;
-        state.comment = action.payload;
+        const isFirstPage =
+          action.meta.arg.page === undefined || action.meta.arg.page === 1;
+        state.comment = isFirstPage
+          ? action.payload.data
+          : [...state.comment, ...action.payload.data];
+        state.meta = action.payload.meta;
       })
       .addCase(getCommentsByEstablishment.rejected, (state, action) => {
         state.loading = false;
@@ -173,13 +190,11 @@ const commentSlice = createSlice({
       })
       .addCase(updateComment.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedComment = action.payload;
         const index = state.comment.findIndex(
           com => com.id === action.payload.id
         );
-
         if (index !== -1) {
-          state.comment[index] = updatedComment;
+          state.comment[index] = action.payload;
         }
       })
       .addCase(updateComment.rejected, (state, action) => {
@@ -194,7 +209,7 @@ const commentSlice = createSlice({
       .addCase(deleteComment.fulfilled, (state, action) => {
         state.loading = false;
         state.comment = state.comment.filter(
-          com => com.id !== action.payload.id
+          com => com.id !== action.meta.arg.commentId
         );
       })
       .addCase(deleteComment.rejected, (state, action) => {

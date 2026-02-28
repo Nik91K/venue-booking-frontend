@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { UserType } from '@/types/user';
 
 export type EstablishmentType = {
   id: number;
@@ -44,7 +45,7 @@ export type CommentType = {
   rating: number;
   createdAt: string;
   establishmentId: number;
-  userId: number;
+  user: UserType;
 };
 
 export type BookingOrderFormRef = {

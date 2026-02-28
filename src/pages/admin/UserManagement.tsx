@@ -27,7 +27,7 @@ const AdminUsersPage = () => {
   const [search, setSearch] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
 
-  const { users, loading } = useAppSelector(state => state.users);
+  const { users, loading, meta } = useAppSelector(state => state.users);
 
   const roleFilters = [
     'all',
@@ -49,7 +49,7 @@ const AdminUsersPage = () => {
 
   useEffect(() => {
     if (users.length === 0) {
-      dispatch(getAllUsers());
+      dispatch(getAllUsers({ page: meta?.page, take: meta?.take }));
     }
   }, [dispatch]);
 

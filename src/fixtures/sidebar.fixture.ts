@@ -64,21 +64,11 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
       ],
     },
     {
-      label: 'Moderation',
-      items: [
-        {
-          title: 'Review Queue',
-          path: '/establishment/reviews',
-          icon: FileCheck,
-        },
-      ],
-    },
-    {
       label: 'Establishmens',
       items: [
         {
-          title: 'Establishment Review',
-          path: '/owner/establishmes',
+          title: 'Management of establishments',
+          path: '/owner',
           icon: FileCheck,
         },
       ],
