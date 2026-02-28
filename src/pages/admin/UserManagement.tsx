@@ -60,7 +60,7 @@ const AdminUsersPage = () => {
   const userRowActions = (user: UserType) => (
     <>
       <DropdownMenuItem
-        className="text-destructive"
+        variant="destructive"
         onClick={() => handleDelete(user.id)}
       >
         Delete User

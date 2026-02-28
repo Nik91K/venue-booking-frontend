@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import PaginationComponent from '@components/common/PaginationComponent';
 
 export type DataTableColumn<T> = {
@@ -103,7 +103,7 @@ const DataTable = <T extends { id: number | string }>({
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
+                          <EllipsisVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent

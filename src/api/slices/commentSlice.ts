@@ -107,15 +107,13 @@ export const updateComment = createAsyncThunk<
 );
 
 export const deleteComment = createAsyncThunk<
-  CommentType,
-  { commentId: number },
+  number,
+  number,
   { rejectValue: string }
->('comment/delete', async ({ commentId }, { rejectWithValue }) => {
+>('comment/delete', async (commentId, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.delete(
-      `${API_URL}${SLICE_URL}/${commentId}`
-    );
-    return response.data;
+    await axiosInstance.delete(`${API_URL}${SLICE_URL}/${commentId}`);
+    return commentId;
   } catch (error: any) {
     return rejectWithValue(
       error.response?.data?.message || 'Failed to delete comment'
@@ -208,9 +206,7 @@ const commentSlice = createSlice({
       })
       .addCase(deleteComment.fulfilled, (state, action) => {
         state.loading = false;
-        state.comment = state.comment.filter(
-          com => com.id !== action.meta.arg.commentId
-        );
+        state.comment = state.comment.filter(com => com.id !== action.payload);
       })
       .addCase(deleteComment.rejected, (state, action) => {
         state.loading = false;

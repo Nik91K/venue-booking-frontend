@@ -208,6 +208,8 @@ const EstablishmentPage = () => {
         <CommentForm establishmentId={Number(id)} role={userRole} />
         <CommentComponent
           establishmentId={establishment.id}
+          user={user}
+          role={userRole}
           establishment={establishment}
         />
       </div>

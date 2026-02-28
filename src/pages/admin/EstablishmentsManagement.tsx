@@ -88,7 +88,7 @@ const AdminEstablishmentsPage = () => {
       />
       <DropdownMenuSeparator />
       <DropdownMenuItem
-        className="text-destructive"
+        variant="destructive"
         onClick={() => handleDelete(establishment.id)}
       >
         Delete Establishment

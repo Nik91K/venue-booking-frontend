@@ -14,7 +14,7 @@ import EstablishmentBookingsDialog from '@components/common/dialog/Establishment
 import {
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from '@radix-ui/react-dropdown-menu';
+} from '@components/ui/dropdown-menu';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
 import {
   Card,
@@ -94,7 +94,7 @@ const OwnerDashboard = () => {
       />
       <DropdownMenuSeparator />
       <DropdownMenuItem
-        className="text-destructive"
+        variant="destructive"
         onClick={() => handleDelete(establishment.id)}
       >
         Delete Establishment

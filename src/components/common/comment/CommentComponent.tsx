@@ -4,19 +4,38 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getUserById } from '@api/slices/userSlice';
 import { Skeleton } from '@components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
-import type { EstablishmentType } from '@/types/establishment';
 import { numToStars } from '@hooks/useNumToStars';
-import { Star } from 'lucide-react';
-import { getCommentsByEstablishment } from '@api/slices/commentSlice';
+import { EllipsisVertical, Star } from 'lucide-react';
+import {
+  getCommentsByEstablishment,
+  deleteComment,
+} from '@api/slices/commentSlice';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
+import type { Role } from '@/types/common';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
+import { Button } from '@components/ui/button';
+import type { UserType } from '@/types/user';
+import type { CommentType, EstablishmentType } from '@/types/establishment';
 
 type CommentProps = {
   establishment: EstablishmentType;
   establishmentId: number;
+  role: Role;
+  user: UserType | null;
 };
 
-const CommentComponent = ({ establishment, establishmentId }: CommentProps) => {
+const CommentComponent = ({
+  establishmentId,
+  role,
+  user,
+  establishment,
+}: CommentProps) => {
   const dispatch = useAppDispatch();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +46,18 @@ const CommentComponent = ({ establishment, establishmentId }: CommentProps) => {
     meta,
   } = useAppSelector(state => state.comment);
   const { selectedUser } = useAppSelector(state => state.users);
+
+  const canDelete = (comment: CommentType): boolean => {
+    if (!user) {
+      return false;
+    }
+
+    return (
+      role === 'SUPER_ADMIN' ||
+      establishment.ownerId === user.id ||
+      comment.user?.id === user.id
+    );
+  };
 
   useEffect(() => {
     dispatch(getCommentsByEstablishment({ establishmentId, page: 1, take: 5 }));
@@ -81,13 +112,14 @@ const CommentComponent = ({ establishment, establishmentId }: CommentProps) => {
         <p className="text-muted-foreground text-sm py-4">No reviews yet.</p>
       )}
 
-      {establishment.comments?.map(comment => {
-        const user = selectedUser[comment.user.id];
+      {comments.map(comment => {
+        const commentUser = selectedUser[comment.user?.id];
+
         return (
-          <Card className="p-6">
+          <Card key={comment.id} className="p-6">
             <div className="flex gap-4">
               <Avatar className="w-10 h-10">
-                <AvatarImage src={user?.avatarUrl} />
+                <AvatarImage src={commentUser?.avatarUrl} />
                 <AvatarFallback>
                   <Skeleton className="w-full h-full rounded-full" />
                 </AvatarFallback>
@@ -95,9 +127,9 @@ const CommentComponent = ({ establishment, establishmentId }: CommentProps) => {
 
               <div className="flex-1 space-y-2">
                 <div className="flex justify-between">
-                  {user ? (
+                  {commentUser ? (
                     <div>
-                      <h3 className="font-semibold">{user.name}</h3>
+                      <h3 className="font-semibold">{commentUser.name}</h3>
                       <div className="flex items-center">
                         {numToStars(comment.rating).map((_, i) => (
                           <Star
@@ -111,22 +143,38 @@ const CommentComponent = ({ establishment, establishmentId }: CommentProps) => {
                     <Skeleton className="h-4 w-24" />
                   )}
 
-                  {comment ? (
+                  <div className="flex items-center gap-1">
                     <span className="text-xs text-muted-foreground">
-                      {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
+                      {comment.createdAt &&
+                        new Date(comment.createdAt).toLocaleDateString('uk-UA')}
                     </span>
-                  ) : (
-                    <Skeleton className="h-3 w-20" />
-                  )}
+
+                    {role !== 'GUEST' && canDelete(comment) && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <EllipsisVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="flex flex-col gap-2"
+                        >
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() =>
+                              comment.id && dispatch(deleteComment(comment.id))
+                            }
+                          >
+                            Delete comment
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  {comment ? (
-                    <p className="text-sm leading-relaxed">{comment.text}</p>
-                  ) : (
-                    <Skeleton className="h-4 w-full" />
-                  )}
-                </div>
+                <p className="text-sm leading-relaxed">{comment.text}</p>
               </div>
             </div>
           </Card>
