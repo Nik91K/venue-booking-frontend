@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LayoutPage from '@/layoutPage';
 import MapComponent from '@components/common/map/Map';
@@ -18,6 +18,7 @@ import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import { useEstablishments } from '@hooks/useEstablishments';
+import { getAllFavorites } from '@api/slices/establishmentSlice';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -32,8 +33,12 @@ const VenuesMapPage = () => {
     handlePageChange,
     handleSearchChange,
   } = useEstablishments();
+  const { favorites } = useAppSelector(state => state.establishment);
   const { user } = useAppSelector(state => state.users);
   const { schedule } = useAppSelector(state => state.schedule);
+  const [showingFavorites, setShowingFavorites] = useState(false);
+
+  const displayedEstablishments = showingFavorites ? favorites : establishments;
 
   useEffect(() => {
     if (error) {
@@ -41,28 +46,18 @@ const VenuesMapPage = () => {
     }
   }, [error, dispatch]);
 
-  // const showFavorites = async () => {
-  //   if (!user || user.role === 'GUEST') {
-  //     navigate('/login');
-  //     return;
-  //   }
+  const toggleFavorites = async () => {
+    if (!user || user.role === 'GUEST') {
+      navigate('/login');
+      return;
+    }
 
-  //   if (showingFavorites) {
-  //     setEstablishment(establishments);
-  //     setShowingFavorites(false);
-  //     return;
-  //   }
+    if (!showingFavorites && favorites.length == 0) {
+      await dispatch(getAllFavorites());
+    }
 
-  //   try {
-  //     const res = await dispatch(getAllFavorites());
-  //     const favorites = res.payload ?? [];
-  //     setEstablishment(favorites);
-  //     setShowingFavorites(true);
-  //   } catch (error) {
-  //     dispatch(addError(convertError(error)));
-  //     setEstablishment([]);
-  //   }
-  // };
+    setShowingFavorites(prev => !prev);
+  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -84,18 +79,33 @@ const VenuesMapPage = () => {
                   placeholder="Search venues..."
                   value={search}
                   onChange={handleSearchChange}
+                  disabled={showingFavorites}
                 />
                 <InputGroupAddon>
                   <Search className="w-4 h-4" />
                 </InputGroupAddon>
                 <InputGroupAddon align="inline-end">
-                  {establishments.length} results
+                  {displayedEstablishments.length} results
                 </InputGroupAddon>
               </InputGroup>
-              <Button variant="secondary" size="icon">
-                <Heart className="w-5 h-5" color="#f66151" />
+              <Button
+                variant={showingFavorites ? 'default' : 'secondary'}
+                size="icon"
+                onClick={toggleFavorites}
+                title={showingFavorites ? 'Show all venues' : 'Show favorites'}
+              >
+                <Heart
+                  className="w-5 h-5"
+                  color="#f66151"
+                  fill={showingFavorites ? '#f66151' : 'none'}
+                />
               </Button>
             </div>
+            {showingFavorites && (
+              <p className="text-sm text-gray-500 mb-3">
+                Showing your saved favorites
+              </p>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {loading ? (
                 <div className="col-span-full flex justify-center items-center py-12">
@@ -109,8 +119,16 @@ const VenuesMapPage = () => {
                 <div className="col-span-full text-center py-12">
                   <p className="text-gray-500">No establishments found</p>
                 </div>
+              ) : displayedEstablishments.length === 0 ? (
+                <div>
+                  <p className="text-gray-500">
+                    {showingFavorites
+                      ? 'You have no favorite establishments yet'
+                      : 'No establishments found'}
+                  </p>
+                </div>
               ) : (
-                establishments.map(
+                displayedEstablishments.map(
                   est =>
                     est && (
                       <EstablishmentCard
@@ -126,7 +144,7 @@ const VenuesMapPage = () => {
                 )
               )}
             </div>
-            {!loading && establishments.length > 0 && (
+            {!loading && !showingFavorites && establishments.length > 0 && (
               <PaginationComponent
                 page={meta?.page ?? 1}
                 handlePageChange={handlePageChange}

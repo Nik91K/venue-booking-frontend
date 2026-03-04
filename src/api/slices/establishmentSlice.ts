@@ -79,7 +79,7 @@ export const getAllEstablishments = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}`, {
+      const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`, {
         params: { page, take, order, sortBy, ...(search && { search }) },
       });
       return response.data;
@@ -93,7 +93,7 @@ export const getEstablishmentById = createAsyncThunk(
   'establishment/id',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}${SLICE_URL}/${id}`);
+      const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -424,7 +424,7 @@ const establishmentSlice = createSlice({
       })
 
       .addCase(addFavorite.pending, state => {
-        state.loading = false;
+        state.loading = true;
         state.error = null;
       })
       .addCase(addFavorite.fulfilled, (state, action) => {
@@ -436,7 +436,7 @@ const establishmentSlice = createSlice({
         }
 
         const index = state.establishments.findIndex(
-          est => est.id == establishmentId
+          est => est.id === establishmentId
         );
         if (index !== -1) {
           state.establishments[index].isFavorite = true;
@@ -464,6 +464,10 @@ const establishmentSlice = createSlice({
         if (index !== -1) {
           state.establishments[index].isFavorite = false;
         }
+
+        state.favorites = state.favorites.filter(
+          establishment => establishment.id !== action.meta.arg
+        );
       })
       .addCase(removeFavorite.rejected, (state, action) => {
         state.error = action.payload as string;

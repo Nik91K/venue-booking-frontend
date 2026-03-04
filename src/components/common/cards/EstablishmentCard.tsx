@@ -61,8 +61,8 @@ const EstablishmentCard = ({
           />
         </Link>
         <FavoriteButton
-          establishmentId={establishment.id}
           role={role}
+          establishmentId={establishment.id}
           isFavorite={establishment.isFavorite || false}
           className={`absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-white shadow-md transition-all duration-200 hover:scale-105`}
         />
