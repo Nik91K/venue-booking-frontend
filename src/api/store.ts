@@ -7,6 +7,7 @@ import errorsSlice from '@api/slices/errorSlice';
 import bookingSlice from '@api/slices/bookingSlice';
 import userSlice from '@api/slices/userSlice';
 import scheduleSlice from '@api/slices/scheduleSlice';
+import establishmentTypeSlice from '@api/slices/establishmentTypeSlice';
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   actionTransformer: action => {
@@ -56,6 +57,7 @@ export const store = configureStore({
     errors: errorsSlice,
     booking: bookingSlice,
     schedule: scheduleSlice,
+    establishmentType: establishmentTypeSlice,
   },
   enhancers: getDefaultEnhancers =>
     getDefaultEnhancers().concat(sentryReduxEnhancer),

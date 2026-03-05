@@ -19,6 +19,7 @@ import { convertError } from '@hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import { useEstablishments } from '@hooks/useEstablishments';
 import { getAllFavorites } from '@api/slices/establishmentSlice';
+import FiltrationComponent from '@components/common/FiltrationComponent';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ const VenuesMapPage = () => {
     search,
     handlePageChange,
     handleSearchChange,
+    handleFilter,
   } = useEstablishments();
   const { favorites } = useAppSelector(state => state.establishment);
   const { user } = useAppSelector(state => state.users);
@@ -156,8 +158,7 @@ const VenuesMapPage = () => {
           </div>
           <div className="lg:w-80 xl:w-96 shrink-0">
             <div className="sticky top-4">
-              {/* TO DO */}
-              {/* <FiltrationComponent/> */}
+              <FiltrationComponent onFilter={handleFilter} />
             </div>
           </div>
         </div>

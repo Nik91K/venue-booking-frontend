@@ -1,40 +1,52 @@
 import { useState } from 'react';
 import { Button } from '@components/ui/button';
 import { Label } from '@components/ui/label';
-import { Checkbox } from '@components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@components/ui/radio-group';
 import { X, SlidersHorizontal } from 'lucide-react';
+import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
+import { useAppDispatch, useAppSelector } from '@api/hooks';
+import { useEffect } from 'react';
+import { convertError } from '@hooks/logger/errorConverter';
+import { addError } from '@api/slices/errorSlice';
 
 type FiltrationProps = {
-  onFilter: (minRaiting: number) => void;
+  onFilter: (filters: { minRating?: number; typeId?: number }) => void;
 };
 
 const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
+  const dispatch = useAppDispatch();
   const [rating, setRating] = useState('all');
+  const [typeId, setTypeId] = useState<number | undefined>(undefined);
+  const { establishmentType, loading, error } = useAppSelector(
+    state => state.establishmentType
+  );
 
-  const cuisines = [
-    'Italian',
-    'Chinese',
-    'Japanese',
-    'Mexican',
-    'Indian',
-    'American',
-    'French',
-    'Thai',
-    'Mediterranean',
-  ];
+  useEffect(() => {
+    if (error) {
+      dispatch(addError(convertError(error)));
+    }
+  }, [error, dispatch]);
 
   const handleReset = () => {
-    onFilter(0);
+    onFilter({});
+    setTypeId(undefined);
     setRating('all');
   };
 
   const handleApplyFilters = () => {
-    const numericRating = rating === 'all' ? 0 : parseFloat(rating);
-    onFilter(numericRating);
+    onFilter({
+      minRating: rating === 'all' ? undefined : parseFloat(rating),
+      typeId,
+    });
   };
 
   const hasActiveFilters = rating !== 'all';
+
+  useEffect(() => {
+    if (establishmentType.length == 0 && !loading) {
+      dispatch(getAllEstablishmentTypes());
+    }
+  }, [dispatch, establishmentType.length, loading]);
 
   return (
     <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">
@@ -81,20 +93,34 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
         </RadioGroup>
       </div>
       <div className="space-y-3">
-        <Label className="text-sm font-medium">Cuisine Type</Label>
-        <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-          {cuisines.map(cuisine => (
-            <div key={cuisine} className="flex items-center space-x-2">
-              <Checkbox id={`cuisine-${cuisine}`} />
+        <Label className="text-sm font-medium">Type</Label>
+        <RadioGroup
+          value={typeId?.toString() ?? 'all'}
+          onValueChange={val =>
+            setTypeId(val === 'all' ? undefined : parseInt(val))
+          }
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="all" id="type-all" />
+            <Label htmlFor="type-all" className="font-normal cursor-pointer">
+              All Types
+            </Label>
+          </div>
+          {establishmentType.map(type => (
+            <div key={type.id} className="flex items-center space-x-2">
+              <RadioGroupItem
+                value={type.id.toString()}
+                id={`type-${type.id}`}
+              />
               <Label
-                htmlFor={`cuisine-${cuisine}`}
+                htmlFor={`type-${type.id}`}
                 className="font-normal cursor-pointer"
               >
-                {cuisine}
+                {type.name}
               </Label>
             </div>
           ))}
-        </div>
+        </RadioGroup>
       </div>
       <Button
         className="w-full"
