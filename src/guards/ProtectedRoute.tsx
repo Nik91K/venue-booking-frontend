@@ -3,9 +3,10 @@ import { Spinner } from '@components/ui/spinner';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import { Navigate, Outlet } from 'react-router-dom';
 import { getCurrentUser } from '@api/slices/userSlice';
+import type { Role } from '@/types/common';
 
 type ProtectedRouteProps = {
-  allowedRoles?: string[];
+  allowedRoles?: Role[];
   redirectTo?: string;
 };
 
@@ -31,7 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={redirectTo} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (allowedRoles.length && !allowedRoles.includes(user.role)) {
     return <Navigate to={redirectTo} replace />;
   }
 

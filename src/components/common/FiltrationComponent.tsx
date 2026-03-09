@@ -43,7 +43,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
   const hasActiveFilters = rating !== 'all';
 
   useEffect(() => {
-    if (establishmentType.length == 0 && !loading) {
+    if (establishmentType.length == 0 && !loading && !error) {
       dispatch(getAllEstablishmentTypes());
     }
   }, [dispatch, establishmentType.length, loading]);

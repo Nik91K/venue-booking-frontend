@@ -6,8 +6,8 @@ export type UserType = {
   name: string;
   email: string;
   phoneNumber: string;
-  avatarSeed: string;
-  avatarUrl: string;
+  avatarSeed: string | null;
+  avatarUrl: string | null;
   role: Role;
   createdAt: string;
   favorites: number[];

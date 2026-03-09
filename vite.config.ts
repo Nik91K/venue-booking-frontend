@@ -16,4 +16,9 @@ export default defineConfig({
       '@fixtures': path.resolve(__dirname, 'src/fixtures'),
     },
   },
+  server: {
+    proxy: {
+      '/uploads': 'http://localhost:3000',
+    },
+  },
 });

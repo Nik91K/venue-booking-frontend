@@ -74,6 +74,32 @@ export const getAllUsers = createAsyncThunk<
   }
 });
 
+export const updateCurrentUser = createAsyncThunk<
+  UserType,
+  FormData | Partial<UserType>,
+  { rejectValue: string }
+>('users/updateMe', async (data, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.patch(`${SLICE_URL}/me`, data);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
+  }
+});
+
+export const updateUserById = createAsyncThunk<
+  UserType,
+  { id: number; data: Partial<UserType> },
+  { rejectValue: string }
+>('users/updateUserById', async ({ id, data }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.patch(`${SLICE_URL}/${id}`, data);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data);
+  }
+});
+
 export const deleteUser = createAsyncThunk<
   UserType,
   { id: number },
@@ -141,6 +167,35 @@ const userSlice = createSlice({
       .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Something went wrong';
+      })
+
+      .addCase(updateCurrentUser.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCurrentUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateCurrentUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(updateUserById.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        state.loading = false;
+
+        if (state.user?.id === action.payload.id) {
+          state.user = action.payload;
+        }
+      })
+      .addCase(updateUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
 
       .addCase(deleteUser.pending, state => {
