@@ -12,34 +12,40 @@ const Footer: React.FC<FooterProps> = ({
   quickLinks = FOOTER.quickLinks,
   role,
 }) => {
+  const ctaLabel = role === 'GUEST' ? 'Register' : 'Settings';
+  const ctaPath = role === 'GUEST' ? '/register' : '/settings';
+
   return (
-    <footer className="flex justify-around items-center border-t p-2">
-      <div>
+    <footer className="border-t">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4 sm:px-6">
         <WebsiteLogo
           image={image}
           imageTitle={imageTitle}
           imageLink={imageLink}
         />
-      </div>
-      <div>
-        <ul className="flex gap-5">
+
+        <ul className="flex flex-wrap justify-center gap-4 sm:gap-6">
           {quickLinks.map((link, index) => (
             <li key={index}>
-              <Link to={link.path} className="link">
+              <Link
+                to={link.path}
+                className="link text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 {link.title}
               </Link>
             </li>
           ))}
         </ul>
-      </div>
-      <div>
-        {role == 'GUEST' ? (
-          <Button title="Register" variant="secondary" size="lg" asChild>
-            <Link to="/register">Register</Link>
-          </Button>
-        ) : (
-          <Link to={'/settings'}>Settings</Link>
-        )}
+
+        <Button
+          title={ctaLabel}
+          aria-label={ctaLabel}
+          variant="secondary"
+          size="lg"
+          asChild
+        >
+          <Link to={ctaPath}>{ctaLabel}</Link>
+        </Button>
       </div>
     </footer>
   );

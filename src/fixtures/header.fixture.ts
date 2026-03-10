@@ -11,13 +11,11 @@ export const HEADER: Record<Role, HeaderConfig> = {
     imageTitle: 'Company logo',
     imageLink: '/',
     image: 'https://placehold.co/50x50',
-    message: 'Hello ${User!}',
   },
   MODERATOR: {
     imageTitle: 'Company logo',
     imageLink: '/',
     image: 'https://placehold.co/50x50',
-    message: 'Hello Moderator',
     backgroundColor: 'bg-green-900',
   },
   OWNER: {
