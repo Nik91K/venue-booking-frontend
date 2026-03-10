@@ -20,6 +20,7 @@ import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import { useEstablishments } from '@hooks/useEstablishments';
 import { getAllFavorites } from '@api/slices/establishmentSlice';
 import FiltrationComponent from '@components/common/FiltrationComponent';
+import { getSchedulesByEstablishment } from '@api/slices/scheduleSlice';
 
 const VenuesMapPage = () => {
   const dispatch = useAppDispatch();
@@ -65,6 +66,14 @@ const VenuesMapPage = () => {
     navigate('/login');
   };
 
+  useEffect(() => {
+    establishments.forEach(est => {
+      if (!schedule[est.id]) {
+        dispatch(getSchedulesByEstablishment(est.id));
+      }
+    });
+  }, [establishments, dispatch]);
+
   return (
     <LayoutPage>
       <div className="flex flex-col h-full">
@@ -74,7 +83,7 @@ const VenuesMapPage = () => {
           </div>
         </MapProvider>
         <div className="flex flex-col lg:flex-row gap-4 p-4">
-          <div className="flex-1 min-w-0">
+          <div className="flex-1">
             <div className="flex items-center gap-2 mb-4">
               <InputGroup className="flex-1">
                 <InputGroupInput

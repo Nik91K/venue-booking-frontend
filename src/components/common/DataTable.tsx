@@ -59,7 +59,7 @@ const DataTable = <T extends { id: number | string }>({
 
   return (
     <div className="rounded-md border border-border">
-      <Table className="min-w-5xl">
+      <Table>
         <TableHeader>
           <TableRow>
             {columns.map(col => (

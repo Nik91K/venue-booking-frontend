@@ -9,6 +9,7 @@ import { getCurrentUser } from '@api/slices/userSlice';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import ErrorComponent from '@components/common/ErrorComponent';
+import { Toaster } from 'sonner';
 
 const LayoutPage = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
@@ -44,8 +45,9 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
             avatar={user?.avatarUrl || 'avatar'}
             email={user?.email || 'Guest'}
           />
-          <main className="flex-1 max-w-7xl mx-auto px-4">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4">
             <ErrorComponent />
+            <Toaster position="top-right" theme="system" />
             {loading && <Spinner />}
             {children}
           </main>

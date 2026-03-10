@@ -55,7 +55,7 @@ const UserDropdownMenu = ({
         ) : (
           <Avatar className="w-10 h-10 cursor-pointer">
             <AvatarImage src={avatar} alt="User avatar" />
-            <AvatarFallback className="p-0">
+            <AvatarFallback>
               <Skeleton className="w-full h-full rounded-full" />
             </AvatarFallback>
           </Avatar>
@@ -66,11 +66,11 @@ const UserDropdownMenu = ({
         align="end"
         sideOffset={4}
       >
-        <DropdownMenuLabel className="p-0 font-normal">
+        <DropdownMenuLabel>
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="w-10 h-10">
               <AvatarImage src={avatar} alt="User avatar" />
-              <AvatarFallback className="p-0">
+              <AvatarFallback>
                 <Skeleton className="w-full h-full rounded-full" />
               </AvatarFallback>
             </Avatar>
