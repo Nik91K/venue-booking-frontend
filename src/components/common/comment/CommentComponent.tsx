@@ -119,7 +119,7 @@ const CommentComponent = ({
           <Card key={comment.id} className="p-6">
             <div className="flex gap-4">
               <Avatar className="w-10 h-10">
-                <AvatarImage src={commentUser?.avatarUrl} />
+                <AvatarImage src={commentUser?.avatarUrl ?? 'avatar'} />
                 <AvatarFallback>
                   <Skeleton className="w-full h-full rounded-full" />
                 </AvatarFallback>

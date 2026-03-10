@@ -8,16 +8,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@components/ui/card';
-import { Input } from '@components/ui/input';
-import { Label } from '@components/ui/label';
 import { Button } from '@components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import { updateCurrentUser } from '@api/slices/userSlice';
-import { Camera, User, Clock, CalendarDays } from 'lucide-react';
+import {
+  Camera,
+  User,
+  Clock,
+  CalendarDays,
+  KeyRound,
+  EyeOff,
+  Eye,
+} from 'lucide-react';
 import { getCurrentUserBookings } from '@api/slices/bookingSlice';
 import BookingCard from '@components/common/cards/BookingCard';
 import CardComponent from '@components/common/cards/CardComponent';
+import FormFieldGroup from '@components/common/FormFieldGroup';
+import PasswordStrength from '@components/common/PasswordStrength';
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch();
@@ -29,6 +37,8 @@ const SettingsPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,15 +150,13 @@ const SettingsPage = () => {
               title="Display Name"
               subTitle="Change how your name."
             >
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="Your name"
-                />
-              </div>
+              <FormFieldGroup
+                value={name}
+                onChange={setName}
+                placeholder="Your name"
+                type="text"
+                leftIcon={<User />}
+              />
               <Button
                 onClick={handleNameSave}
                 disabled={loading || !name.trim() || name === user?.name}
@@ -159,38 +167,46 @@ const SettingsPage = () => {
             </CardComponent>
             <CardComponent
               title="Password"
-              subTitle="Choose a strong, unique password."
+              subTitle="Choose a strong password. At least 8 characters, including a number, an uppercase letter, and a special character."
+              className="flex flex-col gap-4"
             >
-              <div className="space-y-1.5">
-                <Label htmlFor="new-password">New password</Label>
-                <Input
-                  id="new-password"
-                  type="password"
+              <div className="flex flex-col gap-2 w-full md:flex-row">
+                <FormFieldGroup
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
                   value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
+                  onChange={setNewPassword}
+                  leftIcon={<KeyRound />}
+                  rightIcon={showPassword ? <EyeOff /> : <Eye />}
+                  onRightIconClick={() => setShowPassword(prev => !prev)}
+                />
+                <FormFieldGroup
+                  type={showConfirm ? 'text' : 'password'}
+                  placeholder="Repeat password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  leftIcon={<KeyRound />}
+                  rightIcon={showConfirm ? <EyeOff /> : <Eye />}
+                  onRightIconClick={() => setShowConfirm(prev => !prev)}
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="confirm-password">Confirm new password</Label>
-
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
-                />
+              <div className="flex flex-col gap-2 w-full">
+                <PasswordStrength password={newPassword} />
                 {confirmPassword && newPassword !== confirmPassword && (
                   <p className="text-xs text-destructive">
                     Passwords do not match.
                   </p>
                 )}
               </div>
+
+              {/* Save button */}
               <Button
                 onClick={handlePasswordSave}
                 disabled={
                   loading || !newPassword || newPassword !== confirmPassword
                 }
                 size="sm"
+                className="self-start"
               >
                 Update password
               </Button>

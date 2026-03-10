@@ -35,7 +35,6 @@ export const register = createAsyncThunk(
       phoneNumber: string;
       email: string;
       password: string;
-      role: string;
     },
     { rejectWithValue }
   ) => {

@@ -11,16 +11,24 @@ type CardComponentProps = {
   title: string;
   subTitle: string;
   children: React.ReactNode;
+  className?: string;
 };
 
-const CardComponent = ({ title, subTitle, children }: CardComponentProps) => {
+const CardComponent = ({
+  title,
+  subTitle,
+  children,
+  className,
+}: CardComponentProps) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription>{subTitle}</CardDescription>
       </CardHeader>
-      <CardContent className="flex items-center gap-6">{children}</CardContent>
+      <CardContent className={className ?? `flex items-center gap-6`}>
+        {children}
+      </CardContent>
     </Card>
   );
 };

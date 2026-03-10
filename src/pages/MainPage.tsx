@@ -1,11 +1,10 @@
-import '@/App.css';
 import TextComponent from '@components/common/MainPageText';
 import LayoutPage from '@/layoutPage';
 import { TEXT_COMPONENTS } from '@fixtures/mainPage.fixture';
 import { MAIN_PAGE_LIST } from '@fixtures/mainPage.fixture';
 import type { MainPageListProps } from '@/types/mainPageText';
 
-function App() {
+const MainPage = () => {
   return (
     <LayoutPage>
       <div className="flex flex-col items-center">
@@ -26,6 +25,6 @@ function App() {
       </div>
     </LayoutPage>
   );
-}
+};
 
-export default App;
+export default MainPage;

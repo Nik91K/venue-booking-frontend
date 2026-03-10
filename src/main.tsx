@@ -5,9 +5,9 @@ import { Provider } from 'react-redux';
 import { store } from '@api/store.ts';
 import '@/index.css';
 import ProtectedRoute from '@/guards/ProtectedRoute.tsx';
-import App from '@/App.tsx';
-import RegisterPage from '@pages/RegisterPage.tsx';
-import LoginPage from '@pages/LoginPage.tsx';
+import MainPage from '@pages/MainPage';
+import RegisterPage from '@pages/auth/RegisterPage';
+import LoginPage from '@pages/auth/LoginPage';
 import VenuesMapPage from '@pages/VenuesMapPage.tsx';
 import AdminDashboard from '@pages/admin/AdminDashboard.tsx';
 import AdminUsersPage from '@pages/admin/UserManagement.tsx';
@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/explore" element={<VenuesMapPage />} />
         <Route path="/establishment/:id" element={<EstablishmentPage />} />
         <Route path="/register" element={<RegisterPage />} />
