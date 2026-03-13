@@ -1,27 +1,177 @@
-import TextComponent from '@components/common/MainPageText';
 import LayoutPage from '@/layoutPage';
-import { TEXT_COMPONENTS } from '@fixtures/mainPage.fixture';
-import { MAIN_PAGE_LIST } from '@fixtures/mainPage.fixture';
-import type { MainPageListProps } from '@/types/mainPageText';
+import { CarouselComponent } from '@components/common/CarouselComponent';
+import { Badge } from '@components/ui/badge';
+import { Separator } from '@components/ui/separator';
+import { motion } from 'motion/react';
+import {
+  BOOKING_STEPS,
+  ROLES,
+  CAROUSEL_IMAGES,
+  HERO_STATS,
+} from '@fixtures/mainPage.fixture';
+import { SectionHeader } from '@components/common/SectionHeader';
+import { StatsRow } from '@components/common/StatsRow';
+import { IconCard } from '@components/common/IconCard';
+import { SectionWithCaption } from '@components/common/SectionWithCaption';
+import { CTAButtons } from '@components/common/CTAButtons';
+import { NumberedStepList } from '@components/common/NumberedStepList';
+import { TwoColumnSection } from '@components/common/TwoColumnSection';
+import { MapCard } from '@components/common/MapCard';
+import { AvatarShowcase } from '@components/common/AvatarShowcase';
+import { CTASection } from '@components/common/CTASection';
+import { fadeInUp } from '@/lib/motion';
 
 const MainPage = () => {
   return (
     <LayoutPage>
-      <div className="flex flex-col items-center">
-        <TextComponent
-          title={TEXT_COMPONENTS.top.title}
-          text={TEXT_COMPONENTS.top.text}
-        />
-        <TextComponent
-          title={TEXT_COMPONENTS.bottom.title}
-          text={TEXT_COMPONENTS.bottom.text}
-        >
-          <ul className="list-decimal flex items-center flex-col">
-            {MAIN_PAGE_LIST.map((item: MainPageListProps) => (
-              <li className="text-left">{item.title}</li>
+      <div className="flex flex-col gap-0">
+        <section className="relative overflow-hidden py-20 md:py-28 px-4">
+          <div className="max-w-3xl">
+            <SectionHeader
+              label="Ukraine's Booking Network"
+              title="Every dinner starts with a reservation"
+              highlight="starts with a reservation"
+            />
+            <motion.p
+              initial="hidden"
+              animate="visible"
+              custom={2}
+              variants={fadeInUp}
+              className="text-muted-foreground leading-relaxed mb-10 max-w-xl text-base md:text-lg"
+            >
+              Discover restaurants, cafés, and experiences near you. Book a
+              table, and explore the map.
+            </motion.p>
+            <CTAButtons />
+            <StatsRow stats={[...HERO_STATS]} className="mt-14" />
+          </div>
+        </section>
+
+        <SectionWithCaption caption="Featured establishments across Ukraine">
+          <div className="w-full max-h-[420px] overflow-hidden rounded-xl border-1 border-orange-900">
+            <CarouselComponent images={CAROUSEL_IMAGES} />
+          </div>
+        </SectionWithCaption>
+
+        <Separator />
+
+        <section className="py-20 px-4">
+          <TwoColumnSection
+            left={
+              <>
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={fadeInUp}
+                  className="mb-10"
+                >
+                  <SectionHeader
+                    label="Simple process"
+                    title="Three steps to your perfect table"
+                    highlight="perfect table"
+                  />
+                </motion.div>
+                <NumberedStepList steps={BOOKING_STEPS} />
+              </>
+            }
+            right={<MapCard />}
+          />
+        </section>
+
+        <Separator />
+
+        <section className="py-20 px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="mb-12"
+          >
+            <SectionHeader
+              label="Built for everyone"
+              title="One platform, "
+              highlight="every role"
+            />
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {ROLES.map(role => (
+              <IconCard
+                key={role.label}
+                icon={role.icon}
+                title={role.label}
+                description={role.desc}
+                badge={role.badge}
+              />
             ))}
-          </ul>
-        </TextComponent>
+          </div>
+        </section>
+
+        <Separator />
+
+        <section className="py-20 px-4">
+          <TwoColumnSection
+            left={
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+              >
+                <SectionHeader
+                  label="Personal identity"
+                  title="Unique avatars, generated for you"
+                  highlight="generated for you"
+                />
+                <p className="text-muted-foreground leading-relaxed text-sm mb-6 max-w-md">
+                  Each user profile receives a unique avatar generated by the
+                  DiceBear API. Your identity on Reservio belongs to you from
+                  the moment you first register.
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  {['thumbs'].map(style => (
+                    <Badge
+                      key={style}
+                      variant="secondary"
+                      className="text-xs tracking-wide"
+                    >
+                      {style}
+                    </Badge>
+                  ))}
+                </div>
+              </motion.div>
+            }
+            right={
+              <AvatarShowcase
+                diceBear={{
+                  style: 'thumbs',
+                  count: 12,
+                  seedPrefix: 'reservio-demo',
+                }}
+              />
+            }
+          />
+        </section>
+
+        <Separator />
+
+        <CTASection
+          title={
+            <>
+              Ready to find your{' '}
+              <span className="italic text-(--fourth-color)">
+                next favourite place?
+              </span>
+            </>
+          }
+          subtitle="Join Reservio — browse the map, book your table, and discover the best establishments near you."
+        >
+          <CTAButtons />
+          <p className="text-xs text-muted-foreground mt-5">
+            No credit card required · Free for guests and diners
+          </p>
+        </CTASection>
       </div>
     </LayoutPage>
   );
