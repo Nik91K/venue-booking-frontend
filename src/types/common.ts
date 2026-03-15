@@ -19,4 +19,5 @@ export type InputType =
   | 'email'
   | 'file'
   | 'image'
-  | 'search';
+  | 'search'
+  | 'number';

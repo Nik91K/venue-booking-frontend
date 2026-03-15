@@ -31,6 +31,7 @@ import EstablishmentColumns from '@components/tableColumns/establishmentColumns'
 import DataTable from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
 import { useEstablishments } from '@hooks/useEstablishments';
+import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishmentDialog';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -132,6 +133,7 @@ const AdminEstablishmentsPage = () => {
                   </InputGroupAddon>
                 </InputGroup>
               </div>
+              <CreateEstablishmentDialog />
             </div>
             <DataTable
               data={establishments}

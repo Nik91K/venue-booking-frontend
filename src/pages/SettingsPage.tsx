@@ -199,7 +199,6 @@ const SettingsPage = () => {
                 )}
               </div>
 
-              {/* Save button */}
               <Button
                 onClick={handlePasswordSave}
                 disabled={

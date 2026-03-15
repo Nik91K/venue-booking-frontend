@@ -46,24 +46,31 @@ if (!API_URL) {
 export const createEstablishment = createAsyncThunk(
   'establishment/create',
   async (
-    establishmentData: {
+    data: {
       name: string;
       address: string;
       description: string;
       totalSeats: number;
-      featureIds: number[];
       typeId: number;
+      coverPhoto: File | null;
+      photos: File[];
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post(
-        `${API_URL}${SLICE_URL}`,
-        establishmentData
-      );
+      const body = new FormData();
+      body.append('name', data.name);
+      body.append('address', data.address);
+      body.append('description', data.description);
+      body.append('totalSeats', String(data.totalSeats));
+      body.append('typeId', String(data.typeId));
+      if (data.coverPhoto) body.append('coverPhoto', data.coverPhoto);
+      data.photos.forEach(photo => body.append('photos', photo));
+
+      const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, body);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );

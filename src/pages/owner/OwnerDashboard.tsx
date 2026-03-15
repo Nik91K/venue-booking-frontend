@@ -32,6 +32,7 @@ import {
 import { Search } from 'lucide-react';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
+import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishmentDialog';
 
 const OwnerDashboard = () => {
   const dispatch = useAppDispatch();
@@ -109,7 +110,7 @@ const OwnerDashboard = () => {
           <CardTitle>Establishments</CardTitle>
           <CardDescription>Search and filter establishments</CardDescription>
         </CardHeader>
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 mb-6 p-2">
           <div className="relative flex-1">
             <InputGroup>
               <InputGroupAddon>
@@ -126,6 +127,7 @@ const OwnerDashboard = () => {
               </InputGroupAddon>
             </InputGroup>
           </div>
+          <CreateEstablishmentDialog />
         </div>
         <CardContent>
           <DataTable
