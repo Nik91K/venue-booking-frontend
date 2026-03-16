@@ -10,7 +10,6 @@ import type { BookingType } from '@/types/booking';
 interface BookingState {
   booking: BookingType | null;
   bookings: BookingType[];
-  accessToken: string | null;
   loading: boolean;
   error: string | null;
 }
@@ -18,7 +17,6 @@ interface BookingState {
 const initialState: BookingState = {
   booking: null,
   bookings: [],
-  accessToken: localStorage.getItem('accessToken'),
   loading: false,
   error: null,
 };

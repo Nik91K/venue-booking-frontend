@@ -61,8 +61,14 @@ const CommentForm = ({ establishmentId, role }: CommentFormProps) => {
         })
       ).unwrap();
       setFormData({ text: '', rating: 0 });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      dispatch(
+        addError({
+          title: 'Error creating comment',
+          message: error.message || 'An error occurred',
+          type: 'error',
+        })
+      );
     }
   };
 

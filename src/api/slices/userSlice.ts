@@ -9,8 +9,6 @@ interface UserState {
   users: UserType[];
   selectedUser: Record<number, UserType>;
   meta: PaginationType | null;
-  accessToken: string | null;
-  refreshToken: string | null;
   loading: boolean;
   error: string | null;
 }
@@ -19,8 +17,6 @@ const initialState: UserState = {
   user: null,
   users: [],
   selectedUser: {},
-  accessToken: localStorage.getItem('accessToken') || null,
-  refreshToken: localStorage.getItem('refreshToken') || null,
   meta: null,
   loading: false,
   error: null,
@@ -80,7 +76,10 @@ export const updateCurrentUser = createAsyncThunk<
   { rejectValue: string }
 >('users/updateMe', async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.patch(`${SLICE_URL}/me`, data);
+    const response = await axiosInstance.patch(
+      `${API_URL}${SLICE_URL}/me`,
+      data
+    );
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);
@@ -93,7 +92,10 @@ export const updateUserById = createAsyncThunk<
   { rejectValue: string }
 >('users/updateUserById', async ({ id, data }, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.patch(`${SLICE_URL}/${id}`, data);
+    const response = await axiosInstance.patch(
+      `${API_URL}${SLICE_URL}/${id}`,
+      data
+    );
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);
@@ -136,10 +138,6 @@ const userSlice = createSlice({
       .addCase(getCurrentUser.rejected, state => {
         state.loading = false;
         state.user = null;
-        state.accessToken = null;
-        state.refreshToken = null;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
       })
 
       .addCase(getUserById.pending, state => {
@@ -189,8 +187,17 @@ const userSlice = createSlice({
       .addCase(updateUserById.fulfilled, (state, action) => {
         state.loading = false;
 
+        const index = state.users.findIndex(u => u.id === action.payload.id);
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
+
         if (state.user?.id === action.payload.id) {
           state.user = action.payload;
+        }
+
+        if (state.selectedUser[action.payload.id]) {
+          state.selectedUser[action.payload.id] = action.payload;
         }
       })
       .addCase(updateUserById.rejected, (state, action) => {

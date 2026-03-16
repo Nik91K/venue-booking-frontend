@@ -67,7 +67,7 @@ const EstablishmentPage = () => {
     if (error) {
       dispatch(addError(convertError(new Error(error))));
     }
-  });
+  }, [error, dispatch]);
 
   if (loading) {
     return (

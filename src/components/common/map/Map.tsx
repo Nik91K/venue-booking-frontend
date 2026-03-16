@@ -12,9 +12,7 @@ const MapComponent: React.FC<MapProps> = ({
   zoom = 12,
   children,
 }) => {
-  const defaultCenter = center;
-
-  const [userCenter, setUserCenter] = useState(defaultCenter);
+  const [userCenter, setUserCenter] = useState(center);
 
   useEffect(() => {
     if (!navigator.geolocation) {

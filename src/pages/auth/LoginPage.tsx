@@ -55,8 +55,14 @@ const LoginPage: React.FC<AuthorizationProps> = ({
         })
       ).unwrap();
       navigate('/explore');
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      dispatch(
+        addError({
+          title: 'Login Failed',
+          message: error.message || 'Invalid email or password',
+          type: 'error',
+        })
+      );
     }
   };
 

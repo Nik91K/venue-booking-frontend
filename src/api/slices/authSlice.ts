@@ -174,6 +174,13 @@ const authSlice = createSlice({
         state.refreshToken = null;
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+      })
+      .addCase(logout.rejected, state => {
+        state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
       });
   },
 });

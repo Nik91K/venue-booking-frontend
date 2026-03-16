@@ -1,9 +1,9 @@
 import { APIProvider } from '@vis.gl/react-google-maps';
 import React from 'react';
 
-const MapProvider = ({ children }: { children: React.ReactNode }) => {
-  const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API;
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API;
 
+const MapProvider = ({ children }: { children: React.ReactNode }) => {
   return <APIProvider apiKey={API_KEY}>{children}</APIProvider>;
 };
 
