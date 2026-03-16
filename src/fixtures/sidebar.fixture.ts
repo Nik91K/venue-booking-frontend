@@ -5,7 +5,6 @@ import type {
   UserMenuItems,
 } from '@/types/sidebat';
 import {
-  CreditCard,
   Settings,
   Home,
   FileCheck,
@@ -100,7 +99,6 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
 export type SidebarConfig = typeof SIDEBAR;
 
 export const USER_MENU: MenuSection = [
-  { icon: CreditCard, label: 'Billing', path: '/billing' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 

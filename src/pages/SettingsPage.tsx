@@ -26,12 +26,17 @@ import BookingCard from '@components/common/cards/BookingCard';
 import CardComponent from '@components/common/cards/CardComponent';
 import FormFieldGroup from '@components/common/FormFieldGroup';
 import PasswordStrength from '@components/common/PasswordStrength';
+import { validatePassword } from '@hooks/validation/authorization';
+import { validateUsername } from '@hooks/validation/authorization';
+import { addError } from '@api/slices/errorSlice';
+import { Spinner } from '@components/ui/spinner';
 
 const SettingsPage = () => {
   const dispatch = useAppDispatch();
-  const { user, loading } = useAppSelector(state => state.users);
-  const { bookings } = useAppSelector(state => state.booking);
-
+  const { user, loading: userLoading } = useAppSelector(state => state.users);
+  const { bookings, loading: bookingLoading } = useAppSelector(
+    state => state.booking
+  );
   const [name, setName] = useState(user?.name ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -52,12 +57,30 @@ const SettingsPage = () => {
   };
 
   const handleNameSave = () => {
-    if (!name.trim()) return;
+    if (!validateUsername(name)) {
+      dispatch(
+        addError({
+          title: 'Vaildation error',
+          message: 'Incorrect username',
+          type: 'error',
+        })
+      );
+      return;
+    }
     dispatch(updateCurrentUser({ name }));
   };
 
   const handlePasswordSave = () => {
-    if (!newPassword || newPassword !== confirmPassword) return;
+    if (!validatePassword(newPassword) || newPassword !== confirmPassword) {
+      dispatch(
+        addError({
+          title: 'Vaildation error',
+          message: 'Incorrect password',
+          type: 'error',
+        })
+      );
+      return;
+    }
     dispatch(updateCurrentUser({ password: newPassword } as any));
     setNewPassword('');
     setConfirmPassword('');
@@ -71,7 +94,7 @@ const SettingsPage = () => {
   };
 
   useEffect(() => {
-    if (!bookings || bookings.length === 0) {
+    if (!bookings) {
       dispatch(getCurrentUserBookings());
     }
   }, [dispatch, bookings]);
@@ -139,7 +162,7 @@ const SettingsPage = () => {
                     size="sm"
                     className="mt-2"
                     onClick={handleAvatarSave}
-                    disabled={loading}
+                    disabled={userLoading}
                   >
                     Save avatar
                   </Button>
@@ -159,7 +182,7 @@ const SettingsPage = () => {
               />
               <Button
                 onClick={handleNameSave}
-                disabled={loading || !name.trim() || name === user?.name}
+                disabled={userLoading || !name.trim() || name === user?.name}
                 size="sm"
               >
                 Save name
@@ -202,7 +225,7 @@ const SettingsPage = () => {
               <Button
                 onClick={handlePasswordSave}
                 disabled={
-                  loading || !newPassword || newPassword !== confirmPassword
+                  userLoading || !newPassword || newPassword !== confirmPassword
                 }
                 size="sm"
                 className="self-start"
@@ -224,7 +247,9 @@ const SettingsPage = () => {
               </CardHeader>
 
               <CardContent className="flex flex-col gap-4">
-                {!bookings?.length ? (
+                {bookingLoading ? (
+                  <Spinner />
+                ) : !bookings?.length ? (
                   <div className="py-12 text-center text-sm text-muted-foreground">
                     No bookings yet.
                   </div>
