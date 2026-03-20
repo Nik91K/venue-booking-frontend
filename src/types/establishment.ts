@@ -19,6 +19,8 @@ export type EstablishmentType = {
   comments: CommentType[];
   ownerId: number;
   isFavorite: boolean;
+  lat?: number;
+  lng?: number;
 };
 
 export type LocationDetails = {
@@ -26,6 +28,8 @@ export type LocationDetails = {
   street: string;
   building: string;
   zipCode?: string;
+  lat?: number;
+  lng?: number;
 };
 
 type Features = {

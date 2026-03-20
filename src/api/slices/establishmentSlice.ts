@@ -75,6 +75,44 @@ export const createEstablishment = createAsyncThunk(
   }
 );
 
+export const getNearbyEstablishments = createAsyncThunk(
+  'establishment/nearby',
+  async (
+    {
+      page = 1,
+      take = 9,
+      order = 'DESC',
+      sortBy = 'weightedRating',
+      search = '',
+      lat,
+      lng,
+      radius,
+    }: {
+      page?: number;
+      take?: number;
+      order?: 'ASC' | 'DESC';
+      sortBy?: string;
+      search?: string;
+      lat: number;
+      lng: number;
+      radius: number;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(
+        `${API_URL}${SLICE_URL}/nearby`,
+        {
+          params: { page, take, order, sortBy, search, lat, lng, radius },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 export const getAllEstablishments = createAsyncThunk(
   'establishment/getAll',
   async (
@@ -278,6 +316,19 @@ const establishmentSlice = createSlice({
         }
       )
       .addCase(createEstablishment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(getNearbyEstablishments.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getNearbyEstablishments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.establishments = action.payload;
+      })
+      .addCase(getNearbyEstablishments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
