@@ -34,9 +34,11 @@ import { Spinner } from '@components/ui/spinner';
 const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const { user, loading: userLoading } = useAppSelector(state => state.users);
-  const { bookings, loading: bookingLoading } = useAppSelector(
-    state => state.booking
-  );
+  const {
+    bookings,
+    loading: bookingLoading,
+    fetched,
+  } = useAppSelector(state => state.booking);
   const [name, setName] = useState(user?.name ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -94,7 +96,7 @@ const SettingsPage = () => {
   };
 
   useEffect(() => {
-    if (!bookings) {
+    if (!fetched) {
       dispatch(getCurrentUserBookings());
     }
   }, [dispatch, bookings]);

@@ -12,6 +12,7 @@ interface BookingState {
   bookings: BookingType[];
   loading: boolean;
   error: string | null;
+  fetched: boolean;
 }
 
 const initialState: BookingState = {
@@ -19,6 +20,7 @@ const initialState: BookingState = {
   bookings: [],
   loading: false,
   error: null,
+  fetched: false,
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -159,10 +161,12 @@ const bookingSlice = createSlice({
       .addCase(getCurrentUserBookings.fulfilled, (state, action) => {
         state.loading = false;
         state.bookings = action.payload;
+        state.fetched = true;
       })
       .addCase(getCurrentUserBookings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Unknown error';
+        state.fetched = true;
       })
 
       .addCase(getBookingsByEstablishment.pending, state => {

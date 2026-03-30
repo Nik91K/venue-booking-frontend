@@ -3,6 +3,7 @@ import type { UserType } from '@/types/user';
 import axiosInstance from '@api/axiosConfig';
 import type { RootState } from '@api/store';
 import type { PageType, PaginationType } from '@/types/pagination';
+import { logout } from '@api/slices/authSlice';
 
 interface UserState {
   user: UserType | null;
@@ -223,6 +224,13 @@ const userSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Something went wrong';
+      })
+
+      .addCase(logout.fulfilled, state => {
+        state.user = null;
+      })
+      .addCase(logout.rejected, state => {
+        state.user = null;
       });
   },
 });
