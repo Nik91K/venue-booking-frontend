@@ -40,7 +40,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
     });
   };
 
-  const hasActiveFilters = rating !== 'all';
+  const hasActiveFilters = rating !== 'all' || typeId !== undefined;
 
   useEffect(() => {
     if (establishmentType.length == 0 && !loading && !error) {
@@ -49,7 +49,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
   }, [dispatch, establishmentType.length, loading]);
 
   return (
-    <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">
+    <div className="flex flex-col bg-(--primary-background-light) rounded-lg p-4 space-y-6">
       <div className="flex items-center justify-between min-h-10">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-5 w-5" />
@@ -57,7 +57,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
         </div>
         {hasActiveFilters && (
           <Button size="sm" onClick={handleReset}>
-            <X className="h-4 w-4 mr-1" />
+            <X className="h-4 w-4" />
             Clear all
           </Button>
         )}
@@ -122,12 +122,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
           ))}
         </RadioGroup>
       </div>
-      <Button
-        className="w-full"
-        size="lg"
-        variant="secondary"
-        onClick={handleApplyFilters}
-      >
+      <Button size="lg" variant="secondary" onClick={handleApplyFilters}>
         Apply Filters
       </Button>
     </div>

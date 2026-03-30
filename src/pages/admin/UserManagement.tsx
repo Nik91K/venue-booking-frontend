@@ -21,11 +21,13 @@ import { getAllUsers, deleteUser } from '@api/slices/userSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import type { UserType } from '@/types/user';
 import { ROLES } from '@/constants/roles';
+import { useDebounce } from 'use-debounce';
 
 const AdminUsersPage = () => {
   const dispatch = useAppDispatch();
   const [search, setSearch] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
+  const [debouncedSearch] = useDebounce(search, 400);
 
   const { users, loading, meta } = useAppSelector(state => state.users);
 
@@ -34,7 +36,7 @@ const AdminUsersPage = () => {
     ...Object.values(ROLES).filter(role => role !== ROLES.GUEST),
   ];
   const filteredUsers = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
+    const normalizedSearch = debouncedSearch.trim().toLowerCase();
 
     return users.filter(user => {
       const matchesSearch =
@@ -45,7 +47,7 @@ const AdminUsersPage = () => {
       const matchesRole = selectedRole === 'all' || user.role === selectedRole;
       return matchesSearch && matchesRole;
     });
-  }, [users, search, selectedRole]);
+  }, [users, debouncedSearch, selectedRole]);
 
   useEffect(() => {
     if (users.length === 0) {

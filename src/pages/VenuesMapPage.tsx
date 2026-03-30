@@ -90,7 +90,7 @@ const VenuesMapContent = () => {
   }, [establishments, schedule, dispatch]);
 
   return (
-    <div className="flex flex-col h-full lg:flex-row gap-4 p-4">
+    <div className="flex flex-col h-full lg:flex-row gap-4 p-4 w-full">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-4">
           <InputGroup className="flex-1">
@@ -170,7 +170,7 @@ const VenuesMapContent = () => {
           />
         )}
       </div>
-      <div className="lg:w-80 xl:w-96 shrink-0">
+      <div className="lg:w-65 xl:w-70">
         <div className="sticky top-4">
           <FiltrationComponent onFilter={handleFilter} />
         </div>
@@ -187,7 +187,7 @@ const VenuesMapPage = () => (
           <MapComponent />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4 p-4">
+        <div className="flex items-center justify-center">
           <VenuesMapContent />
         </div>
       </div>
