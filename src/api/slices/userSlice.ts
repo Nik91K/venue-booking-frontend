@@ -39,7 +39,7 @@ export const getCurrentUser = createAsyncThunk<
   { state: RootState }
 >('user/me', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
+    const response = await axiosInstance.get(`${SLICE_URL}/me`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data || error.message);
@@ -52,7 +52,7 @@ export const getUserById = createAsyncThunk<
   { rejectValue: string }
 >('user/getUserById', async (id, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
+    const response = await axiosInstance.get(`${SLICE_URL}/${id}`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);
@@ -65,7 +65,7 @@ export const getAllUsers = createAsyncThunk<
   { rejectValue: string }
 >('users/all', async (params = {}, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`, {
+    const response = await axiosInstance.get(`${SLICE_URL}`, {
       params,
     });
     return response.data;
@@ -106,7 +106,7 @@ export const deleteUser = createAsyncThunk<
   { rejectValue: string }
 >('user/delete', async ({ id }, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
+    const response = await axiosInstance.delete(`${SLICE_URL}/${id}`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);

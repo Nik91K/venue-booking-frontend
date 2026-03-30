@@ -46,7 +46,7 @@ const FiltrationComponent = ({ onFilter }: FiltrationProps) => {
     if (establishmentType.length == 0 && !loading && !error) {
       dispatch(getAllEstablishmentTypes());
     }
-  }, [dispatch, establishmentType.length, loading]);
+  }, [dispatch, establishmentType.length, loading, error]);
 
   return (
     <div className="w-3xs bg-(--primary-background-light) rounded-lg p-4 space-y-6">

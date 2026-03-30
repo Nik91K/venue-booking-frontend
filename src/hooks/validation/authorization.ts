@@ -1,5 +1,5 @@
 function noEmoji(data: string): boolean {
-  return /^[A-Za-z0-9!@#$%^&*]+$/.test(data);
+  return /^[A-Za-z0-9!@#$%^&* ]+$/.test(data);
 }
 
 export function validateUsername(data: string): boolean {

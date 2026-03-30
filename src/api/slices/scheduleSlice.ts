@@ -33,7 +33,7 @@ export const createSchedule = createAsyncThunk<
   { rejectValue: string }
 >('schedule/create', async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, data);
+    const response = await axiosInstance.post(`${SLICE_URL}`, data);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -65,7 +65,7 @@ export const deleteSchedules = createAsyncThunk<
   { rejectValue: string }
 >('schedule/delete', async (id, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
+    await axiosInstance.delete(`${SLICE_URL}/${id}`);
     return id;
   } catch (error: any) {
     return rejectWithValue(

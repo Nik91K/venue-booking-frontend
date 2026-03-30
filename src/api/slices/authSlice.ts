@@ -95,7 +95,7 @@ export const logout = createAsyncThunk<void, void, { state: RootState }>(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await axiosInstance.post(`${API_URL}${SLICE_URL}/logout`);
+      await axiosInstance.post(`${SLICE_URL}/logout`);
     } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -141,9 +141,9 @@ const authSlice = createSlice({
         localStorage.setItem('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
-      .addCase(login.rejected, state => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = (action.payload as string) || 'Login failed';
       })
 
       .addCase(refreshAccessToken.fulfilled, (state, action) => {

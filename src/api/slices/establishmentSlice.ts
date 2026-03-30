@@ -67,7 +67,7 @@ export const createEstablishment = createAsyncThunk(
       if (data.coverPhoto) body.append('coverPhoto', data.coverPhoto);
       data.photos.forEach(photo => body.append('photos', photo));
 
-      const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, body);
+      const response = await axiosInstance.post(`${SLICE_URL}`, body);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -90,7 +90,7 @@ export const getAllEstablishments = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.get(`${API_URL}${SLICE_URL}`, {
+      const response = await axiosInstance.get(`${SLICE_URL}`, {
         params: {
           page,
           take,
@@ -112,10 +112,10 @@ export const getEstablishmentById = createAsyncThunk(
   'establishment/id',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/${id}`);
+      const response = await axiosInstance.get(`${SLICE_URL}/${id}`);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -126,10 +126,10 @@ export const getEstablishmentByOwner = createAsyncThunk<
   { rejectValue: string }
 >('establishment/owner', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`${API_URL}${SLICE_URL}/me`);
+    const response = await axiosInstance.get(`${SLICE_URL}/me`);
     return response.data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data);
   }
 });
 
@@ -140,10 +140,7 @@ export const updateEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.patch(
-        `${API_URL}${SLICE_URL}/${id}`,
-        data
-      );
+      const response = await axiosInstance.patch(`${SLICE_URL}/${id}`, data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -155,7 +152,7 @@ export const deleteEstablishment = createAsyncThunk(
   'establishment/delete',
   async (id: number, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(`${API_URL}${SLICE_URL}/${id}`);
+      await axiosInstance.delete(`${SLICE_URL}/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -183,7 +180,7 @@ export const addFeatureToEstablishment = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post(
-        `${API_URL}${SLICE_URL}/${id}/features/${featureId}`
+        `${SLICE_URL}/${id}/features/${featureId}`
       );
       return { id, feature: response.data };
     } catch (error: any) {
@@ -199,9 +196,7 @@ export const removeFeatureFromEstablishment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      await axiosInstance.delete(
-        `${API_URL}${SLICE_URL}/${id}/features/${featureId}`
-      );
+      await axiosInstance.delete(`${SLICE_URL}/${id}/features/${featureId}`);
       return { id, featureId };
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -213,12 +208,10 @@ export const addFavorite = createAsyncThunk(
   'establishment/id/favorite',
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(
-        `${API_URL}${SLICE_URL}/${id}/favorite`
-      );
+      const response = await axiosInstance.post(`${SLICE_URL}/${id}/favorite`);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -228,7 +221,7 @@ export const removeFavorite = createAsyncThunk(
   async (id: number, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.delete(
-        `${API_URL}${SLICE_URL}/${id}/favorite`
+        `${SLICE_URL}/${id}/favorite`
       );
       return response.data;
     } catch (error: any) {
@@ -241,9 +234,7 @@ export const getAllFavorites = createAsyncThunk(
   'establishment/favorites',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(
-        `${API_URL}${SLICE_URL}/favorites`
-      );
+      const response = await axiosInstance.get(`${SLICE_URL}/favorites`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);

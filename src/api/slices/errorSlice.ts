@@ -19,8 +19,11 @@ const errorSlice = createSlice({
     clearError: (state, action: PayloadAction<number>) => {
       state.list = state.list.filter(error => error.id !== action.payload);
     },
+    clearAllErrors: state => {
+      state.list = [];
+    },
   },
 });
 
-export const { addError, clearError } = errorSlice.actions;
+export const { addError, clearError, clearAllErrors } = errorSlice.actions;
 export default errorSlice.reducer;

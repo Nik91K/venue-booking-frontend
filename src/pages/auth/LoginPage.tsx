@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { validateLoginForm } from '@hooks/validation/authorization';
 import { Card } from '@components/ui/card';
 import { addError } from '@api/slices/errorSlice';
+import { convertError } from '@hooks/logger/errorConverter';
 import { Eye, EyeOff, KeyRound, MailIcon } from 'lucide-react';
 
 const LoginPage: React.FC<AuthorizationProps> = ({
@@ -56,7 +57,7 @@ const LoginPage: React.FC<AuthorizationProps> = ({
       ).unwrap();
       navigate('/explore');
     } catch (error) {
-      console.log(error);
+      dispatch(addError(convertError(error)));
     }
   };
 

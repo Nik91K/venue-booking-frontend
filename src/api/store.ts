@@ -36,7 +36,7 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
       ...rest,
       auth: {
         isAuthenticated: Boolean(auth?.user),
-        user: auth.user ? { id: auth.user.id, email: auth.user.email } : null,
+        user: auth.user ? { id: auth.user.id } : null,
       },
       users: {
         usersCount: users?.selectedUser

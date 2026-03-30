@@ -32,7 +32,7 @@ export const createComment = createAsyncThunk<
   { rejectValue: string }
 >('comment/create', async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, data);
+    const response = await axiosInstance.post(`${SLICE_URL}`, data);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -93,10 +93,10 @@ export const updateComment = createAsyncThunk<
   'comment/update',
   async ({ commentId, text, rating }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.patch(
-        `${API_URL}${SLICE_URL}/${commentId}`,
-        { text, rating }
-      );
+      const response = await axiosInstance.patch(`${SLICE_URL}/${commentId}`, {
+        text,
+        rating,
+      });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -112,7 +112,7 @@ export const deleteComment = createAsyncThunk<
   { rejectValue: string }
 >('comment/delete', async (commentId, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete(`${API_URL}${SLICE_URL}/${commentId}`);
+    await axiosInstance.delete(`${SLICE_URL}/${commentId}`);
     return commentId;
   } catch (error: any) {
     return rejectWithValue(

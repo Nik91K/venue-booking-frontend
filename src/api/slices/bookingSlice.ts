@@ -41,7 +41,7 @@ export const createBooking = createAsyncThunk<
   { rejectValue: string }
 >('/booking/create', async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, data);
+    const response = await axiosInstance.post(`${SLICE_URL}`, data);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -71,9 +71,7 @@ export const getCurrentUserBookings = createAsyncThunk<
   { rejectValue: string }
 >('booking/getCurrentUser', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(
-      `${API_URL}${SLICE_URL}/my-bookings`
-    );
+    const response = await axiosInstance.get(`${SLICE_URL}/my-bookings`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -108,9 +106,7 @@ export const getBookingById = createAsyncThunk<
   { rejectValue: string }
 >('booking/getById', async (bookingId, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(
-      `${API_URL}${SLICE_URL}/${bookingId}`
-    );
+    const response = await axiosInstance.get(`${SLICE_URL}/${bookingId}`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
