@@ -16,12 +16,12 @@ import {
 } from '@components/ui/input-group';
 import DataTable from '@components/common/DataTable';
 import userColumns from '@components/tableColumns/UserColumns';
-import { DropdownMenuItem } from '@components/ui/dropdown-menu';
 import { getAllUsers, deleteUser } from '@api/slices/userSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import type { UserType } from '@/types/user';
 import { ROLES } from '@/constants/roles';
 import { useDebounce } from 'use-debounce';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
 
 const AdminUsersPage = () => {
   const dispatch = useAppDispatch();
@@ -61,12 +61,13 @@ const AdminUsersPage = () => {
 
   const userRowActions = (user: UserType) => (
     <>
-      <DropdownMenuItem
-        variant="destructive"
-        onClick={() => handleDelete(user.id)}
-      >
-        Delete User
-      </DropdownMenuItem>
+      <AlertDialogConponent
+        title="Delete User"
+        triggerText="Delete User"
+        description={`Are you sure you want to delete ${user.name}? This action cannot be undone.`}
+        actionText="Delete"
+        onAction={() => handleDelete(user.id)}
+      />
     </>
   );
 

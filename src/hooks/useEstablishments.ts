@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@api/hooks';
 import {
   getAllEstablishments,
   getNearbyEstablishments,
+  getEstablishmentByOwner,
 } from '@api/slices/establishmentSlice';
 import { addError } from '@api/slices/errorSlice';
 
@@ -13,7 +14,7 @@ type FilterParams = {
 };
 
 export const useEstablishments = (options?: {
-  mode?: 'all' | 'nearby';
+  mode?: 'all' | 'nearby' | 'owner';
   lat?: number;
   lng?: number;
   radius?: number;
@@ -31,6 +32,7 @@ export const useEstablishments = (options?: {
 
   useEffect(() => {
     const isNearby = mode === 'nearby';
+    const isOwner = mode === 'owner';
 
     if (isNearby && (!lat || !lng)) {
       dispatch(
@@ -40,6 +42,11 @@ export const useEstablishments = (options?: {
           message: 'No coordinates for nearby search',
         })
       );
+      return;
+    }
+
+    if (isOwner) {
+      dispatch(getEstablishmentByOwner());
       return;
     }
 

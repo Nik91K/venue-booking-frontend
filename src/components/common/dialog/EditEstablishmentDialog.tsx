@@ -1,74 +1,77 @@
 import type {
   EstablishmentType,
   UpdateEstablishmentType,
+  VenueType,
 } from '@/types/establishment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AlertDialogConponent from '@components/common/dialog/AlertDialog';
-
 import { Input } from '@components/ui/input';
-import { Textarea } from '@components/ui/textarea';
 import { Label } from '@components/ui/label';
 import { Separator } from '@components/ui/separator';
+import EstablishmentLocationForm from '@components/common/forms/EstablishmentLocationForm';
+import FormFieldGroup from '@components/common/forms/FormFieldGroup';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
 
 type Props = {
   establishment: EstablishmentType;
   onUpdate: (id: number, data: UpdateEstablishmentType) => void;
+  establishmentTypes: VenueType[];
 };
 
-export const EditEstablishmentDialog = ({ establishment, onUpdate }: Props) => {
-  const [data, setData] = useState<UpdateEstablishmentType | null>(null);
+export const EditEstablishmentDialog = ({
+  establishment,
+  onUpdate,
+  establishmentTypes,
+}: Props) => {
+  const [data, setData] = useState({
+    name: establishment.name,
+    description: establishment.description,
+    totalSeats: establishment.totalSeats,
+    typeId: establishment.type.id,
+    locationDetails: {
+      city: establishment.locationDetails?.city,
+      street: establishment.locationDetails?.street,
+      building: establishment.locationDetails?.building,
+      zipCode: establishment.locationDetails?.zipCode,
+    },
+  });
+  const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
+  const [photos, setPhotos] = useState<File[]>([]);
 
-  useEffect(() => {
-    setData({
-      name: establishment.name,
-      description: establishment.description,
-      totalSeats: establishment.totalSeats,
-      coverPhoto: establishment.coverPhoto,
-      photos: establishment.photos,
-      type: establishment.type,
-      address: establishment.address,
-      locationDetails: establishment.locationDetails ?? {
-        city: '',
-        street: '',
-        building: '',
-        zipCode: '',
+  const handleSubmit = async () => {
+    onUpdate(establishment.id, {
+      name: data.name,
+      description: data.description,
+      totalSeats: Number(data.totalSeats),
+      typeId: data.typeId,
+      city: data.locationDetails.city,
+      street: data.locationDetails.street,
+      building: data.locationDetails.building,
+      zipCode: data.locationDetails.zipCode,
+      coverPhoto,
+      photos,
+    });
+  };
+
+  const handleChange = (field: keyof typeof data, value: any) => {
+    setData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleLocationChange = (field: string, value: string) => {
+    setData(prev => ({
+      ...prev,
+      locationDetails: {
+        ...prev.locationDetails,
+        [field]: value,
       },
-    });
-  }, [establishment]);
-
-  const handleChange = <K extends keyof UpdateEstablishmentType>(
-    field: K,
-    value: UpdateEstablishmentType[K]
-  ) => {
-    setData(prev => (prev ? { ...prev, [field]: value } : prev));
+    }));
   };
-
-  const handleLocationChange = (
-    field: keyof NonNullable<UpdateEstablishmentType['locationDetails']>,
-    value: string
-  ) => {
-    setData(data => {
-      if (!data) return data;
-      return {
-        ...data,
-        locationDetails: {
-          city: data.locationDetails?.city ?? '',
-          street: data.locationDetails?.street ?? '',
-          building: data.locationDetails?.building ?? '',
-          zipCode: data.locationDetails?.zipCode ?? '',
-          [field]: value,
-        },
-      };
-    });
-  };
-
-  const handleSubmit = () => {
-    if (data) {
-      onUpdate(establishment.id, data);
-    }
-  };
-
-  if (!data) return null;
 
   return (
     <AlertDialogConponent
@@ -83,86 +86,113 @@ export const EditEstablishmentDialog = ({ establishment, onUpdate }: Props) => {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Basic Info</h3>
 
-          <div className="space-y-2">
-            <Label>Name</Label>
-            <Input
-              value={data.name}
-              onChange={e => handleChange('name', e.target.value)}
-            />
-          </div>
+          <FormFieldGroup
+            label="Name"
+            value={data.name}
+            onChange={value => handleChange('name', value)}
+            placeholder="Enter the name of the establishment"
+          />
 
-          <div className="space-y-2">
-            <Label>Description</Label>
-            <Textarea
-              value={data.description}
-              onChange={e => handleChange('description', e.target.value)}
-            />
-          </div>
+          <FormFieldGroup
+            label="Description"
+            value={data.description}
+            onChange={value => handleChange('description', value)}
+            placeholder="Enter the description of the establishment"
+          />
 
-          <div className="space-y-2">
-            <Label>Total Seats</Label>
-            <Input
-              type="number"
-              value={data.totalSeats}
-              onChange={e => handleChange('totalSeats', Number(e.target.value))}
-            />
-          </div>
+          <FormFieldGroup
+            label="Total Seats"
+            value={data.totalSeats.toString()}
+            onChange={value => handleChange('totalSeats', value)}
+            placeholder="Enter the total number of seats"
+          />
         </div>
 
         <Separator />
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Location</h3>
-
-          <Input
-            placeholder="Address"
-            value={data.address}
-            onChange={e => handleChange('address', e.target.value)}
-          />
-
-          <Input
-            placeholder="City"
-            value={data.locationDetails?.city ?? ''}
-            onChange={e => handleLocationChange('city', e.target.value)}
-          />
-
-          <Input
-            placeholder="Street"
-            value={data.locationDetails?.street ?? ''}
-            onChange={e => handleLocationChange('street', e.target.value)}
-          />
-
-          <Input
-            placeholder="Building"
-            value={data.locationDetails?.building ?? ''}
-            onChange={e => handleLocationChange('building', e.target.value)}
-          />
-
-          <Input
-            placeholder="Zip Code"
-            value={data.locationDetails?.zipCode ?? ''}
-            onChange={e => handleLocationChange('zipCode', e.target.value)}
-          />
-        </div>
+        <EstablishmentLocationForm
+          city={data.locationDetails?.city ?? ''}
+          street={data.locationDetails?.street ?? ''}
+          building={data.locationDetails?.building ?? ''}
+          zipCode={data.locationDetails?.zipCode ?? ''}
+          onChange={handleLocationChange}
+        />
         <Separator />
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Media</h3>
-
-          <Input
-            placeholder="Cover photo URL"
-            value={data.coverPhoto}
-            onChange={e => handleChange('coverPhoto', e.target.value)}
-          />
-
-          <Textarea
-            placeholder="Photos (comma separated)"
-            value={data.photos.join(', ')}
-            onChange={e =>
-              handleChange(
-                'photos',
-                e.target.value.split(',').map(p => p.trim())
-              )
+        <div className="space-y-2">
+          <Label>Type</Label>
+          <Select
+            value={String(data.typeId)}
+            onValueChange={value =>
+              setData(prev => ({ ...prev, typeId: Number(value) }))
             }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              {establishmentTypes.map(type => (
+                <SelectItem key={type.id} value={String(type.id)}>
+                  {type.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Cover photo</Label>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={e => {
+              const file = e.target.files?.[0] || null;
+              setCoverPhoto(file);
+            }}
           />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Additional photos</Label>
+          <Input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={e => {
+              const incoming = Array.from(e.target.files ?? []);
+              setPhotos(prev => {
+                const existingKeys = new Set(
+                  prev.map(file => `${file.name}-${file.size}`)
+                );
+                const fresh = incoming.filter(
+                  f => !existingKeys.has(`${f.name}-${f.size}`)
+                );
+                return [...prev, ...fresh];
+              });
+              e.target.value = '';
+            }}
+          />
+          {photos.length > 0 && (
+            <ul>
+              {photos.map((photo, index) => (
+                <li
+                  key={`${photo.size}-${photo.name}`}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <span className="truncate text-muted-foreground">
+                    {photo.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPhotos(prev => prev.filter((_, idx) => idx !== index))
+                    }
+                    className="text-red-500 hover:text-red-700 shrink-0"
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </form>
     </AlertDialogConponent>

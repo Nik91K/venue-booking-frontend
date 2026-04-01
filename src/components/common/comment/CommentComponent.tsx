@@ -55,6 +55,7 @@ const CommentComponent = ({
     return (
       role === 'SUPER_ADMIN' ||
       establishment.ownerId === user.id ||
+      establishment.moderators.some(mod => mod === user.id) ||
       comment.user?.id === user.id
     );
   };

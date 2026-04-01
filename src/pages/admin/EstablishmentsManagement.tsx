@@ -18,10 +18,7 @@ import {
   InputGroupInput,
 } from '@components/ui/input-group';
 import { Search } from 'lucide-react';
-import {
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from '@components/ui/dropdown-menu';
+import { DropdownMenuSeparator } from '@components/ui/dropdown-menu';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
@@ -29,9 +26,15 @@ import EditEstablishmentDialog from '@components/common/dialog/EditEstablishment
 import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
 import EstablishmentColumns from '@components/tableColumns/establishmentColumns';
 import DataTable from '@components/common/DataTable';
-import type { EstablishmentType } from '@/types/establishment';
+import type {
+  EstablishmentType,
+  UpdateEstablishmentType,
+} from '@/types/establishment';
 import { useEstablishments } from '@hooks/useEstablishments';
 import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishmentDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
+import { createEstablishment } from '@api/slices/establishmentSlice';
+import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +50,15 @@ const AdminEstablishmentsPage = () => {
   const { bookings, loading: bookingsLoading } = useAppSelector(
     state => state.booking
   );
+  const { establishmentType } = useAppSelector(
+    state => state.establishmentType
+  );
+
+  useEffect(() => {
+    if (!establishmentType.length) {
+      dispatch(getAllEstablishmentTypes());
+    }
+  });
 
   useEffect(() => {
     if (error) {
@@ -56,12 +68,23 @@ const AdminEstablishmentsPage = () => {
 
   const handleUpdateEstablishment = (
     establishmentId: number,
-    updateData: { name?: string; description?: string; address?: string }
+    updateData: UpdateEstablishmentType
   ) => {
     dispatch(
       updateEstablishment({
         id: establishmentId,
-        data: updateData,
+        data: {
+          name: updateData.name,
+          description: updateData.description,
+          totalSeats: updateData.totalSeats,
+          typeId: updateData.typeId,
+          city: updateData?.city,
+          street: updateData?.street,
+          building: updateData?.building,
+          zipCode: updateData?.zipCode,
+          coverPhoto: updateData.coverPhoto,
+          photos: updateData.photos,
+        },
       })
     );
   };
@@ -78,6 +101,7 @@ const AdminEstablishmentsPage = () => {
     <>
       <EditEstablishmentDialog
         establishment={establishment}
+        establishmentTypes={establishmentType}
         onUpdate={handleUpdateEstablishment}
       />
       <EstablishmentBookingsDialog
@@ -88,12 +112,13 @@ const AdminEstablishmentsPage = () => {
         onOpen={() => handleViewBookings(establishment.id)}
       />
       <DropdownMenuSeparator />
-      <DropdownMenuItem
-        variant="destructive"
-        onClick={() => handleDelete(establishment.id)}
-      >
-        Delete Establishment
-      </DropdownMenuItem>
+      <AlertDialogConponent
+        title="Delete Establishment"
+        triggerText="Delete Establishment"
+        description={`Are you sure you want to delete ${establishment.name}? This action cannot be undone.`}
+        actionText="Delete"
+        onAction={() => handleDelete(establishment.id)}
+      />
     </>
   );
 
@@ -133,7 +158,10 @@ const AdminEstablishmentsPage = () => {
                   </InputGroupAddon>
                 </InputGroup>
               </div>
-              <CreateEstablishmentDialog />
+              <CreateEstablishmentDialog
+                establishmentTypes={establishmentType}
+                onCreated={data => dispatch(createEstablishment(data))}
+              />
             </div>
             <DataTable
               data={establishments}

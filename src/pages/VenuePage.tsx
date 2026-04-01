@@ -39,6 +39,10 @@ const EstablishmentPage = () => {
   const userRole = user?.role || 'GUEST';
   const establishment = selectedEstablishment;
 
+  const isModerator = establishment?.moderators?.some(mod => mod === user?.id);
+
+  const isOwner = establishment?.ownerId === user?.id;
+
   useEffect(() => {
     if (id) {
       dispatch(getEstablishmentById(Number(id)));
@@ -111,13 +115,18 @@ const EstablishmentPage = () => {
           <div className="space-y-6">
             <div>
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-0 mb-4">
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-white-900">
+                <div className="grid">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white-900">
                     {establishment.name}
-                  </h1>
-                  <Badge variant="secondary" className="mt-2">
-                    {establishment.type.name}
-                  </Badge>
+                  </h2>
+                  <div className="flex gap-1 p-1">
+                    <Badge variant="secondary">{establishment.type.name}</Badge>
+                    {isModerator && (
+                      <Badge variant="destructive">Moderator</Badge>
+                    )}
+
+                    {isOwner && <Badge variant="destructive">Owner</Badge>}
+                  </div>
                 </div>
                 <FavoriteButton
                   role={userRole}

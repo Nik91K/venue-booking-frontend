@@ -48,24 +48,31 @@ export const createEstablishment = createAsyncThunk(
   async (
     data: {
       name: string;
-      address: string;
       description: string;
       totalSeats: number;
       typeId: number;
       coverPhoto: File | null;
       photos: File[];
+      city: string;
+      street: string;
+      building: string;
+      zipCode: string;
     },
     { rejectWithValue }
   ) => {
     try {
       const body = new FormData();
-      body.append('name', data.name);
-      body.append('address', data.address);
-      body.append('description', data.description);
-      body.append('totalSeats', String(data.totalSeats));
-      body.append('typeId', String(data.typeId));
-      if (data.coverPhoto) body.append('coverPhoto', data.coverPhoto);
-      data.photos.forEach(photo => body.append('photos', photo));
+      Object.entries(data).forEach(([keyframes, value]) => {
+        if (value == undefined || value === null) return;
+
+        if (keyframes === 'photos' && Array.isArray(value)) {
+          value.forEach((photo: File) => body.append('photos', photo));
+        } else if (value instanceof File) {
+          body.append(keyframes, value);
+        } else {
+          body.append(keyframes, String(value));
+        }
+      });
 
       const response = await axiosInstance.post(`${API_URL}${SLICE_URL}`, body);
       return response.data;
@@ -174,13 +181,44 @@ export const getEstablishmentByOwner = createAsyncThunk<
 export const updateEstablishment = createAsyncThunk(
   'establishment/update',
   async (
-    { id, data }: { id: number; data: Partial<EstablishmentType> },
+    {
+      id,
+      data,
+    }: {
+      id: number;
+      data: {
+        name?: string;
+        address?: string;
+        description?: string;
+        totalSeats?: number;
+        typeId?: number;
+        coverPhoto?: File | null;
+        photos?: File[];
+        city?: string;
+        street?: string;
+        building?: string;
+        zipCode?: string;
+      };
+    },
     { rejectWithValue }
   ) => {
     try {
+      const body = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value == undefined || value === null) return;
+
+        if (key == 'photos' && Array.isArray(value)) {
+          value.forEach((photo: File) => body.append('photos', photo));
+        } else if (value instanceof File) {
+          body.append(key, value);
+        } else {
+          body.append(key, String(value));
+        }
+      });
+
       const response = await axiosInstance.patch(
         `${API_URL}${SLICE_URL}/${id}`,
-        data
+        body
       );
       return response.data;
     } catch (error: any) {

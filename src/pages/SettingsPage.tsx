@@ -24,7 +24,7 @@ import {
 import { getCurrentUserBookings } from '@api/slices/bookingSlice';
 import BookingCard from '@components/common/cards/BookingCard';
 import CardComponent from '@components/common/cards/CardComponent';
-import FormFieldGroup from '@components/common/FormFieldGroup';
+import FormFieldGroup from '@/components/common/forms/FormFieldGroup';
 import PasswordStrength from '@components/common/PasswordStrength';
 import { validatePassword } from '@hooks/validation/authorization';
 import { validateUsername } from '@hooks/validation/authorization';

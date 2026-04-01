@@ -43,16 +43,6 @@ export const SIDEBAR: Record<Role, SidebarSection[]> = {
         { title: 'Browse Services', path: '/explore', icon: Search },
       ],
     },
-    {
-      label: 'Moderation',
-      items: [
-        {
-          title: 'Review Queue',
-          path: '/establishment/reviews',
-          icon: FileCheck,
-        },
-      ],
-    },
   ],
   OWNER: [
     {

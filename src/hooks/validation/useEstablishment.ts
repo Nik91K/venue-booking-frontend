@@ -42,7 +42,6 @@ export function establishmentValidation(formData: {
   coverPhoto: File | null;
   photos: File[];
   type: number;
-  address: string;
 }) {
   const newErrors: Record<string, string> = {};
 
@@ -52,10 +51,6 @@ export function establishmentValidation(formData: {
 
   if (!textValidation(formData.description, 10)) {
     newErrors.description = 'Description must be at least 10 characters';
-  }
-
-  if (!textValidation(formData.address, 5)) {
-    newErrors.address = 'Address must be at least 5 characters';
   }
 
   if (formData.totalSeats <= 2) {

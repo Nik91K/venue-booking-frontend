@@ -2,7 +2,7 @@ import LayoutPage from '@/layoutPage';
 import DataTable from '@components/common/DataTable';
 import type { EstablishmentType } from '@/types/establishment';
 import {
-  getEstablishmentByOwner,
+  createEstablishment,
   deleteEstablishment,
   updateEstablishment,
 } from '@api/slices/establishmentSlice';
@@ -11,10 +11,7 @@ import { useEffect } from 'react';
 import EstablishmentColumns from '@components/tableColumns/establishmentColumns';
 import EditEstablishmentDialog from '@components/common/dialog/EditEstablishmentDialog';
 import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
-import {
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from '@components/ui/dropdown-menu';
+import { DropdownMenuSeparator } from '@components/ui/dropdown-menu';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
 import {
   Card,
@@ -33,6 +30,8 @@ import { Search } from 'lucide-react';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishmentDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
+import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
 
 const OwnerDashboard = () => {
   const dispatch = useAppDispatch();
@@ -45,14 +44,19 @@ const OwnerDashboard = () => {
     search,
     handlePageChange,
     handleSearchChange,
-  } = useEstablishments();
+  } = useEstablishments({ mode: 'owner' });
   const { bookings, loading: bookingsLoading } = useAppSelector(
     state => state.booking
   );
+  const { establishmentType } = useAppSelector(
+    state => state.establishmentType
+  );
 
   useEffect(() => {
-    dispatch(getEstablishmentByOwner());
-  }, [dispatch]);
+    if (!establishmentType.length) {
+      dispatch(getAllEstablishmentTypes());
+    }
+  });
 
   const handleUpdateEstablishment = (
     establishmentId: number,
@@ -85,6 +89,7 @@ const OwnerDashboard = () => {
       <EditEstablishmentDialog
         establishment={establishment}
         onUpdate={handleUpdateEstablishment}
+        establishmentTypes={establishmentType}
       />
       <EstablishmentBookingsDialog
         establishmentId={establishment.id}
@@ -94,12 +99,13 @@ const OwnerDashboard = () => {
         onOpen={() => handleViewBookings(establishment.id)}
       />
       <DropdownMenuSeparator />
-      <DropdownMenuItem
-        variant="destructive"
-        onClick={() => handleDelete(establishment.id)}
-      >
-        Delete Establishment
-      </DropdownMenuItem>
+      <AlertDialogConponent
+        title="Delete Establishment"
+        triggerText="Delete Establishment"
+        description={`Are you sure you want to delete ${establishment.name}? This action cannot be undone.`}
+        actionText="Delete"
+        onAction={() => handleDelete(establishment.id)}
+      />
     </>
   );
 
@@ -127,7 +133,10 @@ const OwnerDashboard = () => {
               </InputGroupAddon>
             </InputGroup>
           </div>
-          <CreateEstablishmentDialog />
+          <CreateEstablishmentDialog
+            onCreated={data => dispatch(createEstablishment(data))}
+            establishmentTypes={establishmentType}
+          />
         </div>
         <CardContent>
           <DataTable

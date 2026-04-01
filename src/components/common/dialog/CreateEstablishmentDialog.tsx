@@ -1,90 +1,62 @@
-import { createEstablishment } from '@api/slices/establishmentSlice';
 import AlertDialogConponent from '@components/common/dialog/AlertDialog';
-import { useAppDispatch, useAppSelector } from '@api/hooks';
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
-import { useEffect, useState } from 'react';
-import FormFieldGroup from '@components/common/FormFieldGroup';
-import { establishmentValidation } from '@hooks/validation/useEstablishment';
-import { addError } from '@api/slices/errorSlice';
-import { convertError } from '@hooks/logger/errorConverter';
-import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
+import { useState } from 'react';
+import FormFieldGroup from '@/components/common/forms/FormFieldGroup';
+import EstablishmentLocationForm from '@components/common/forms/EstablishmentLocationForm';
+import { Separator } from '@components/ui/separator';
+import type { CreateEstablishmentType, VenueType } from '@/types/establishment';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@components/ui/select';
 
 type Props = {
   triggerText?: string;
   triggerClassName?: string;
-  onCreated?: () => void;
+  establishmentTypes: VenueType[];
+  onCreated: (data: CreateEstablishmentType) => void;
 };
 
 const CreateEstablishmentDialog = ({
   triggerText = 'Create Establishment',
   triggerClassName,
+  establishmentTypes,
   onCreated,
 }: Props) => {
-  const dispatch = useAppDispatch();
-
   const [formData, setFormData] = useState({
     name: '',
-    address: '',
     description: '',
     totalSeats: '0',
-    typeId: '1',
-    featureIds: '',
+    typeId: 1,
+    locationDetails: { city: '', street: '', building: '', zipCode: '' },
   });
   const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
-  // const { establishments, error, loading } = useAppSelector((state) => state.establishment)
-  const { establishmentType, loading } = useAppSelector(
-    state => state.establishmentType
-  );
 
-  useEffect(() => {
-    if (!establishmentType.length && !loading) {
-      dispatch(getAllEstablishmentTypes());
-    }
-  }, [dispatch, establishmentType]);
-
-  const handleSubmit = async () => {
-    const validationPayload = {
+  const handleSubmit = () => {
+    onCreated({
       name: formData.name,
       description: formData.description,
       totalSeats: Number(formData.totalSeats),
+      typeId: formData.typeId,
       coverPhoto,
       photos,
-      type: Number(formData.typeId),
-      address: formData.address,
-    };
+      city: formData.locationDetails.city,
+      street: formData.locationDetails.street,
+      building: formData.locationDetails.building,
+      zipCode: formData.locationDetails.zipCode,
+    });
+  };
 
-    const validationErrors = establishmentValidation(validationPayload);
-    if (Object.keys(validationErrors).length > 0) {
-      Object.entries(validationErrors).forEach(([field, message]) => {
-        dispatch(
-          addError({
-            title: `Validation Error: ${field}`,
-            message,
-            type: 'error',
-          })
-        );
-      });
-      return;
-    }
-
-    try {
-      await dispatch(
-        createEstablishment({
-          name: formData.name,
-          address: formData.address,
-          description: formData.description,
-          totalSeats: Number(formData.totalSeats),
-          typeId: Number(formData.typeId),
-          coverPhoto,
-          photos,
-        })
-      );
-      onCreated?.();
-    } catch (error: any) {
-      dispatch(addError(convertError(error)));
-    }
+  const handleLocationChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      locationDetails: { ...prev.locationDetails, [field]: value },
+    }));
   };
 
   return (
@@ -99,11 +71,15 @@ const CreateEstablishmentDialog = ({
         if (!open) {
           setFormData({
             name: '',
-            address: '',
             description: '',
             totalSeats: '0',
-            typeId: '1',
-            featureIds: '',
+            typeId: 1,
+            locationDetails: {
+              city: '',
+              street: '',
+              building: '',
+              zipCode: '',
+            },
           });
           setCoverPhoto(null);
           setPhotos([]);
@@ -118,12 +94,15 @@ const CreateEstablishmentDialog = ({
           placeholder="Name"
         />
 
-        <FormFieldGroup
-          label="Address"
-          value={formData.address}
-          onChange={value => setFormData(prev => ({ ...prev, address: value }))}
-          placeholder="Address"
+        <Separator />
+        <EstablishmentLocationForm
+          city={formData.locationDetails?.city ?? ''}
+          street={formData.locationDetails?.street ?? ''}
+          building={formData.locationDetails?.building ?? ''}
+          zipCode={formData.locationDetails?.zipCode ?? ''}
+          onChange={handleLocationChange}
         />
+        <Separator />
 
         <FormFieldGroup
           label="Description"
@@ -147,19 +126,23 @@ const CreateEstablishmentDialog = ({
 
           <div className="space-y-2">
             <Label>Type</Label>
-            <select
-              value={formData.typeId}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, typeId: e.target.value }))
+            <Select
+              value={String(formData.typeId)}
+              onValueChange={value =>
+                setFormData(prev => ({ ...prev, typeId: Number(value) }))
               }
-              className="w-full border rounded px-2 py-1"
             >
-              {establishmentType.map(type => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                {establishmentTypes.map(type => (
+                  <SelectItem key={type.id} value={String(type.id)}>
+                    {type.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

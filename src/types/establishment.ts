@@ -7,9 +7,9 @@ export type EstablishmentType = {
   description: string;
   totalSeats: number;
   rating: number;
-  coverPhoto: string;
+  coverPhoto: File | null;
   createdAt: string;
-  photos: string[];
+  photos: File[];
   type: VenueType;
   address: string;
   locationDetails?: LocationDetails;
@@ -21,12 +21,13 @@ export type EstablishmentType = {
   isFavorite: boolean;
   lat?: number;
   lng?: number;
+  moderators: number[];
 };
 
-export type LocationDetails = {
-  city: string;
-  street: string;
-  building: string;
+type LocationDetails = {
+  city?: string;
+  street?: string;
+  building?: string;
   zipCode?: string;
   lat?: number;
   lng?: number;
@@ -56,13 +57,28 @@ export type BookingOrderFormRef = {
   submit: () => void;
 };
 
+export type CreateEstablishmentType = {
+  name: string;
+  description: string;
+  totalSeats: number;
+  typeId: number;
+  coverPhoto: File | null;
+  photos: File[];
+  city: string;
+  street: string;
+  building: string;
+  zipCode: string;
+};
+
 export type UpdateEstablishmentType = {
   name: string;
   description: string;
   totalSeats: number;
-  coverPhoto: string;
-  photos: string[];
-  type: VenueType;
-  address: string;
-  locationDetails?: LocationDetails;
+  typeId: number;
+  coverPhoto: File | null;
+  photos: File[];
+  city?: string;
+  street?: string;
+  building?: string;
+  zipCode?: string;
 };
