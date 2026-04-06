@@ -7,12 +7,12 @@ export type EstablishmentType = {
   description: string;
   totalSeats: number;
   rating: number;
-  coverPhoto: File | null;
+  coverPhoto: string;
   createdAt: string;
-  photos: File[];
+  photos: string[];
   type: VenueType;
   address: string;
-  locationDetails?: LocationDetails;
+  locationDetails: LocationDetails;
   workingHours?: string;
   features: Features[];
   commentsCount: number;
@@ -24,7 +24,7 @@ export type EstablishmentType = {
   moderators: number[];
 };
 
-type LocationDetails = {
+export type LocationDetails = {
   city?: string;
   street?: string;
   building?: string;

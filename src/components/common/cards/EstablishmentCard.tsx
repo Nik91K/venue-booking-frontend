@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@components/ui/badge';
-import { Star, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { Star, Clock, MessageCircle } from 'lucide-react';
 import type {
   BookingOrderFormRef,
   EstablishmentType,
 } from '@/types/establishment';
 import type { Role } from '@/types/common';
-import AlertDialogConponent from '@/components/common/dialog/AlertDialog';
+import AlertDialogConponent from '@components/common/dialog/AlertDialog';
 import { Skeleton } from '@components/ui/skeleton';
 import BookingOrderForm from '@components/common/BookingOrderForm';
 import FavoriteButton from '@components/common/FavoriteButton';
 import type { ScheduleType } from '@/types/schedule';
 import { getEstablishmentStatus } from '@hooks/useSchedule';
 import { useMemo } from 'react';
+import EstablishmentAddress from '@components/common/EstablishmentAdress';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
@@ -54,7 +55,10 @@ const EstablishmentCard = ({
         )}
         <Link to={`/establishment/${establishment.id}`}>
           <img
-            src={establishment.coverPhoto}
+            src={
+              establishment.coverPhoto ||
+              'https://placehold.co/600x400?text=No+Image'
+            }
             alt={establishment.name}
             className="w-full h-full object-cover transition-transform"
             onLoad={() => setImageLoaded(true)}
@@ -80,10 +84,10 @@ const EstablishmentCard = ({
           </div>
 
           <div className="flex flex-col gap-2 text-sm text-gray-600">
-            <div className="flex items-start gap-1">
-              <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
-              <p className="line-clamp-2 flex-1">{establishment.address}</p>
-            </div>
+            <EstablishmentAddress
+              address={establishment.address}
+              locationDetails={establishment.locationDetails}
+            />
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4 shrink-0" />
               <p className="font-medium">{status.open ? 'Open' : 'Closed'}</p>

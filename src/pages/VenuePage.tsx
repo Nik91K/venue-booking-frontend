@@ -9,7 +9,7 @@ import {
 } from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
 import AlertDialogConponent from '@components/common/dialog/AlertDialog';
-import { ArrowLeft, Clock, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, Clock, Star } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { Separator } from '@components/ui/separator';
 import { CarouselComponent } from '@components/common/CarouselComponent';
@@ -23,6 +23,7 @@ import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import FavoriteButton from '@components/common/FavoriteButton';
 import { getSchedulesByEstablishment } from '@api/slices/scheduleSlice';
 import { getEstablishmentStatus } from '@hooks/useSchedule';
+import EstablishmentAddress from '@components/common/EstablishmentAdress';
 
 const EstablishmentPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -141,13 +142,10 @@ const EstablishmentPage = () => {
             </div>
             <Separator />
             <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 shrink-0 mt-1" />
-                <div>
-                  <p className="font-medium text-white-900">Address</p>
-                  <p>{establishment.address}</p>
-                </div>
-              </div>
+              <EstablishmentAddress
+                address={establishment.address}
+                locationDetails={establishment.locationDetails}
+              />
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 shrink-0 mt-1" />
                 <p className="font-medium text-white-900">
