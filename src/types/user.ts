@@ -1,5 +1,5 @@
 import type { Role } from '@/types/common';
-import type { BookingType } from './booking';
+import type { BookingType } from '@/types/booking';
 
 export type UserType = {
   id: number;
