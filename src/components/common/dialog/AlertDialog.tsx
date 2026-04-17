@@ -12,7 +12,7 @@ import {
 import { Button } from '@components/ui/button';
 import React, { useState } from 'react';
 
-type AlertDialogProps = {
+type Props = {
   triggerText: string;
   triggerClassName?: string;
   title: string;
@@ -24,7 +24,8 @@ type AlertDialogProps = {
   onCancel?: () => void;
   onOpenChange?: (open: boolean) => void;
 };
-const AlertDialogConponent = ({
+
+const AlertDialogComponent = ({
   triggerText,
   triggerClassName = 'font-medium',
   title,
@@ -35,7 +36,7 @@ const AlertDialogConponent = ({
   onAction,
   onCancel,
   onOpenChange,
-}: AlertDialogProps) => {
+}: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -86,4 +87,4 @@ const AlertDialogConponent = ({
   );
 };
 
-export default AlertDialogConponent;
+export default AlertDialogComponent;

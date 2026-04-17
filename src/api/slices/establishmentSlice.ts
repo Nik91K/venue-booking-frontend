@@ -7,11 +7,14 @@ import type { EstablishmentType } from '@/types/establishment';
 import axios from 'axios';
 import axiosInstance from '@api/axiosConfig';
 import type { PageType, PaginationType } from '@/types/pagination';
+import type { UserType } from '@/types/user';
 
 interface EstablishmentState {
   establishments: EstablishmentType[];
   selectedEstablishment: EstablishmentType | null;
   favorites: EstablishmentType[];
+  moderators: UserType[];
+  moderatorsLoading: boolean;
   loading: boolean;
   error: string | null;
   meta: PaginationType | null;
@@ -21,7 +24,9 @@ const initialState: EstablishmentState = {
   establishments: [],
   selectedEstablishment: null,
   favorites: [],
+  moderators: [],
   loading: false,
+  moderatorsLoading: false,
   error: null,
   meta: null,
 };
@@ -327,6 +332,54 @@ export const getAllFavorites = createAsyncThunk(
   }
 );
 
+export const getEstablishmentModerators = createAsyncThunk(
+  'establishment/moderators/get',
+  async (establishmentId: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `${API_URL}${SLICE_URL}/${establishmentId}/moderators`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const addEstablishmentModerator = createAsyncThunk(
+  'establishment/moderator/add',
+  async (
+    { establishmentId, userId }: { establishmentId: number; userId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post(
+        `${API_URL}${SLICE_URL}/${establishmentId}/moderators/${userId}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const removeEstablishmentModerator = createAsyncThunk(
+  'establishment/moderator/remove',
+  async (
+    { establishmentId, userId }: { establishmentId: number; userId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${API_URL}${SLICE_URL}/${establishmentId}/moderators/${userId}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const establishmentSlice = createSlice({
   name: 'establishment',
   initialState,
@@ -591,6 +644,49 @@ const establishmentSlice = createSlice({
         state.favorites = action.payload;
       })
       .addCase(getAllFavorites.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+
+      .addCase(getEstablishmentModerators.pending, state => {
+        state.moderatorsLoading = true;
+        state.error = null;
+      })
+      .addCase(getEstablishmentModerators.fulfilled, (state, action) => {
+        state.moderatorsLoading = false;
+        state.moderators = action.payload;
+      })
+      .addCase(getEstablishmentModerators.rejected, (state, action) => {
+        state.moderatorsLoading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(addEstablishmentModerator.pending, state => {
+        state.moderatorsLoading = true;
+        state.error = null;
+      })
+      .addCase(addEstablishmentModerator.fulfilled, (state, action) => {
+        state.moderatorsLoading = false;
+        state.moderators = action.payload.moderators ?? state.moderators;
+      })
+      .addCase(addEstablishmentModerator.rejected, (state, action) => {
+        state.moderatorsLoading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(removeEstablishmentModerator.pending, state => {
+        state.moderatorsLoading = true;
+        state.error = null;
+      })
+      .addCase(removeEstablishmentModerator.fulfilled, (state, action) => {
+        state.moderatorsLoading = false;
+        state.selectedEstablishment = action.payload;
+
+        state.establishments = state.establishments.map(est =>
+          est.id === action.payload.id ? action.payload : est
+        );
+      })
+      .addCase(removeEstablishmentModerator.rejected, (state, action) => {
+        state.moderatorsLoading = false;
         state.error = action.payload as string;
       });
   },

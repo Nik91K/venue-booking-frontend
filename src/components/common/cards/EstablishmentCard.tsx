@@ -7,7 +7,7 @@ import type {
   EstablishmentType,
 } from '@/types/establishment';
 import type { Role } from '@/types/common';
-import AlertDialogConponent from '@components/common/dialog/AlertDialog';
+import AlertDialogComponent from '@components/common/dialog/AlertDialog';
 import { Skeleton } from '@components/ui/skeleton';
 import BookingOrderForm from '@components/common/BookingOrderForm';
 import FavoriteButton from '@components/common/FavoriteButton';
@@ -119,7 +119,7 @@ const EstablishmentCard = ({
           </div>
 
           {role === 'GUEST' ? (
-            <AlertDialogConponent
+            <AlertDialogComponent
               triggerText="Book Now"
               title="Login Required"
               description="You need to be logged in to make a reservation. Please log in or create an account to continue."
@@ -127,7 +127,7 @@ const EstablishmentCard = ({
               onAction={handleLogin}
             />
           ) : (
-            <AlertDialogConponent
+            <AlertDialogComponent
               triggerText="Book Now"
               title="Let's reserve this"
               description="Fill in the details below to create a new booking order."
@@ -138,7 +138,7 @@ const EstablishmentCard = ({
                 establishmentId={establishment.id}
                 ref={bookingFormRef}
               />
-            </AlertDialogConponent>
+            </AlertDialogComponent>
           )}
         </div>
       </div>

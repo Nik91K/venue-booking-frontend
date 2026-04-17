@@ -2,7 +2,11 @@ import LayoutPage from '@/layoutPage';
 import { useEffect } from 'react';
 import {
   deleteEstablishment,
+  getEstablishmentModerators,
   updateEstablishment,
+  createEstablishment,
+  addEstablishmentModerator,
+  removeEstablishmentModerator,
 } from '@api/slices/establishmentSlice';
 import { useAppDispatch, useAppSelector } from '@api/hooks';
 import {
@@ -22,8 +26,8 @@ import { DropdownMenuSeparator } from '@components/ui/dropdown-menu';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
-import EditEstablishmentDialog from '@components/common/dialog/EditEstablishmentDialog';
-import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookingsDialog';
+import EditEstablishmentDialog from '@/components/common/dialog/EditEstablishmentDialog';
+import EstablishmentBookingsDialog from '@/components/common/dialog/EstablishmentBookingsDialog';
 import EstablishmentColumns from '@components/tableColumns/establishmentColumns';
 import DataTable from '@components/common/DataTable';
 import type {
@@ -32,9 +36,9 @@ import type {
 } from '@/types/establishment';
 import { useEstablishments } from '@hooks/useEstablishments';
 import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishmentDialog';
-import AlertDialogConponent from '@components/common/dialog/AlertDialog';
-import { createEstablishment } from '@api/slices/establishmentSlice';
+import AlertDialogComponent from '@components/common/dialog/AlertDialog';
 import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
+import ModeratorManagement from '@components/common/dialog/ModeratorsManager';
 
 const AdminEstablishmentsPage = () => {
   const dispatch = useAppDispatch();
@@ -47,11 +51,17 @@ const AdminEstablishmentsPage = () => {
     handlePageChange,
     handleSearchChange,
   } = useEstablishments();
+
   const { bookings, loading: bookingsLoading } = useAppSelector(
     state => state.booking
   );
+
   const { establishmentType } = useAppSelector(
     state => state.establishmentType
+  );
+
+  const { moderators, loading: moderatorsLoading } = useAppSelector(
+    state => state.establishment
   );
 
   useEffect(() => {
@@ -93,6 +103,10 @@ const AdminEstablishmentsPage = () => {
     dispatch(getBookingsByEstablishment(establishmentId));
   };
 
+  const handleViewModerators = (establishmentId: number) => {
+    dispatch(getEstablishmentModerators(establishmentId));
+  };
+
   const handleDelete = (id: number) => {
     dispatch(deleteEstablishment(id));
   };
@@ -111,8 +125,30 @@ const AdminEstablishmentsPage = () => {
         loading={bookingsLoading}
         onOpen={() => handleViewBookings(establishment.id)}
       />
+      <ModeratorManagement
+        establishment={establishment}
+        moderators={moderators}
+        loading={moderatorsLoading}
+        onOpen={() => handleViewModerators(establishment.id)}
+        onAddModerator={userId =>
+          dispatch(
+            addEstablishmentModerator({
+              establishmentId: establishment.id,
+              userId,
+            })
+          )
+        }
+        onRemoveModerator={userId =>
+          dispatch(
+            removeEstablishmentModerator({
+              establishmentId: establishment.id,
+              userId,
+            })
+          )
+        }
+      />
       <DropdownMenuSeparator />
-      <AlertDialogConponent
+      <AlertDialogComponent
         title="Delete Establishment"
         triggerText="Delete Establishment"
         description={`Are you sure you want to delete ${establishment.name}? This action cannot be undone.`}

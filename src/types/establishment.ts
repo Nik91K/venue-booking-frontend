@@ -21,7 +21,7 @@ export type EstablishmentType = {
   isFavorite: boolean;
   lat?: number;
   lng?: number;
-  moderators: number[];
+  moderators: UserType[];
 };
 
 export type LocationDetails = {

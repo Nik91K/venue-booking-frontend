@@ -8,7 +8,7 @@ import {
   getEstablishmentComments,
 } from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
-import AlertDialogConponent from '@components/common/dialog/AlertDialog';
+import AlertDialogComponent from '@components/common/dialog/AlertDialog';
 import { ArrowLeft, Clock, Star } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { Separator } from '@components/ui/separator';
@@ -186,7 +186,7 @@ const EstablishmentPage = () => {
             </div>
             <div className="pt-4">
               {userRole === 'GUEST' ? (
-                <AlertDialogConponent
+                <AlertDialogComponent
                   triggerText="Book Now"
                   title="Login Required"
                   description="You need to be logged in to make a reservation. Please log in or create an account to continue."
@@ -195,7 +195,7 @@ const EstablishmentPage = () => {
                   triggerClassName="w-full"
                 />
               ) : (
-                <AlertDialogConponent
+                <AlertDialogComponent
                   triggerText="Book Now"
                   title="Let's reserve this"
                   description="Fill in the details below to create a new booking order."
@@ -207,7 +207,7 @@ const EstablishmentPage = () => {
                     establishmentId={Number(id)}
                     ref={bookingFormRef}
                   />
-                </AlertDialogConponent>
+                </AlertDialogComponent>
               )}
             </div>
           </div>
