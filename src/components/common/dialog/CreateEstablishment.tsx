@@ -1,8 +1,7 @@
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { useState } from 'react';
-import FormFieldGroup from '@/components/common/forms/FormFieldGroup';
+import FormFieldGroup from '@components/common/forms/FormFieldGroup';
 import EstablishmentLocationForm from '@components/common/forms/EstablishmentLocationForm';
 import { Separator } from '@components/ui/separator';
 import type { CreateEstablishmentType, VenueType } from '@/types/establishment';
@@ -13,17 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@components/ui/select';
+import DialogComponent from '@components/common/dialog/DialogComponent';
 
 type Props = {
   triggerText?: string;
-  triggerClassName?: string;
   establishmentTypes: VenueType[];
   onCreated: (data: CreateEstablishmentType) => void;
 };
 
 const CreateEstablishmentDialog = ({
-  triggerText = 'Create Establishment',
-  triggerClassName,
   establishmentTypes,
   onCreated,
 }: Props) => {
@@ -60,13 +57,13 @@ const CreateEstablishmentDialog = ({
   };
 
   return (
-    <AlertDialogComponent
-      triggerText={triggerText}
-      triggerClassName={triggerClassName}
-      title="Create establishment"
-      description="Fill out the details"
-      actionText="Create"
-      onAction={handleSubmit}
+    <DialogComponent
+      triggerClassName="w-auto"
+      headerTitle="Create establishment"
+      headerDescription="Fill out the details"
+      triggerText="Create Establishment"
+      onSubmit={handleSubmit}
+      cancelText="Cancel"
       onOpenChange={open => {
         if (!open) {
           setFormData({
@@ -203,7 +200,7 @@ const CreateEstablishmentDialog = ({
           )}
         </div>
       </form>
-    </AlertDialogComponent>
+    </DialogComponent>
   );
 };
 

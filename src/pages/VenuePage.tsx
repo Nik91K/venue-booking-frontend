@@ -8,7 +8,8 @@ import {
   getEstablishmentComments,
 } from '@api/slices/establishmentSlice';
 import { useAppSelector, useAppDispatch } from '@api/hooks';
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import AppDialogComponent from '@components/common/alert/ConfirmDialog';
+import DialogComponent from '@components/common/dialog/DialogComponent';
 import { ArrowLeft, Clock, Star } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { Separator } from '@components/ui/separator';
@@ -40,7 +41,9 @@ const EstablishmentPage = () => {
   const userRole = user?.role || 'GUEST';
   const establishment = selectedEstablishment;
 
-  const isModerator = establishment?.moderators?.some(mod => mod === user?.id);
+  const isModerator = establishment?.moderators?.some(
+    mod => mod.id === user?.id
+  );
 
   const isOwner = establishment?.ownerId === user?.id;
 
@@ -186,7 +189,7 @@ const EstablishmentPage = () => {
             </div>
             <div className="pt-4">
               {userRole === 'GUEST' ? (
-                <AlertDialogComponent
+                <AppDialogComponent
                   triggerText="Book Now"
                   title="Login Required"
                   description="You need to be logged in to make a reservation. Please log in or create an account to continue."
@@ -195,19 +198,20 @@ const EstablishmentPage = () => {
                   triggerClassName="w-full"
                 />
               ) : (
-                <AlertDialogComponent
+                <DialogComponent
                   triggerText="Book Now"
-                  title="Let's reserve this"
-                  description="Fill in the details below to create a new booking order."
-                  actionText="Create Booking"
-                  onAction={submitBookingForm}
+                  headerTitle="Let's reserve this"
+                  headerDescription="Fill in the details below to create a new booking order."
+                  submitText="Create Booking"
+                  onSubmit={submitBookingForm}
+                  cancelText="Cancel"
                   triggerClassName="w-full"
                 >
                   <BookingOrderForm
                     establishmentId={Number(id)}
                     ref={bookingFormRef}
                   />
-                </AlertDialogComponent>
+                </DialogComponent>
               )}
             </div>
           </div>

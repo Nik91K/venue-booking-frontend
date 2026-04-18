@@ -1,14 +1,7 @@
 import type { EstablishmentType } from '@/types/establishment';
 import type { UserType } from '@/types/user';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from '@components/ui/dialog';
 import { Button } from '@components/ui/button';
+import { DialogComponent } from '@components/common/dialog/DialogComponent';
 
 type Props = {
   establishment: EstablishmentType;
@@ -27,46 +20,35 @@ const ModeratorManagement = ({
   onRemoveModerator,
 }: Props) => {
   return (
-    <Dialog
+    <DialogComponent
       onOpenChange={open => {
         if (open) onOpen();
       }}
+      triggerText="View moderators"
+      headerTitle={`Moderators for ${establishment.name}`}
+      headerDescription="View and manage moderators for this establishment"
+      cancelText="Close"
     >
-      <DialogTrigger asChild>
-        <Button variant="secondary" className="w-full text-center">
-          View moderators
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Moderators for {establishment.name}</DialogTitle>
-          <DialogDescription>
-            View and manage moderators for this establishment
-          </DialogDescription>
-        </DialogHeader>
-
-        {loading ? (
-          <p>Loading moderators...</p>
-        ) : (
-          <ul className="space-y-2">
-            {!moderators.length && <p>No moderators assigned.</p>}
-            {moderators.map(mod => (
-              <li key={mod.id} className="flex items-center justify-between">
-                <span>{mod.name}</span>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => onRemoveModerator(mod.id)}
-                >
-                  Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </DialogContent>
-    </Dialog>
+      {loading ? (
+        <p>Loading moderators...</p>
+      ) : (
+        <ul className="space-y-2">
+          {!moderators.length && <p>No moderators assigned.</p>}
+          {moderators.map(mod => (
+            <li key={mod.id} className="flex items-center justify-between">
+              <span>{mod.name}</span>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => onRemoveModerator(mod.id)}
+              >
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </DialogComponent>
   );
 };
 

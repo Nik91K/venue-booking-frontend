@@ -12,7 +12,6 @@ import { addFavorite, removeFavorite } from '@api/slices/favoritesSlice';
 interface EstablishmentState {
   establishments: EstablishmentType[];
   selectedEstablishment: EstablishmentType | null;
-  favorites: EstablishmentType[];
   loading: boolean;
   error: string | null;
   meta: PaginationType | null;
@@ -21,7 +20,6 @@ interface EstablishmentState {
 const initialState: EstablishmentState = {
   establishments: [],
   selectedEstablishment: null,
-  favorites: [],
   loading: false,
   error: null,
   meta: null,

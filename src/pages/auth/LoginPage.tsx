@@ -1,6 +1,6 @@
 import React from 'react';
 import LayoutPage from '@/layoutPage';
-import FormFieldGroup from '@/components/common/forms/FormFieldGroup';
+import FormFieldGroup from '@components/common/forms/FormFieldGroup';
 import { Button } from '@components/ui/button';
 import { useState } from 'react';
 import type { AuthorizationProps } from '@/types/authorization';

@@ -21,7 +21,7 @@ import { useAppSelector, useAppDispatch } from '@api/hooks';
 import type { UserType } from '@/types/user';
 import { ROLES } from '@/constants/roles';
 import { useDebounce } from 'use-debounce';
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import AppDialogComponent from '@components/common/alert/ConfirmDialog';
 
 const AdminUsersPage = () => {
   const dispatch = useAppDispatch();
@@ -61,7 +61,7 @@ const AdminUsersPage = () => {
 
   const userRowActions = (user: UserType) => (
     <>
-      <AlertDialogComponent
+      <AppDialogComponent
         title="Delete User"
         triggerText="Delete User"
         description={`Are you sure you want to delete ${user.name}? This action cannot be undone.`}

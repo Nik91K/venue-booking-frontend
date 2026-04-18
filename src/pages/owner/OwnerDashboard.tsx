@@ -9,8 +9,8 @@ import {
 import { useAppDispatch, useAppSelector } from '@api/hooks';
 import { useEffect } from 'react';
 import EstablishmentColumns from '@components/tableColumns/establishmentColumns';
-import EditEstablishmentDialog from '@/components/common/dialog/EditEstablishmentDialog';
-import EstablishmentBookingsDialog from '@/components/common/dialog/EstablishmentBookingsDialog';
+import EditEstablishmentDialog from '@components/common/dialog/EditEstablishment';
+import EstablishmentBookingsDialog from '@components/common/dialog/EstablishmentBookings';
 import { DropdownMenuSeparator } from '@components/ui/dropdown-menu';
 import { getBookingsByEstablishment } from '@api/slices/bookingSlice';
 import {
@@ -29,8 +29,8 @@ import {
 import { Search } from 'lucide-react';
 import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
-import CreateEstablishmentDialog from '@/components/common/dialog/CreateEstablishmentDialog';
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import CreateEstablishmentDialog from '@components/common/dialog/CreateEstablishment';
+import AppDialogComponent from '@components/common/alert/ConfirmDialog';
 import { getAllEstablishmentTypes } from '@api/slices/establishmentTypeSlice';
 
 const OwnerDashboard = () => {
@@ -99,7 +99,7 @@ const OwnerDashboard = () => {
         onOpen={() => handleViewBookings(establishment.id)}
       />
       <DropdownMenuSeparator />
-      <AlertDialogComponent
+      <AppDialogComponent
         title="Delete Establishment"
         triggerText="Delete Establishment"
         description={`Are you sure you want to delete ${establishment.name}? This action cannot be undone.`}

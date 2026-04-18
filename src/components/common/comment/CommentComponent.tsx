@@ -16,12 +16,12 @@ import type { Role } from '@/types/common';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
 import type { UserType } from '@/types/user';
 import type { CommentType, EstablishmentType } from '@/types/establishment';
+import AppDialogComponent from '@components/common/alert/ConfirmDialog';
 
 type CommentProps = {
   establishment: EstablishmentType;
@@ -55,7 +55,7 @@ const CommentComponent = ({
     return (
       role === 'SUPER_ADMIN' ||
       establishment.ownerId === user.id ||
-      establishment.moderators.some(mod => mod === user.id) ||
+      establishment.moderators.some(mod => mod.id === user.id) ||
       comment.user?.id === user.id
     );
   };
@@ -161,14 +161,13 @@ const CommentComponent = ({
                           align="end"
                           className="flex flex-col gap-2"
                         >
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() =>
-                              comment.id && dispatch(deleteComment(comment.id))
-                            }
-                          >
-                            Delete comment
-                          </DropdownMenuItem>
+                          <AppDialogComponent
+                            title="Delete Comment"
+                            triggerText="Delete"
+                            description={`Are you sure you want to delete this comment? This action cannot be undone.`}
+                            actionText="Delete"
+                            onAction={() => dispatch(deleteComment(comment.id))}
+                          />
                         </DropdownMenuContent>
                       </DropdownMenu>
                     )}

@@ -1,6 +1,6 @@
 import type { Role } from '@/types/common';
 import { ROLE_CONFIG } from '@fixtures/roleLabel.fixture';
-import { Badge } from '../ui/badge';
+import { Badge } from '@components/ui/badge';
 
 const RoleBadge: React.FC<{ role: Role }> = ({ role }) => {
   const config = ROLE_CONFIG[role];

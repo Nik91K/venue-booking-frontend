@@ -18,7 +18,7 @@ import { addError } from '@api/slices/errorSlice';
 import { convertError } from '@hooks/logger/errorConverter';
 import { useBookingFormSubmit } from '@hooks/useBookingForm';
 import { useEstablishments } from '@hooks/useEstablishments';
-import { getAllFavorites } from '@api/slices/establishmentSlice';
+import { getAllFavorites } from '@api/slices/favoritesSlice';
 import FiltrationComponent from '@components/common/FiltrationComponent';
 import { getSchedulesByEstablishment } from '@api/slices/scheduleSlice';
 import { useMapContext } from '@components/common/map/MapProvider';
@@ -47,7 +47,7 @@ const VenuesMapContent = () => {
     lat: location?.lat,
     lng: location?.lng,
   });
-  const { favorites } = useAppSelector(state => state.establishment);
+  const { favorites } = useAppSelector(state => state.favorites);
   const { user } = useAppSelector(state => state.users);
   const { schedule } = useAppSelector(state => state.schedule);
   const [showingFavorites, setShowingFavorites] = useState(false);

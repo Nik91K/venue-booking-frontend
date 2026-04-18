@@ -1,4 +1,4 @@
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import DialogComponent from '@components/common/dialog/DialogComponent';
 import type { BookingType } from '@/types/booking';
 import BookingCard from '@components/common/cards/BookingCard';
 
@@ -18,12 +18,11 @@ export const EstablishmentBookingsDialog = ({
   onOpen,
 }: Props) => {
   return (
-    <AlertDialogComponent
+    <DialogComponent
       triggerText="View Bookings"
-      title={`Bookings for ${establishmentName}`}
-      description="View all reservations for this establishment"
-      actionText="Close"
-      triggerClassName="w-full text-center"
+      headerTitle={`Bookings for ${establishmentName}`}
+      headerDescription="View all reservations for this establishment"
+      cancelText="Close"
       onOpenChange={open => {
         if (open) {
           onOpen(establishmentId);
@@ -41,7 +40,7 @@ export const EstablishmentBookingsDialog = ({
       ) : (
         <p>No bookings found.</p>
       )}
-    </AlertDialogComponent>
+    </DialogComponent>
   );
 };
 

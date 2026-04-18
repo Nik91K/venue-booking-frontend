@@ -4,7 +4,7 @@ import type {
   VenueType,
 } from '@/types/establishment';
 import { useState } from 'react';
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import DialogComponent from '@/components/common/dialog/DialogComponent';
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { Separator } from '@components/ui/separator';
@@ -74,13 +74,13 @@ export const EditEstablishmentDialog = ({
   };
 
   return (
-    <AlertDialogComponent
+    <DialogComponent
       triggerText="Edit Establishment"
-      title={`Edit ${establishment.name}`}
-      description="Edit the details"
-      actionText="Save"
-      onAction={handleSubmit}
-      triggerClassName="w-full text-center"
+      headerTitle={`Edit ${establishment.name}`}
+      headerDescription="Edit the details"
+      submitText="Save"
+      onSubmit={handleSubmit}
+      cancelText="Cancel"
     >
       <form className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
         <div className="space-y-4">
@@ -195,7 +195,7 @@ export const EditEstablishmentDialog = ({
           )}
         </div>
       </form>
-    </AlertDialogComponent>
+    </DialogComponent>
   );
 };
 

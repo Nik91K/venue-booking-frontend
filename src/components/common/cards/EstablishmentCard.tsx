@@ -7,7 +7,7 @@ import type {
   EstablishmentType,
 } from '@/types/establishment';
 import type { Role } from '@/types/common';
-import AlertDialogComponent from '@components/common/dialog/AlertDialog';
+import DialogComponent from '@components/common/dialog/DialogComponent';
 import { Skeleton } from '@components/ui/skeleton';
 import BookingOrderForm from '@components/common/BookingOrderForm';
 import FavoriteButton from '@components/common/FavoriteButton';
@@ -15,6 +15,7 @@ import type { ScheduleType } from '@/types/schedule';
 import { getEstablishmentStatus } from '@hooks/useSchedule';
 import { useMemo } from 'react';
 import EstablishmentAddress from '@components/common/EstablishmentAdress';
+import AppDialogComponent from '@components/common/alert/ConfirmDialog';
 
 type EstablishmentCardProps = {
   establishment: EstablishmentType;
@@ -119,7 +120,7 @@ const EstablishmentCard = ({
           </div>
 
           {role === 'GUEST' ? (
-            <AlertDialogComponent
+            <AppDialogComponent
               triggerText="Book Now"
               title="Login Required"
               description="You need to be logged in to make a reservation. Please log in or create an account to continue."
@@ -127,18 +128,20 @@ const EstablishmentCard = ({
               onAction={handleLogin}
             />
           ) : (
-            <AlertDialogComponent
+            <DialogComponent
               triggerText="Book Now"
-              title="Let's reserve this"
-              description="Fill in the details below to create a new booking order."
-              actionText="Create Booking"
-              onAction={handleAction}
+              headerTitle="Let's reserve this"
+              headerDescription="Fill in the details below to create a new booking order."
+              submitText="Create Booking"
+              onSubmit={handleAction}
+              cancelText="Cancel"
+              triggerClassName="w-32"
             >
               <BookingOrderForm
                 establishmentId={establishment.id}
                 ref={bookingFormRef}
               />
-            </AlertDialogComponent>
+            </DialogComponent>
           )}
         </div>
       </div>
