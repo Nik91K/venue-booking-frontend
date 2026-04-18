@@ -8,6 +8,8 @@ import bookingSlice from '@api/slices/bookingSlice';
 import userSlice from '@api/slices/userSlice';
 import scheduleSlice from '@api/slices/scheduleSlice';
 import establishmentTypeSlice from '@api/slices/establishmentTypeSlice';
+import moderatorsSlice from '@api/slices/moderatorSlice';
+import favoritesSlice from '@api/slices/favoritesSlice';
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   actionTransformer: action => {
@@ -58,6 +60,8 @@ export const store = configureStore({
     booking: bookingSlice,
     schedule: scheduleSlice,
     establishmentType: establishmentTypeSlice,
+    moderotors: moderatorsSlice,
+    favorites: favoritesSlice,
   },
   enhancers: getDefaultEnhancers =>
     getDefaultEnhancers().concat(sentryReduxEnhancer),
